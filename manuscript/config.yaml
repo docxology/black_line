@@ -1,0 +1,44 @@
+paper:
+  title: "Black Line: Strong Work in Public"
+  subtitle: "A Positive Operating Discipline for Concise, Rigorous Research and Engineering"
+  version: "0.4.0"
+  date: "2026-07-18"
+  description: "A positive practice instrument for concise, inspectable, revisable work and research."
+  cover:
+    image: "figures/cover_art.png"
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+
+publication:
+  doi: "10.5281/zenodo.21754236"
+  github_repository: "docxology/black_line"
+  repository_url: "https://github.com/docxology/black_line"
+
+# Figure occupancy. The default 0.5\textheight cap binds before the width on
+# every plate taller than about half the text block, shrinking the whole image
+# and with it every label inside it. Raising the cap lets the declared
+# `width=100%` bind instead, which is what the rendered-legibility floor in
+# `black_line.figures.legibility` is measured against.
+rendering:
+  figure_height_fraction: 0.95
+  front_matter_figure_height_fraction: 0.95
+  cover_height_fraction: 0.95
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+    docx: false
+    epub: false
+
+metadata:
+  license: "CC-BY-4.0 (prose); MIT (code)"
+  status: "living document — versioned and revisable"
+  # Denser editorial page geometry; the figures use the additional width while
+  # the explicit top/bottom whitespace keeps headings and captions breathable.
+  geometry: "left=0.33in,right=0.33in,top=0.58in,bottom=0.58in"

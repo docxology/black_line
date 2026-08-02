@@ -1,0 +1,9 @@
+```latex
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{etoolbox}
+\pagecolor{white}
+\AtBeginEnvironment{thebibliography}{\small}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible}
+```

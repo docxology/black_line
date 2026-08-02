@@ -1,0 +1,34 @@
+# black_line — this repository's own ignores.
+#
+# Black Line is its own repository, so it must carry the ignore rules its own
+# documentation asserts. README.md, AGENTS.md, docs/README.md, and
+# docs/development.md all state that `output/` is git-ignored and disposable;
+# without this file that statement is only true for a checkout that happens to
+# sit inside some larger tree whose ignores it inherits. In a separated copy a
+# contributor could commit generated artifacts against the project's own stated
+# invariant. `tests/test_standalone_contract.py` binds these entries to that
+# claim with a real `git check-ignore` run.
+
+# Environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.benchmarks/
+
+# Build products of the package itself
+build/
+dist/
+*.egg-info/
+
+# Coverage artifacts
+.coverage
+.coverage.*
+coverage_project.json
+htmlcov/
+
+# The generated mirror: figures, rendered manuscript, reports. Disposable and
+# regenerable from source; never a review artifact in its own right.
+output/

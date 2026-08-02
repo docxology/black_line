@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "black_line"
+version = "0.4.0"
+description = "A positive practice instrument for concise, inspectable, revisable work"
+authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+# Every tool the documented validation contract invokes is declared here, so a
+# separated copy can run that contract from its own declarations rather than
+# from whatever happens to be on the ambient PATH. `ruff` is part of the
+# contract in README.md, AGENTS.md, and docs/development.md;
+# tests/test_standalone_contract.py fails if the two ever disagree again.
+dev = ["pytest>=7.4.0", "pytest-cov>=4.1.0", "ruff>=0.6.0"]
+
+[tool.ruff]
+# Pinned so "ruff clean" names a reproducible configuration rather than
+# whichever defaults the caller's ambient ruff happened to carry.
+# target-version matters: the package declares a 3.10 floor, and ruff is what
+# catches a construct that only parses on a later interpreter.
+target-version = "py310"
+extend-exclude = ["output"]
+
+[tool.ruff.lint]
+# Ruff's default set: pyflakes plus the syntax and logic subset of pycodestyle.
+# Line length and import ordering are deliberately not enforced; the figure
+# builders carry long SVG f-strings that read worse when wrapped.
+select = ["E4", "E7", "E9", "F"]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+precision = 2

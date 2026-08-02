@@ -1,0 +1,83 @@
+{
+  "title": "Black Line: Strong Work in Public",
+  "description": "<p>A positive practice instrument for concise, inspectable, revisable work. It reads self-declared tags and evidence labels against a versioned practice registry and returns one of four statuses over declaration coverage. It measures whether the evidence a practice asks for was declared \u2014 never whether the work is true, good, or permitted; an ALIGNED reading authorizes nothing.</p><p><strong>Subtitle:</strong> A Positive Operating Discipline for Concise, Rigorous Research and Engineering</p><p>Code is MIT licensed; prose and figures are CC BY 4.0. See LICENSE in the repository.</p>",
+  "upload_type": "publication",
+  "publication_type": "workingpaper",
+  "creators": [
+    {
+      "name": "Friedman, Daniel Ari",
+      "affiliation": "Active Inference Institute",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "version": "0.4.0",
+  "keywords": [
+    "research practice",
+    "declaration coverage",
+    "evidence discipline",
+    "scientific integrity",
+    "reproducibility",
+    "open science",
+    "engineering practice"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/docxology/black_line",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/docxology/red_line",
+      "relation": "isPartOf",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/docxology/golden_line",
+      "relation": "isPartOf",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/docxology/white_line",
+      "relation": "isPartOf",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/docxology/line_set",
+      "relation": "isPartOf",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/docxology/witness_register",
+      "relation": "references",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.21754238",
+      "relation": "cites",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.21754240",
+      "relation": "cites",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.21754242",
+      "relation": "cites",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.21754244",
+      "relation": "cites",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.21754246",
+      "relation": "cites",
+      "scheme": "doi"
+    }
+  ],
+  "notes": "One of six related works (the line set and its witness register). The five sibling DOIs are listed in related_identifiers with relation 'cites'; this work's own DOI is recorded in CITATION.cff identifiers and the record link."
+}

@@ -1,0 +1,46 @@
+# Machine-readable numeric support for the manuscript.
+#
+# Each row is keyed on the claim, not on the bare integer, so two unrelated
+# claims that happen to share a value stay distinct. Every row is re-derived
+# from the running package by tests/test_claim_ledger.py, which also refuses a
+# row with no derivation and a derivation with no row — the ledger is checked,
+# not merely declared. `source` names the file that re-derives the value;
+# `source_tier` is `test` for every row, because every row has an executable
+# derivation.
+schema: black-line-claim-ledger-v2
+claims:
+  - {claim_id: practice-count, kind: number, value: 11, source: tests/test_claim_ledger.py, artifact_path: src/black_line/registry.py, source_tier: test}
+  - {claim_id: craft-family-count, kind: number, value: 6, source: tests/test_claim_ledger.py, artifact_path: src/black_line/model/enums.py, source_tier: test}
+  - {claim_id: tag-vocabulary-size, kind: number, value: 5, source: tests/test_claim_ledger.py, artifact_path: src/black_line/registry.py, source_tier: test}
+  - {claim_id: structural-invariant-count, kind: number, value: 7, source: tests/test_claim_ledger.py, artifact_path: src/black_line/invariants.py, source_tier: test}
+  - {claim_id: distinct-evidence-label-count, kind: number, value: 22, source: tests/test_claim_ledger.py, artifact_path: src/black_line/registry.py, source_tier: test}
+  - {claim_id: applicable-tag-practice-cells, kind: number, value: 27, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: tag-practice-cell-total, kind: number, value: 55, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: research-tag-reach, kind: number, value: 8, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: research-tag-burden, kind: number, value: 16, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: analysis-tag-reach, kind: number, value: 7, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: analysis-tag-burden, kind: number, value: 14, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: engineering-tag-reach, kind: number, value: 6, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: engineering-tag-burden, kind: number, value: 12, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: writing-tag-reach, kind: number, value: 5, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: writing-tag-burden, kind: number, value: 10, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: data-tag-reach, kind: number, value: 1, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: data-tag-burden, kind: number, value: 2, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: incremental-path-steps, kind: number, value: 17, source: tests/test_claim_ledger.py, artifact_path: src/black_line/analytics.py, source_tier: test}
+  - {claim_id: incremental-path-first-aligned-step, kind: number, value: 16, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/scenarios.py, source_tier: test}
+  - {claim_id: decay-narrow-window-days, kind: number, value: 30, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/analytics_figures.py, source_tier: test}
+  - {claim_id: decay-narrow-window-flip-age, kind: number, value: 31, source: tests/test_claim_ledger.py, artifact_path: src/black_line/evaluator.py, source_tier: test}
+  - {claim_id: staleness-boundary-stale-window, kind: number, value: 50, source: tests/test_claim_ledger.py, artifact_path: src/black_line/evaluator.py, source_tier: test}
+  - {claim_id: staleness-boundary-fresh-window, kind: number, value: 51, source: tests/test_claim_ledger.py, artifact_path: src/black_line/evaluator.py, source_tier: test}
+  - {claim_id: decay-wide-window-flip-age, kind: number, value: 52, source: tests/test_claim_ledger.py, artifact_path: src/black_line/evaluator.py, source_tier: test}
+  - {claim_id: decay-sweep-max-age, kind: number, value: 70, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/scenarios.py, source_tier: test}
+  - {claim_id: digest-hex-length, kind: number, value: 64, source: tests/test_claim_ledger.py, artifact_path: src/black_line/serialization.py, source_tier: test}
+  - {claim_id: generated-figure-count, kind: number, value: 15, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/specs.py, source_tier: test}
+  - {claim_id: refresh-queue-scheduled, kind: number, value: 5, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/horizon_figures.py, source_tier: test}
+  - {claim_id: refresh-queue-omitted, kind: number, value: 3, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/horizon_figures.py, source_tier: test}
+  - {claim_id: lattice-order-count, kind: number, value: 12, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/scenarios.py, source_tier: test}
+  - {claim_id: intake-battery-declarations, kind: number, value: 9, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/scenarios.py, source_tier: test}
+  - {claim_id: intake-battery-notes, kind: number, value: 10, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/intake_figures.py, source_tier: test}
+  - {claim_id: detection-matrix-registries, kind: number, value: 8, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/scenarios.py, source_tier: test}
+  - {claim_id: detection-matrix-collateral-plants, kind: number, value: 2, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/invariant_figures.py, source_tier: test}
+  - {claim_id: minimum-rendered-point-size, kind: number, value: 6, source: tests/test_claim_ledger.py, artifact_path: src/black_line/figures/legibility.py, source_tier: test}
