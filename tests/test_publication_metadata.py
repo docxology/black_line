@@ -30,7 +30,14 @@ SIBLINGS = ("red_line", "golden_line", "white_line", "line_set", "witness_regist
 #: asserted real and reserved via Zenodo. Adding any other DOI-shaped string to
 #: the metadata surfaces fails test_no_unverified_doi_appears_in_metadata.
 #: copy-and-paste into a bibliography and points nowhere.
-VERIFIED_DOIS: tuple[str, ...] = ("10.5281/zenodo.21754236", "10.5281/zenodo.21754238", "10.5281/zenodo.21754240", "10.5281/zenodo.21754242", "10.5281/zenodo.21754244", "10.5281/zenodo.21754246")
+VERIFIED_DOIS: tuple[str, ...] = (
+    "10.5281/zenodo.21754236",
+    "10.5281/zenodo.21754238",
+    "10.5281/zenodo.21754240",
+    "10.5281/zenodo.21754242",
+    "10.5281/zenodo.21754244",
+    "10.5281/zenodo.21754246",
+)
 
 #: A DOI as the registries publish them.
 DOI_PATTERN = re.compile(r"10\.\d{4,9}/[-._;()/:A-Za-z0-9]+")

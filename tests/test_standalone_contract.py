@@ -147,16 +147,16 @@ def _ignored_by(repository: Path, paths: tuple[str, ...]) -> set[str]:
     """Return which of ``paths`` git considers ignored inside ``repository``."""
 
     result = subprocess.run(  # noqa: S603
-        ["git", "check-ignore", "--stdin"],
+        ["git", "check-ignore", "-z", "--stdin"],
         cwd=repository,
-        input="\n".join(paths),
+        input=b"\0".join(p.encode("utf-8") for p in paths) + b"\0",
         capture_output=True,
-        text=True,
         timeout=60,
     )
     # git exits 1 when nothing matched, which is a real answer, not an error.
     assert result.returncode in (0, 1), result.stderr
-    return {line.strip() for line in result.stdout.splitlines() if line.strip()}
+    raw_lines = result.stdout.split(b"\0")
+    return {p.decode("utf-8").strip() for p in raw_lines if p.strip()}
 
 
 def _throwaway_repository(tmp_path: Path, gitignore: str | None) -> Path:

@@ -223,7 +223,10 @@ for surface in surfaces:
     print(surface.practice_id, marks, sep=" | ")
 envelope = assessment_envelope(assessment, subject_id="colony-traces-2026")
 print(envelope.line_id, envelope.native_status)
-print("envelope points at this exact assessment:", envelope_matches_assessment(envelope, assessment))
+print(
+    "envelope points at this exact assessment:",
+    envelope_matches_assessment(envelope, assessment),
+)
 ```
 
 ```text

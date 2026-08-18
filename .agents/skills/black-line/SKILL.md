@@ -124,7 +124,11 @@ or permission.
 
 ```python
 from black_line import evaluate_with_surfaces
-from black_line.envelope import assessment_envelope, canonical_envelope, envelope_matches_assessment
+from black_line.envelope import (
+    assessment_envelope,
+    canonical_envelope,
+    envelope_matches_assessment,
+)
 
 assessment, surfaces = evaluate_with_surfaces(attempt, as_of="2026-07-01")
 envelope = assessment_envelope(assessment, subject_id="your reference for the attempt")
