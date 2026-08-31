@@ -191,7 +191,7 @@ def test_manuscript_quotes_the_headline_ledger_values() -> None:
 
     prose = "\n".join(
         path.read_text(encoding="utf-8")
-        for path in sorted((ROOT / "manuscript").glob("*.md"))
+        for path in sorted((ROOT / "docs" / "manuscript").glob("*.md"))
     )
     derived = _derivations()
     for claim_id, spelling in (

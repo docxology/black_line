@@ -71,8 +71,8 @@ ANCHOR_DOCS = (
     Path("STANDALONE.md"),
     Path("docs/README.md"),
     Path("docs/development.md"),
-    Path("manuscript/01_introduction.md"),
-    Path("manuscript/01b_line_set_relationship.md"),
+    Path("docs/manuscript/01_introduction.md"),
+    Path("docs/manuscript/01b_line_set_relationship.md"),
     Path(".agents/skills/black-line/SKILL.md"),
 )
 
@@ -135,7 +135,7 @@ MUST_BE_IGNORED = (
 MUST_NOT_BE_IGNORED = (
     "src/black_line/evaluator.py",
     "tests/test_standalone_contract.py",
-    "manuscript/01_introduction.md",
+    "docs/manuscript/01_introduction.md",
     "data/claim_ledger.yaml",
     "README.md",
     "STANDALONE.md",

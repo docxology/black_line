@@ -208,13 +208,17 @@ def figure_legibility_report(
     """
 
     root = Path(project_root).resolve()
-    config_text = (root / "manuscript" / "config.yaml").read_text(encoding="utf-8")
+    manuscript = (
+        root / "docs" / "manuscript"
+        if (root / "docs" / "manuscript").is_dir()
+        else root / "manuscript"
+    )
+    config_text = (manuscript / "config.yaml").read_text(encoding="utf-8")
     page = page_geometry(config_text)
     figure_height = render_fraction(config_text, "figure_height_fraction", 0.50)
     cover_height = render_fraction(config_text, "cover_height_fraction", 0.60)
     prose = "\n".join(
-        path.read_text(encoding="utf-8")
-        for path in sorted((root / "manuscript").glob("*.md"))
+        path.read_text(encoding="utf-8") for path in sorted(manuscript.glob("*.md"))
     )
     figures_dir = root / "output" / "figures"
     overrides = svg_by_name or {}

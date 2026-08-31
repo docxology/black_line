@@ -68,7 +68,7 @@ def _bundle(tmp_path: Path) -> Path:
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir(parents=True, exist_ok=True)
     (manuscript / "config.yaml").write_text(
-        (ROOT / "manuscript" / "config.yaml").read_text(encoding="utf-8"),
+        (ROOT / "docs" / "manuscript" / "config.yaml").read_text(encoding="utf-8"),
         encoding="utf-8",
     )
     return tmp_path
@@ -82,7 +82,7 @@ def test_figure_specs_match_the_expected_roster() -> None:
 
 
 def test_every_registered_figure_is_embedded_in_the_manuscript() -> None:
-    manuscript = Path(__file__).resolve().parent.parent / "manuscript"
+    manuscript = Path(__file__).resolve().parent.parent / "docs" / "manuscript"
     prose = "\n".join(
         path.read_text(encoding="utf-8") for path in sorted(manuscript.glob("*.md"))
     )
@@ -106,7 +106,7 @@ def test_manuscript_embed_captions_match_the_registry_captions() -> None:
     a test failure instead of a silent publication defect.
     """
 
-    manuscript = Path(__file__).resolve().parent.parent / "manuscript"
+    manuscript = Path(__file__).resolve().parent.parent / "docs" / "manuscript"
     prose = "\n".join(
         path.read_text(encoding="utf-8") for path in sorted(manuscript.glob("*.md"))
     )

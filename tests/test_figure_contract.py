@@ -32,7 +32,7 @@ def _bundle(tmp_path: Path) -> Path:
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir(parents=True, exist_ok=True)
     (manuscript / "config.yaml").write_text(
-        (ROOT / "manuscript" / "config.yaml").read_text(encoding="utf-8"),
+        (ROOT / "docs" / "manuscript" / "config.yaml").read_text(encoding="utf-8"),
         encoding="utf-8",
     )
     return tmp_path
@@ -129,7 +129,7 @@ def test_the_shipped_cover_reaches_a_reader_with_its_caption(
     cover = registry["cover"]
     prose = "\n".join(
         path.read_text(encoding="utf-8")
-        for path in sorted((ROOT / "manuscript").glob("*.md"))
+        for path in sorted((ROOT / "docs" / "manuscript").glob("*.md"))
     )
     assert f"figures/{cover['filename']}" in prose
     matches = re.findall(

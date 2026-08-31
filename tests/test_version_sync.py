@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parent.parent
 def _config_paper_version() -> str:
     """Read paper.version from manuscript/config.yaml with a scoped line parse."""
 
-    text = (ROOT / "manuscript" / "config.yaml").read_text(encoding="utf-8")
+    text = (ROOT / "docs" / "manuscript" / "config.yaml").read_text(encoding="utf-8")
     in_paper = False
     for line in text.splitlines():
         if line.strip() and not line.startswith(" "):

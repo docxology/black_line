@@ -47,7 +47,7 @@ from black_line import (
     registry_digest,
 )
 
-MANUSCRIPT = Path(__file__).resolve().parent.parent / "manuscript"
+MANUSCRIPT = Path(__file__).resolve().parent.parent / "docs" / "manuscript"
 AS_OF = date(2026, 7, 1)
 #: A practice with a two-label contract and a single tag, so the tests below can
 #: vary one thing at a time. Read from the registry rather than restated.

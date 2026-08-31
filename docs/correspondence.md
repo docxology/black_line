@@ -40,7 +40,7 @@ them — "precedence without information destruction."
 **Deferred, then closed (2026-07-29 manuscript window):** manuscript
 formalism definitions for the surfaces and the envelope were deferred to the
 next manuscript window because formal edits require a re-render and manifest
-pass. That window ran the same day: `manuscript/03b_formalism.md` now defines
+pass. That window ran the same day: `docs/manuscript/03b_formalism.md` now defines
 `EvidenceSurfaces` and the report envelope, states the surfaces-to-finding
 projection as a proposition, and embeds the derived `black_surfaces_panel`
 plate — one executed `evaluate_with_surfaces` call drawn as typed

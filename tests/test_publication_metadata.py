@@ -20,7 +20,7 @@ from black_line import __version__
 ROOT = Path(__file__).resolve().parents[1]
 CITATION = ROOT / "CITATION.cff"
 ZENODO = ROOT / ".zenodo.json"
-CONFIG = ROOT / "manuscript" / "config.yaml"
+CONFIG = ROOT / "docs" / "manuscript" / "config.yaml"
 LICENSE = ROOT / "LICENSE"
 
 SELF = "black_line"

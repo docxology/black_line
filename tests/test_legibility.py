@@ -40,9 +40,10 @@ def _project_copy(tmp_path: Path) -> Path:
     manuscript.mkdir(parents=True, exist_ok=True)
     for name in ("config.yaml",):
         (manuscript / name).write_text(
-            (ROOT / "manuscript" / name).read_text(encoding="utf-8"), encoding="utf-8"
+            (ROOT / "docs" / "manuscript" / name).read_text(encoding="utf-8"),
+            encoding="utf-8",
         )
-    for path in sorted((ROOT / "manuscript").glob("*.md")):
+    for path in sorted((ROOT / "docs" / "manuscript").glob("*.md")):
         (manuscript / path.name).write_text(
             path.read_text(encoding="utf-8"), encoding="utf-8"
         )
@@ -85,7 +86,7 @@ def test_height_cap_can_bind_before_width_and_shrink_the_plate() -> None:
 
 
 def test_manuscript_config_releases_the_figure_height_cap() -> None:
-    config = (ROOT / "manuscript" / "config.yaml").read_text(encoding="utf-8")
+    config = (ROOT / "docs" / "manuscript" / "config.yaml").read_text(encoding="utf-8")
     figure_fraction = render_fraction(config, "figure_height_fraction", 0.50)
     cover_fraction = render_fraction(config, "cover_height_fraction", 0.60)
     assert figure_fraction > 0.5, "the default cap binds before width on tall plates"
@@ -240,7 +241,7 @@ def test_every_manuscript_embed_declares_a_full_width() -> None:
 
     prose = "\n".join(
         path.read_text(encoding="utf-8")
-        for path in sorted((ROOT / "manuscript").glob("*.md"))
+        for path in sorted((ROOT / "docs" / "manuscript").glob("*.md"))
     )
     embeds = re.findall(r"\.\./output/figures/(\w+)\.png\)\{#[^}]*?width=(\d+)%", prose)
     names = {name for name, _ in embeds}
@@ -280,7 +281,7 @@ def test_an_empty_bundle_is_reported_as_unmeasured_not_as_passing(
 
     (tmp_path / "manuscript").mkdir()
     (tmp_path / "manuscript" / "config.yaml").write_text(
-        (ROOT / "manuscript" / "config.yaml").read_text(encoding="utf-8"),
+        (ROOT / "docs" / "manuscript" / "config.yaml").read_text(encoding="utf-8"),
         encoding="utf-8",
     )
     (tmp_path / "output" / "figures").mkdir(parents=True)

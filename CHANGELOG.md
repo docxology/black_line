@@ -91,7 +91,7 @@ per-instrument pieces that are Black Line's to ship.
 
 The deferred manuscript work from the entry above, closed the same day.
 
-- **Formalism.** `manuscript/03b_formalism.md` gains a "Surfaces, projection,
+- **Formalism.** `docs/manuscript/03b_formalism.md` gains a "Surfaces, projection,
   and the report envelope" section: a definition of `EvidenceSurfaces` (the
   four fields in order, `stale ⊆ missing`, all three tuples in the practice's
   declared evidence order), a proposition that the finding is a projection of
@@ -102,7 +102,7 @@ The deferred manuscript work from the entry above, closed the same day.
   `report_ref` pointer to `canonical_assessment`, the travelling non-claims,
   and the explicit rule that `native_status` is this line's own word, never
   to be compared, ranked, averaged, or merged across lines). Both claim
-  tables gained matching rows, and `manuscript/02_method.md` narrates
+  tables gained matching rows, and `docs/manuscript/02_method.md` narrates
   surfaces-as-state / status-as-projection beside the staged outline. Three
   new binding tests in `tests/test_formalism_definitions.py` re-derive the
   field lists, the containment and order invariants, and the equivalence from
@@ -242,8 +242,8 @@ bound by a test that is shown to fail when the property is removed
   `git init` + `git add -A` over the clone stages 94 files and zero paths from
   `output/`, `.venv/`, or `htmlcov/`, with all three present on disk.
 - **Five markdown links resolved outside the repository root.** `README.md`,
-  `docs/README.md`, `manuscript/01_introduction.md`, and
-  `manuscript/01b_line_set_relationship.md` (twice) pointed at
+  `docs/README.md`, `docs/manuscript/01_introduction.md`, and
+  `docs/manuscript/01b_line_set_relationship.md` (twice) pointed at
   `../../docs/line-set.md`, a private sidecar note. Three of the five ship
   inside the rendered manuscript. The acknowledgement is kept and only its
   address changed: each now names the sibling work and its repository under
@@ -304,7 +304,7 @@ bound by a test that is shown to fail when the property is removed
   re-derives the omission classes and rejects the wording on every surface that
   reaches a reader.
 - **The tag-minimization contrast was labelled with the wrong fold.**
-  `manuscript/05_limits.md` called the executed `analysis`+`data` → `data`
+  `docs/manuscript/05_limits.md` called the executed `analysis`+`data` → `data`
   narrowing "eightfold"; the executed contrast is 7 practices / 14 labels down
   to 1 / 2, which is sevenfold. Eightfold is the registry's widest spread
   (`research` 8 against `data` 1) and is correctly stated in
@@ -320,7 +320,7 @@ bound by a test that is shown to fail when the property is removed
   (so a new unguarded script fails there), asserts each one still succeeds on
   a good run, and feeds each five argument shapes.
 - **The practice list paraphrased two registry wires.** Nine of the eleven
-  entries in `manuscript/03_practices.md` quoted their wire verbatim; entry 1
+  entries in `docs/manuscript/03_practices.md` quoted their wire verbatim; entry 1
   said "scope … selecting tools" where the registry says "boundary … choosing
   tools", and entry 5 dropped an article. The paper and the shipped registry
   therefore described the same practice differently while the digest and every
@@ -342,8 +342,8 @@ bound by a test that is shown to fail when the property is removed
   and shrank the whole image, and the canvas-relative font sizes were screen
   scale rather than print scale. New `src/black_line/figures/legibility.py`
   derives the rendered point size of each label from the canvas, the declared
-  embed width, and the page geometry in `manuscript/config.yaml`;
-  `manuscript/config.yaml` now declares `rendering.figure_height_fraction`
+  embed width, and the page geometry in `docs/manuscript/config.yaml`;
+  `docs/manuscript/config.yaml` now declares `rendering.figure_height_fraction`
   and `rendering.cover_height_fraction` so width binds; and `figures/svg.py`
   clamps every drawing helper to a floor derived from its own canvas.
   Measured minimum across the generated plates moved from **3.18pt** (nine
@@ -365,13 +365,13 @@ bound by a test that is shown to fail when the property is removed
   evaluator over a pinned battery of eight differently-tagged attempts and
   draws `summarize_assessments` beside a per-practice gap ranking, which is
   the first time the figure set shows more than one attempt. All three are
-  embedded with prose cross-references in `manuscript/04_examples.md`, and the
+  embedded with prose cross-references in `docs/manuscript/04_examples.md`, and the
   batch panel is shown to follow its data by rebuilding it from a one-attempt
   batch and checking the ranking, the totals, and the never-open band all move.
 - **The cover reaches a reader.** `cover_art.png` is embedded with its
-  registry caption in `manuscript/01b_line_set_relationship.md`, and
+  registry caption in `docs/manuscript/01b_line_set_relationship.md`, and
   `validate_generated_figures` now binds `paper.cover.image` in
-  `manuscript/config.yaml` to the registry `cover` entry.
+  `docs/manuscript/config.yaml` to the registry `cover` entry.
 - **The figure gate compares the whole contract.** `alt`,
   `interpretive_claim`, and `epistemic_boundary` are checked against the
   declared specs for every figure and the cover; blanking any of them used to
@@ -411,7 +411,7 @@ bound by a test that is shown to fail when the property is removed
   `01b_line_set_relationship.md` claimed the instruments "depend on one
   another" against the set's standalone rule; `03_practices.md` used British
   "colour-keyed" against the set's spelling; `docs/architecture.md` restated a
-  version literal the project's own rule forbids; `manuscript/AGENTS.md`
+  version literal the project's own rule forbids; `docs/manuscript/AGENTS.md`
   described LLM settings the config does not contain; `figures/README.md` had
   a relative link resolving outside the project; the stage numbering in the
   abstract, method, formalism, and architecture doc now agrees; and three
@@ -426,7 +426,7 @@ bound by a test that is shown to fail when the property is removed
   with verbatim evaluator output), the full `black_line.analytics` surface
   with derived coverage numbers, gates, and gotchas. Commands are
   copy-pasteable from the project root; no version literal is restated
-  (authority remains `manuscript/config.yaml`, bound by
+  (authority remains `docs/manuscript/config.yaml`, bound by
   `tests/test_version_sync.py`).
 - README: new Analytics, Figures, and Agent skill sections referencing the
   analytics module (with the derived 8/16-vs-1/2 tag-burden asymmetry over
@@ -442,14 +442,14 @@ bound by a test that is shown to fail when the property is removed
 
 ### 2026-07-22 (manuscript expansion: executed examples + adversarial declarations)
 
-- Rework `manuscript/04_examples.md` into executed worked examples: a
+- Rework `docs/manuscript/04_examples.md` into executed worked examples: a
   17-step incremental-declaration status-path table for a `research`-tagged
   attempt (empty declaration `NEEDS_EVIDENCE`; steps 1–15 `NEEDS_REWORK`
   with `ALIGNED` practice findings accumulating 0→7; `ALIGNED` only at the
   sixteenth label) and an executed decay-sweep table over the
   `data-provenance` practice (window 30 flips at age 31, window 51 at age
   52, no window never, a never-declared label `NEEDS_REWORK` at every age).
-- Add `manuscript/05_limits.md` "Adversarial declarations" subsection with
+- Add `docs/manuscript/05_limits.md` "Adversarial declarations" subsection with
   three executed attacks — label-stuffing (all 22 vocabulary labels →
   `ALIGNED`), tag-minimization (`{analysis, data}` `NEEDS_REWORK` over 7
   findings vs `{data}` `ALIGNED` over 1, same labels), and refresh-date
@@ -484,7 +484,7 @@ bound by a test that is shown to fail when the property is removed
   and an evidence-decay strip chart from executed `evaluate_work` sweeps
   pinning the strict `age > window` staleness rule. Both embedded in the
   manuscript with interpretive claims and epistemic boundaries.
-- Bind version copies: tests now sync `manuscript/config.yaml` `paper.version`
+- Bind version copies: tests now sync `docs/manuscript/config.yaml` `paper.version`
   and `pyproject.toml` to `black_line.__version__`, and the cover-art version
   marker is derived from `__version__` instead of a hardcoded `0.3` literal.
 - Refactor `tests/test_figures.py` from index-pinned label assertions to
@@ -497,13 +497,13 @@ bound by a test that is shown to fail when the property is removed
 
 ### 2026-07-21 (audit improvement pass)
 
-- Correct the worked example in `manuscript/04_examples.md`: for tags
+- Correct the worked example in `docs/manuscript/04_examples.md`: for tags
   `{research}` the evaluator requests failure, handoff, rerun, uncertainty,
   negative-result, and review evidence — never `method` (the only practice
   requiring `method`, smallest-sufficient-method, is tagged
   engineering/analysis). Verified by executing the exact scenario.
 - Align monotonicity claim provenance with Proposition 4's own wording in
-  `manuscript/05_limits.md` and `docs/usage.md`: no test exercises the general
+  `docs/manuscript/05_limits.md` and `docs/usage.md`: no test exercises the general
   monotonicity property (zero `monoton` hits in `tests/`); the conditional
   claim follows from the finding rules, with the boundary case tested by
   `test_irrelevant_evidence_only_needs_rework`.

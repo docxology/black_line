@@ -29,7 +29,7 @@ from black_line import (
 )
 from black_line.figures.scenarios import DECAY_AS_OF, PATH_LABELS
 
-MANUSCRIPT = Path(__file__).resolve().parent.parent / "manuscript"
+MANUSCRIPT = Path(__file__).resolve().parent.parent / "docs" / "manuscript"
 
 
 def _read(name: str) -> str:

@@ -27,7 +27,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-MANUSCRIPT = Path(__file__).resolve().parent.parent / "manuscript"
+MANUSCRIPT = Path(__file__).resolve().parent.parent / "docs" / "manuscript"
 
 #: The Div classes the shipped filter numbers, mapped to the label prefix this
 #: manuscript requires for each. The filter accepts any prefix; the project does

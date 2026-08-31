@@ -122,8 +122,12 @@ def validate_generated_figures(project_root: Path | None = None) -> list[str]:
         # The cover's only PDF-side consumer is the title-page key; bind it
         # here so renaming or deleting the file cannot leave the rendered
         # cover silently missing while every other gate stays green.
-        config = root / "manuscript" / "config.yaml"
-        declared = _configured_cover_image(config)
+        manuscript = (
+            root / "docs" / "manuscript"
+            if (root / "docs" / "manuscript").is_dir()
+            else root / "manuscript"
+        )
+        declared = _configured_cover_image(manuscript / "config.yaml")
         expected_cover = f"figures/{cover.get('filename')}"
         if declared != expected_cover:
             errors.append(

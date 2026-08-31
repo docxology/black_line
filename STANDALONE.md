@@ -61,7 +61,7 @@ versioned practice registry and `evaluate_work`, returning `ALIGNED`,
 evidence. A status describes declaration coverage and nothing else. It is not a
 truth claim, a safety score, an accreditation, a moral authority, or a permission
 mechanism, and it never licenses anything Red Line would refuse. Read
-`README.md`, `manuscript/05_limits.md`, and `docs/claims.md` before changing the
+`README.md`, `docs/manuscript/05_limits.md`, and `docs/claims.md` before changing the
 evaluator.
 
 ## Making a copy

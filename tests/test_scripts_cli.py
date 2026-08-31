@@ -73,8 +73,11 @@ def _sandbox(tmp_path: Path) -> Path:
     shutil.copytree(ROOT / "scripts", tmp_path / "scripts")
     # The page geometry the font floors are derived from is read at import
     # time, so the copied tree needs the real config and nothing else.
-    (tmp_path / "manuscript").mkdir(exist_ok=True)
-    shutil.copy(ROOT / "manuscript" / "config.yaml", tmp_path / "manuscript")
+    (tmp_path / "docs" / "manuscript").mkdir(parents=True, exist_ok=True)
+    shutil.copy(
+        ROOT / "docs" / "manuscript" / "config.yaml",
+        tmp_path / "docs" / "manuscript",
+    )
     return tmp_path
 
 

@@ -13,7 +13,7 @@ accreditation, or permission mechanism.
 Black Line is standalone, and this repository is the whole instrument — see
 [`STANDALONE.md`](STANDALONE.md). Its relationship to the other works of the
 line set is stated in
-[`manuscript/01b_line_set_relationship.md`](manuscript/01b_line_set_relationship.md)
+[`docs/manuscript/01b_line_set_relationship.md`](docs/manuscript/01b_line_set_relationship.md)
 and documented once for the whole set in the companion `line_set` work,
 <https://github.com/docxology/line_set>. The other three are
 <https://github.com/docxology/red_line>,
@@ -119,7 +119,7 @@ embed gate requires the image and its caption to reach the manuscript.
 
 In-figure text carries a rendered-size floor. `black_line.figures.legibility`
 derives the point size each label prints at from the canvas, the declared embed
-width, and the page geometry in `manuscript/config.yaml`, and
+width, and the page geometry in `docs/manuscript/config.yaml`, and
 `tests/test_legibility.py` fails any figure whose smallest label falls below
 6pt.
 

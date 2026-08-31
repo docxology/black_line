@@ -35,7 +35,7 @@ independent evidence. It also writes `cover_art.svg` and `cover_art.png`, which
 are configured as the paper's title-page cover, tracked in the registry's
 `cover` entry, and embedded with their caption in the naming section so the
 description reaches a reader rather than only the registry. The gate binds
-`paper.cover.image` in `manuscript/config.yaml` to that registry entry.
+`paper.cover.image` in `docs/manuscript/config.yaml` to that registry entry.
 
 In-figure text is measured, not eyeballed: `figures/legibility.py` derives the
 point size each label prints at from the canvas, the declared embed width, and

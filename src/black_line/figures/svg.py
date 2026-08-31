@@ -31,7 +31,7 @@ _PROJECT_ROOT = Path(__file__).resolve().parents[3]
 #: The page these figures are scaled into, read from the same manuscript config
 #: the renderer reads, so a geometry change moves the legibility floor with it.
 PAGE = page_geometry(
-    (_PROJECT_ROOT / "manuscript" / "config.yaml").read_text(encoding="utf-8")
+    (_PROJECT_ROOT / "docs" / "manuscript" / "config.yaml").read_text(encoding="utf-8")
 )
 
 COLS = 4

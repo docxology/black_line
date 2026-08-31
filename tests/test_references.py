@@ -19,7 +19,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-MANUSCRIPT = Path(__file__).resolve().parent.parent / "manuscript"
+MANUSCRIPT = Path(__file__).resolve().parent.parent / "docs" / "manuscript"
 BIB = MANUSCRIPT / "references.bib"
 
 _ENTRY = re.compile(r"^@(\w+)\s*\{\s*([^,\s]+)\s*,", re.MULTILINE)

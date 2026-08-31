@@ -91,7 +91,7 @@ _Last reviewed: 2026-08-01 (verification window)._
       strips) embedded in the manuscript; executed worked examples and
       adversarial-declaration attacks in the manuscript with per-claim test
       bindings (`tests/test_manuscript_bindings.py`).
-- [x] Version copies bound to `manuscript/config.yaml` through
+- [x] Version copies bound to `docs/manuscript/config.yaml` through
       `tests/test_version_sync.py` instead of restated literals.
 - [x] Project-scoped agent skill descriptor at
       `.agents/skills/black-line/SKILL.md` (instrument boundary, executed
@@ -148,7 +148,7 @@ _Last reviewed: 2026-08-01 (verification window)._
 - [x] `scripts/_cli.py` argument guard: all three CLIs exit non-zero on any
       argument. `tests/test_scripts_cli.py` discovers the roster from disk and
       runs each script as a subprocess on good and garbage input.
-- [x] `manuscript/03_practices.md` quotes all eleven registry wires verbatim
+- [x] `docs/manuscript/03_practices.md` quotes all eleven registry wires verbatim
       (two had drifted a word each); bound by
       `test_the_practice_list_restates_every_registry_wire_verbatim`.
 - [x] Documented verification order corrected in README, AGENTS,

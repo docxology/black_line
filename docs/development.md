@@ -14,7 +14,7 @@ The PNG rasterization step needs one thing that is not a Python package:
 `rsvg-convert` from librsvg (`brew install librsvg`, or
 `apt-get install librsvg2-bin`). It is a hard requirement of the raster step and
 fails loudly when absent. The manuscript declares its denser 0.5-inch page
-geometry in `manuscript/config.yaml`; keep that source setting and the generated
+geometry in `docs/manuscript/config.yaml`; keep that source setting and the generated
 artifacts in sync when changing layout.
 
 ## Local verification loop
