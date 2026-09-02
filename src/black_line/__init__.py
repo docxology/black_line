@@ -2,8 +2,10 @@
 
 from .analytics import (
     DECLARATION_STATUS_ORDER,
+    OMISSION_FUTURE,
     OMISSION_STALE,
     OMISSION_UNDATED,
+    OMISSION_UNREADABLE,
     OMISSION_UNREQUIRED,
     AssessmentSummary,
     OmittedEvidence,
@@ -73,8 +75,10 @@ __all__ = [
     "ENVELOPE_SCHEMA",
     "EvidenceItem",
     "EvidenceSurfaces",
+    "OMISSION_FUTURE",
     "OMISSION_STALE",
     "OMISSION_UNDATED",
+    "OMISSION_UNREADABLE",
     "OMISSION_UNREQUIRED",
     "OmittedEvidence",
     "PracticeFinding",

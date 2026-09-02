@@ -152,7 +152,9 @@ Use `refresh_horizon` to list dated evidence labels nearest to going stale under
 a pinned review date, sorted by remaining days. Three classes are left out, and
 `refresh_horizon_omissions` names each one: undated labels (treated as current,
 so they have no boundary), already-stale labels (a refresh request rather than
-a schedule), and labels no practice in the supplied registry requires.
+a schedule), labels no practice in the supplied registry requires, and
+declarations the evaluator itself never counts — future-dated or unreadable
+dates.
 
 ```python
 from black_line import (

@@ -170,6 +170,14 @@ class RefreshHorizonItem:
 OMISSION_UNDATED = "undated: treated as current, so it has no boundary to reach"
 OMISSION_STALE = "already stale: past the window, so it is a refresh request now"
 OMISSION_UNREQUIRED = "not required by this registry: refreshing it moves no status"
+OMISSION_FUTURE = (
+    "dated in the future: the evaluator never counts it, so there is no "
+    "boundary to reach until its date is corrected"
+)
+OMISSION_UNREADABLE = (
+    "unreadable date: not an ISO date the evaluator can count, so it has no "
+    "position on the schedule until its date is corrected"
+)
 
 
 @dataclass(frozen=True)
@@ -206,8 +214,10 @@ def refresh_horizon(
     :func:`refresh_horizon_omissions` names each one: undated items (which are
     treated as current and so have no boundary), already-stale items (which are
     a refresh request rather than a schedule), and labels no practice in
-    ``practices`` requires (refreshing them cannot move any status). The result
-    is sorted by ascending ``days_until_stale``, then by label. This is a
+    ``practices`` requires (refreshing them cannot move any status), and
+    declarations the evaluator itself never counts — future-dated or
+    unreadable dates. The result is sorted by ascending ``days_until_stale``,
+    then by label. This is a
     read-only scheduling view — it does not verify that the underlying
     observation exists or remains adequate.
     """
@@ -221,7 +231,12 @@ def refresh_horizon(
         practice_ids = required.get(item.label)
         if not practice_ids:
             continue
-        noted = date.fromisoformat(item.noted_on)
+        try:
+            noted = date.fromisoformat(item.noted_on)
+        except (TypeError, ValueError):
+            continue
+        if noted > review:
+            continue
         remaining = max_evidence_age_days - (review - noted).days
         if remaining < 0:
             continue
@@ -248,6 +263,8 @@ def refresh_horizon_omissions(
     The omission rules live once, here and in :func:`refresh_horizon`, so a
     reader or a figure can show what the schedule does not cover instead of
     inferring it. Rows are sorted by label; the first applicable reason wins.
+    Like the evaluator, the omissions never comment on whether the underlying
+    observation exists — only on the shape and reachability of the declaration.
     """
 
     review = as_of if isinstance(as_of, date) else date.fromisoformat(str(as_of))
@@ -260,7 +277,14 @@ def refresh_horizon_omissions(
         if item.label not in required:
             omitted.append(OmittedEvidence(item.label, OMISSION_UNREQUIRED))
             continue
-        noted = date.fromisoformat(item.noted_on)
+        try:
+            noted = date.fromisoformat(item.noted_on)
+        except (TypeError, ValueError):
+            omitted.append(OmittedEvidence(item.label, OMISSION_UNREADABLE))
+            continue
+        if noted > review:
+            omitted.append(OmittedEvidence(item.label, OMISSION_FUTURE))
+            continue
         if max_evidence_age_days - (review - noted).days < 0:
             omitted.append(OmittedEvidence(item.label, OMISSION_STALE))
     return tuple(sorted(omitted, key=lambda row: (row.label, row.reason)))

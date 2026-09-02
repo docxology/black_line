@@ -13,13 +13,16 @@ import pytest
 from black_line import (
     BLACK_PRACTICES,
     DECLARATION_STATUS_ORDER,
+    OMISSION_FUTURE,
     OMISSION_STALE,
     OMISSION_UNDATED,
+    OMISSION_UNREADABLE,
     OMISSION_UNREQUIRED,
     AssessmentStatus,
     BlackAssessment,
     BlackPractice,
     EvidenceItem,
+    OmittedEvidence,
     PracticeFinding,
     PracticeStatus,
     WorkAttempt,
@@ -256,6 +259,46 @@ def test_refresh_horizon_skips_undated_evidence_items() -> None:
     )
     horizon = refresh_horizon(attempt, as_of="2026-07-18", max_evidence_age_days=30)
     assert [item.label for item in horizon] == ["method"]
+
+
+def test_refresh_horizon_omits_future_dated_evidence_like_the_evaluator() -> None:
+    """The evaluator never counts future-dated evidence; neither may the schedule."""
+
+    attempt = WorkAttempt(
+        "method note",
+        frozenset({"research"}),
+        frozenset({"method"}),
+        dated_evidence=(
+            EvidenceItem("method", "2026-07-10"),
+            EvidenceItem("question", "2026-08-01"),
+        ),
+    )
+    horizon = refresh_horizon(attempt, as_of="2026-07-18", max_evidence_age_days=30)
+    assert [item.label for item in horizon] == ["method"]
+    omissions = refresh_horizon_omissions(
+        attempt, as_of="2026-07-18", max_evidence_age_days=30
+    )
+    assert omissions == (OmittedEvidence("question", OMISSION_FUTURE),)
+
+
+def test_refresh_horizon_omits_unreadable_dates_instead_of_crashing() -> None:
+    """An unreadable date is an omission reason, not a ValueError in the caller."""
+
+    attempt = WorkAttempt(
+        "method note",
+        frozenset({"research"}),
+        frozenset({"method"}),
+        dated_evidence=(
+            EvidenceItem("method", "2026-07-10"),
+            EvidenceItem("scope", "July 10"),
+        ),
+    )
+    horizon = refresh_horizon(attempt, as_of="2026-07-18", max_evidence_age_days=30)
+    assert [item.label for item in horizon] == ["method"]
+    omissions = refresh_horizon_omissions(
+        attempt, as_of="2026-07-18", max_evidence_age_days=30
+    )
+    assert omissions == (OmittedEvidence("scope", OMISSION_UNREADABLE),)
 
 
 def test_refresh_horizon_accepts_date_as_of() -> None:
