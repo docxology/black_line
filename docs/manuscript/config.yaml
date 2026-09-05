@@ -5,7 +5,7 @@ paper:
   date: "2026-07-18"
   description: "A positive practice instrument for concise, inspectable, revisable work and research."
   cover:
-    image: "figures/cover_art.png"
+    image: "../../output/figures/cover_art.png"
 
 authors:
   - name: "Daniel Ari Friedman"
