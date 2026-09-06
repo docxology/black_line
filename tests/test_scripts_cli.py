@@ -83,12 +83,11 @@ def _sandbox(tmp_path: Path) -> Path:
 
 def test_the_script_roster_is_not_empty() -> None:
     """A sweep over zero scripts would make every assertion below vacuous."""
-
-    assert len(SCRIPT_PATHS) >= 3
     assert {path.name for path in SCRIPT_PATHS} == {
         "build_figures.py",
         "check_figures.py",
         "check_registry.py",
+        "gen_formalism_ledger.py",
     }
     assert WRITING_SCRIPTS <= {path.name for path in SCRIPT_PATHS}
 

@@ -129,7 +129,11 @@ def validate_generated_figures(project_root: Path | None = None) -> list[str]:
         )
         declared = _configured_cover_image(manuscript / "config.yaml")
         expected_cover = f"figures/{cover.get('filename')}"
-        if declared != expected_cover:
+        cover_file = (figures_dir / str(cover.get("filename"))).resolve()
+        declared_file = (
+            (manuscript / declared).resolve() if declared is not None else None
+        )
+        if declared != expected_cover and declared_file != cover_file:
             errors.append(
                 f"manuscript/config.yaml paper.cover.image is {declared!r}, "
                 f"expected {expected_cover!r} from the registry cover entry"

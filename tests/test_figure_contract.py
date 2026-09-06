@@ -32,7 +32,9 @@ def _bundle(tmp_path: Path) -> Path:
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir(parents=True, exist_ok=True)
     (manuscript / "config.yaml").write_text(
-        (ROOT / "docs" / "manuscript" / "config.yaml").read_text(encoding="utf-8"),
+        (ROOT / "docs" / "manuscript" / "config.yaml")
+        .read_text(encoding="utf-8")
+        .replace('"../../output/figures/', '"../output/figures/'),
         encoding="utf-8",
     )
     return tmp_path
@@ -84,17 +86,20 @@ def test_cover_config_key_is_bound_to_the_registry_cover(tmp_path: Path) -> None
     assert validate_generated_figures(root) == []
     config = root / "manuscript" / "config.yaml"
     original = config.read_text(encoding="utf-8")
-    assert _configured_cover_image(config) == "figures/cover_art.png"
+    assert _configured_cover_image(config) == "../output/figures/cover_art.png"
 
     config.write_text(
-        original.replace('image: "figures/cover_art.png"', 'image: "figures/gone.png"'),
+        original.replace(
+            'image: "../output/figures/cover_art.png"', 'image: "figures/gone.png"'
+        ),
         encoding="utf-8",
     )
     errors = validate_generated_figures(root)
     assert any("paper.cover.image" in error for error in errors)
-
     config.write_text(
-        original.replace('  cover:\n    image: "figures/cover_art.png"\n', ""),
+        original.replace(
+            '  cover:\n    image: "../output/figures/cover_art.png"\n', ""
+        ),
         encoding="utf-8",
     )
     errors = validate_generated_figures(root)

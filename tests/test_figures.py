@@ -68,7 +68,9 @@ def _bundle(tmp_path: Path) -> Path:
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir(parents=True, exist_ok=True)
     (manuscript / "config.yaml").write_text(
-        (ROOT / "docs" / "manuscript" / "config.yaml").read_text(encoding="utf-8"),
+        (ROOT / "docs" / "manuscript" / "config.yaml")
+        .read_text(encoding="utf-8")
+        .replace('"../../output/figures/', '"../output/figures/'),
         encoding="utf-8",
     )
     return tmp_path
