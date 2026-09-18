@@ -1,8 +1,8 @@
 paper:
   title: "Black Line: Strong Work in Public"
   subtitle: "A Positive Operating Discipline for Concise, Rigorous Research and Engineering"
-  version: "0.4.0"
-  date: "2026-07-18"
+  version: "0.4.1"
+  date: "2026-09-18"
   description: "A positive practice instrument for concise, inspectable, revisable work and research."
   cover:
     image: "../../output/figures/cover_art.png"
@@ -14,7 +14,7 @@ authors:
     affiliation: "Active Inference Institute"
 
 publication:
-  doi: "10.5281/zenodo.21754236"
+  doi: "10.5281/zenodo.22833503"
   github_repository: "docxology/black_line"
   repository_url: "https://github.com/docxology/black_line"
 
