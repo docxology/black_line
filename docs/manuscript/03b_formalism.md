@@ -340,7 +340,7 @@ and
 the boundary case is exercised by
 `tests/test_evaluator.py::test_irrelevant_evidence_only_needs_rework_without_present_reason`.
 The same sweep is drawn as
-[the monotonicity lattice](#fig:black-monotonicity-lattice) in the worked
+[the monotonicity lattice](#sec:examples) in the worked
 examples, where the per-row monotonicity mark and the inversion count are read
 off executed paths rather than asserted.
 :::

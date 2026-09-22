@@ -6,6 +6,7 @@ paper:
   description: "A positive practice instrument for concise, inspectable, revisable work and research."
   cover:
     image: "../../output/figures/cover_art.png"
+    alt: "Cover art for Black Line: bold dark strokes over a light field, marking strong public work"
 
 authors:
   - name: "Daniel Ari Friedman"
@@ -34,7 +35,7 @@ render:
     html: true
     slides: false
     docx: false
-    epub: false
+    epub: true
 
 metadata:
   license: "CC-BY-4.0 (prose); MIT (code)"

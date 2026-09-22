@@ -43,7 +43,7 @@ written. Black Line distinguishes three burdens:
 
 This classification prevents a polished figure, a citation, or a deterministic
 test from silently changing the type of claim being made. The companion
-[claim ledger](../docs/claims.md) keeps the same distinction available during
+[claim ledger](https://github.com/docxology/black_line/blob/main/docs/claims.md) keeps the same distinction available during
 maintenance.
 
 `evaluate_work` runs four stages behind two pre-stages, and the

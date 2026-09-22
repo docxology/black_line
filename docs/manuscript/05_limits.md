@@ -17,7 +17,7 @@ seeded permutation sweeps over
 incremental declarations confirm that once a declaration is non-empty the
 status never regresses, with the empty-declaration boundary pinned as the one
 intentional exception ([@prop:strict-staleness]), and the same sweep is drawn as
-[the monotonicity lattice](#fig:black-monotonicity-lattice). None of that
+[the monotonicity lattice](#sec:examples). None of that
 establishes anything about the world the labels point to (developed in
 [the scholarship section](#sec:scholarship)).
 
