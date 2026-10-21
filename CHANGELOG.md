@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+## 0.5.0 — 2026-10-21
+
+- Implement the 2026-10-20 review: shared intake/configuration, separate
+  observation expiry and effective refresh, explicit last-fresh/first-stale
+  dates, versioned replay records, envelope contract diagnostics, coherent
+  registry preflight, exported projection context, and digest-aware summaries.
+- Deliberate minor-version change: `days_until_stale` counts through the first
+  stale day. `days_until_last_fresh_day` preserves the earlier arithmetic;
+  the evaluator still uses strict `age > window` staleness.
+- Preserve `canonical_assessment/1.0`, envelope shape and enum member names.
+  Capture producing version at evaluation; strict export rejects incomplete
+  old results. No result archive is silently upgraded to replay.
+- Synchronize metadata at 0.5.0, retaining the verified archived 0.4.1 DOI
+  pending Daniel's reserve-first step. Synchronize recipes, formalism, claim
+  boundaries, derived caption numbers, standalone/agent guidance and family
+  orientation. See `docs/releases/v0.5.0.md` for dispositions and evidence.
+
+### Earlier unreleased verification
+
 ### 2026-08-01 (verification window)
 
 - **The format gate regression is closed and now bound.** Two figure modules

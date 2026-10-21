@@ -56,7 +56,7 @@ def horizon_rows() -> tuple:
 def horizon_omissions() -> tuple:
     """The declarations the horizon leaves out, each with its reason.
 
-    Not all of them are dated: an undated declaration is one of the three
+    Not all of them are dated: an undated declaration is one of the
     omitted classes, so calling this set "dated" would misdescribe it.
     """
 
@@ -82,11 +82,11 @@ def refresh_queue_svg() -> str:
     longest = max((row.days_until_stale for row in rows), default=1) or 1
     body = [
         f'<rect width="100%" height="100%" fill="{PAPER}"/>',
-        headline(64, 58, "Which declaration goes stale first"),
+        headline(64, 58, "Observation expiry: first stale day"),
         text(
             64,
             88,
-            "One bar per dated label refresh_horizon keeps, in its own ascending nearest-to-stale order.",
+            "Inventory of dated occurrences; applicability and shadowing require the effective refresh queue.",
             size=17,
             fill=MUTED,
         ),
@@ -102,7 +102,7 @@ def refresh_queue_svg() -> str:
         text(
             64,
             152,
-            "Bar length is days until the freshness boundary, not the importance of the evidence or the",
+            "Bar length counts through the first stale day, not the importance of the evidence or the",
             size=17,
             fill=MUTED,
         ),

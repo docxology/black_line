@@ -10,7 +10,7 @@ cannot do is stated in [`STANDALONE.md`](STANDALONE.md).
 ## Validation contract
 
 Run from this project root with `uv`. Every tool named here is declared in
-`pyproject.toml` under the `dev` extra and pinned in `uv.lock`, so the contract
+`pyproject.toml` under the `dev` dependency group and pinned in `uv.lock`, so the contract
 runs from this repository's own declarations rather than from an ambient PATH:
 
 ```bash

@@ -2,11 +2,13 @@
 
 ## How to cite
 
-Cite this work via its minted DOI or repository:
+Cite the released software 0.5.0 via its repository/tag until Daniel reserves
+and publishes its version DOI. The last verified archived edition is 0.4.1;
+the citation below intentionally names that older edition, not this release:
 
 > Friedman, D. A. (2026). *Black Line: Strong Work in Public* (version
-> 0.4.0) [Software and manuscript]. Zenodo.
-> <https://doi.org/10.5281/zenodo.21754236>
+> 0.4.1) [Software and manuscript]. Zenodo.
+> <https://doi.org/10.5281/zenodo.22833503>
 
 BibTeX:
 
@@ -14,20 +16,24 @@ BibTeX:
 @software{friedman_black_line_2026,
   author  = {Friedman, Daniel Ari},
   title   = {Black Line: Strong Work in Public},
-  version = {0.4.0},
+  version = {0.4.1},
   year    = {2026},
-  doi     = {10.5281/zenodo.21754236}
+  doi     = {10.5281/zenodo.22833503}
 }
 ```
 
 `CITATION.cff` carries the same metadata in machine-readable form, and
-`.zenodo.json` carries the deposit metadata. All three are generated from
-`docs/manuscript/config.yaml`; `tests/test_publication_metadata.py` fails if they
-disagree.
+`.zenodo.json` carries the deposit metadata. Version declarations are synchronized
+with `docs/manuscript/config.yaml` and the package; metadata tests fail on drift.
+The last verified DOI is retained only as a historical reference and
+`isNewVersionOf` relation. Current-edition identifiers and `publication.doi`
+omit it, so the 0.5.0 cover and machine-readable citation cannot assign the
+earlier edition's DOI to this release. Reserve-first publication is pending.
 
 ## Persistent Identifiers and Verification
 
-This repository carries an asserted, verified Zenodo DOI (`10.5281/zenodo.21754236`).
+This repository retains its last verified Zenodo DOI (`10.5281/zenodo.22833503`),
+confirmed from the public Zenodo record on 2026-10-21 as edition 0.4.1.
 `tests/test_publication_metadata.py` refuses any unverified DOI-shaped string in
 the citation metadata unless that exact DOI is listed as verified inside the test
 itself. A placeholder DOI that renders like a real one is worse than no DOI: it
@@ -47,7 +53,9 @@ survives copy-and-paste into someone else's bibliography and points nowhere.
 
 ## The other works
 
-This work is one of six. They reference each other by name, repository URL, and
+This work belongs to the current ten-work family listed in README. The table
+below retains the earlier six-work citation links, not a complete current roster.
+They reference each other by name, repository URL, and
 verified DOI. No work imports another, and the shared report-envelope schema
 string is aligned by published convention rather than by dependency.
 

@@ -31,6 +31,10 @@ SIBLINGS = ("red_line", "golden_line", "white_line", "line_set", "witness_regist
 #: the metadata surfaces fails test_no_unverified_doi_appears_in_metadata.
 #: copy-and-paste into a bibliography and points nowhere.
 VERIFIED_DOIS: tuple[str, ...] = (
+    "10.5281/zenodo.22833503",
+    "10.5281/zenodo.22833506",
+    "10.5281/zenodo.22833507",
+    "10.5281/zenodo.22833511",
     "10.5281/zenodo.21754236",
     "10.5281/zenodo.21754238",
     "10.5281/zenodo.21754240",

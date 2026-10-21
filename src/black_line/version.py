@@ -5,4 +5,4 @@ The package version tracks the code surface; the registry digest (see
 pin both when citing an assessment.
 """
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"

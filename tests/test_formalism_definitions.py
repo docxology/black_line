@@ -158,14 +158,15 @@ def test_work_attempt_matches_the_definition() -> None:
 
 
 def test_assessment_record_matches_the_definition() -> None:
-    """A is the five-field record and each finding is the declared triple."""
-
     assert [field.name for field in fields(BlackAssessment)] == [
         "status",
         "findings",
         "intake_notes",
         "evaluated_as_of",
         "registry_digest",
+        "evaluator_version",
+        "evidence_declared",
+        "intake_codes",
     ]
     assert [field.name for field in fields(PracticeFinding)] == [
         "practice_id",

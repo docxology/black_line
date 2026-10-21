@@ -6,7 +6,7 @@ this checkout.
 
 The package has no runtime dependencies beyond the Python standard library. Its
 declared development tools — `pytest`, `pytest-cov`, and `ruff` — are in the
-`dev` extra of `pyproject.toml` and pinned in `uv.lock`, so the contract below
+`dev` dependency group of `pyproject.toml` and pinned in `uv.lock`, so the contract below
 runs from this repository's declarations rather than from whatever happens to be
 on the ambient PATH.
 
@@ -62,18 +62,18 @@ TEMPLATE_ROOT=${TEMPLATE_ROOT:-$HOME/src/template}
 git clone https://github.com/docxology/template.git "${TEMPLATE_ROOT}"   # once
 
 # Make this repository visible to the engine under a qualified project name.
-# A direct child of projects/ with src/ and tests/ is discovered by its bare
-# directory name, so the qualified name here is simply `black_line`.
-ln -sfn "${BLACK_LINE_ROOT}" "${TEMPLATE_ROOT}/projects/black_line"
+# The current engine requires an external project to use a lifecycle leaf.
+mkdir -p "${TEMPLATE_ROOT}/projects/working"
+ln -sfn "${BLACK_LINE_ROOT}" "${TEMPLATE_ROOT}/projects/working/black_line"
 
 cd "${TEMPLATE_ROOT}"
-uv run python scripts/pipeline/stage_03_render.py --project black_line
-uv run python scripts/pipeline/stage_04_validate.py --project black_line
+uv run python scripts/pipeline/stage_03_render.py --project working/black_line
+uv run python scripts/pipeline/stage_04_validate.py --project working/black_line
 ```
 
-If instead you link this repository through the engine's private-projects root,
-the qualified name becomes the path under `projects/` that the link produced
-(for example `working/black_line`); pass that name to the same commands.
+The qualified name is the path under `projects/` that the leaf link produced.
+Use a real engine Git checkout/worktree: current provenance validation needs
+its indexed stage files, which an archive export alone does not provide.
 
 Inspect the generated PDF and web pages as well as their machine-readable
 reports. Generated files are outputs of the source-to-artifact chain; fix the

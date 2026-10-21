@@ -16,18 +16,21 @@ permission for anything.
 from __future__ import annotations
 
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
-from datetime import date
+from dataclasses import dataclass, field, replace
+from datetime import date, timedelta
 
-from .evaluator import evaluate_work
+from .evaluator import evaluate_work, evaluate_with_surfaces
+from .intake import clean_labels, dated_intake, resolve_max_age, resolve_review_date
 from .model import (
     AssessmentStatus,
     BlackAssessment,
     BlackPractice,
+    EvidenceSurfaces,
     PracticeStatus,
     WorkAttempt,
 )
 from .registry import BLACK_PRACTICES
+from .serialization import registry_digest
 
 #: Assessment statuses ordered from least to most complete declaration
 #: coverage. ``OUTSIDE_SCOPE`` is deliberately absent: it is a statement about
@@ -140,7 +143,7 @@ class AssessmentSummary:
     including zero counts, so batch reports are shaped identically regardless
     of the batch. ``open_finding_kind_counts`` counts non-``ALIGNED``
     practice findings by craft family (``PracticeKind`` value; ``"UNKNOWN"``
-    when a finding's practice id is not in the supplied registry), exposing
+    when its method digest is unresolved or its id is absent), exposing
     where declaration gaps concentrate. Counts summarize declaration
     coverage; they are not a quality ranking of the assessed work.
     """
@@ -148,51 +151,60 @@ class AssessmentSummary:
     total: int
     status_counts: tuple[tuple[str, int], ...]
     open_finding_kind_counts: tuple[tuple[str, int], ...]
+    registry_partitions: tuple[RegistrySummary, ...] = ()
+
+
+@dataclass(frozen=True)
+class RegistrySummary:
+    registry_digest: str
+    total: int
+    open_finding_kind_counts: tuple[tuple[str, int], ...]
+    attribution_available: bool
 
 
 @dataclass(frozen=True)
 class RefreshHorizonItem:
-    """One dated evidence label and its remaining days before staleness.
-
-    ``practice_ids`` names, in registry declaration order, the practices whose
-    required evidence includes this label — the reason refreshing it can move a
-    status at all.
-    """
-
     label: str
     noted_on: str
     days_until_stale: int
     practice_ids: tuple[str, ...] = ()
+    last_fresh_on: str = ""
+    stale_on: str = ""
+    occurrence_index: int = field(default=-1, compare=False)
+    raw_label: object = field(default=None, compare=False)
+    transitions: tuple[tuple[EvidenceSurfaces, EvidenceSurfaces], ...] = ()
+
+    @property
+    def days_until_last_fresh_day(self) -> int:
+        return self.days_until_stale - 1
 
 
-#: Why a dated declaration is absent from a refresh horizon. Each reason is a
-#: statement about the declaration, never about the underlying observation.
 OMISSION_UNDATED = "undated: treated as current, so it has no boundary to reach"
 OMISSION_STALE = "already stale: past the window, so it is a refresh request now"
-OMISSION_UNREQUIRED = "not required by this registry: refreshing it moves no status"
-OMISSION_FUTURE = (
-    "dated in the future: the evaluator never counts it, so there is no "
-    "boundary to reach until its date is corrected"
-)
-OMISSION_UNREADABLE = (
-    "unreadable date: not an ISO date the evaluator can count, so it has no "
-    "position on the schedule until its date is corrected"
-)
+OMISSION_UNREQUIRED = "not required by this registry: no required-label expiry"
+OMISSION_FUTURE = "dated in the future: not counted at this review date"
+OMISSION_UNREADABLE = "unreadable date: not an ISO date the evaluator can count"
+OMISSION_MALFORMED = "malformed declaration: no usable dated label"
+OMISSION_DISABLED = "expiry disabled: max_evidence_age_days is None"
 
 
 @dataclass(frozen=True)
 class OmittedEvidence:
-    """One dated declaration the refresh horizon leaves out, and why."""
-
     label: str
     reason: str
+    occurrence_index: int = field(default=-1, compare=False)
+    raw_label: object = field(default=None, compare=False)
+
+
+@dataclass(frozen=True)
+class RefreshQueue:
+    items: tuple[RefreshHorizonItem, ...]
+    omissions: tuple[OmittedEvidence, ...]
 
 
 def _required_label_practices(
     practices: Iterable[BlackPractice],
 ) -> dict[str, tuple[str, ...]]:
-    """Map each required evidence label to the practices that require it."""
-
     index: dict[str, list[str]] = {}
     for practice in practices:
         for label in practice.required_evidence:
@@ -200,55 +212,72 @@ def _required_label_practices(
     return {label: tuple(ids) for label, ids in index.items()}
 
 
+def _refresh_inventory(
+    attempt, practices, as_of, max_evidence_age_days
+) -> RefreshQueue:
+    review = resolve_review_date(as_of)
+    window = resolve_max_age(max_evidence_age_days)
+    required = _required_label_practices(practices)
+    items = []
+    omissions = []
+    reasons = {
+        "undated": OMISSION_UNDATED,
+        "stale": OMISSION_STALE,
+        "future": OMISSION_FUTURE,
+        "unreadable": OMISSION_UNREADABLE,
+        "malformed_label": OMISSION_MALFORMED,
+        "malformed_collection": OMISSION_MALFORMED,
+    }
+    for row in dated_intake(getattr(attempt, "dated_evidence", ()), review, window):
+        reason = reasons.get(row.category)
+        if reason is None and row.label not in required:
+            reason = OMISSION_UNREQUIRED
+        if reason is None and window is None:
+            reason = OMISSION_DISABLED
+        if reason is not None:
+            omissions.append(
+                OmittedEvidence(row.label, reason, row.occurrence_index, row.raw_label)
+            )
+            continue
+        assert row.noted is not None and window is not None
+        if window >= (date.max - row.noted).days:
+            omissions.append(
+                OmittedEvidence(
+                    row.label,
+                    "expiry_out_of_calendar_range",
+                    row.occurrence_index,
+                    row.raw_label,
+                )
+            )
+            continue
+        last_fresh = row.noted + timedelta(days=window)
+        first_stale = last_fresh + timedelta(days=1)
+        items.append(
+            RefreshHorizonItem(
+                row.label,
+                row.noted.isoformat(),
+                (first_stale - review).days,
+                required[row.label],
+                last_fresh.isoformat(),
+                first_stale.isoformat(),
+                row.occurrence_index,
+                row.raw_label,
+            )
+        )
+    return RefreshQueue(
+        tuple(sorted(items, key=lambda row: (row.days_until_stale, row.label))),
+        tuple(sorted(omissions, key=lambda row: (row.label, row.reason))),
+    )
+
+
 def refresh_horizon(
     attempt: WorkAttempt,
     *,
     practices: Iterable[BlackPractice] = BLACK_PRACTICES,
     as_of: str | date,
-    max_evidence_age_days: int,
+    max_evidence_age_days: int | None,
 ) -> tuple[RefreshHorizonItem, ...]:
-    """List dated evidence labels nearest to the freshness window.
-
-    Each item is derived from the attempt's dated evidence, the review date,
-    and the supplied registry. Three classes of declaration are omitted, and
-    :func:`refresh_horizon_omissions` names each one: undated items (which are
-    treated as current and so have no boundary), already-stale items (which are
-    a refresh request rather than a schedule), and labels no practice in
-    ``practices`` requires (refreshing them cannot move any status), and
-    declarations the evaluator itself never counts — future-dated or
-    unreadable dates. The result is sorted by ascending ``days_until_stale``,
-    then by label. This is a
-    read-only scheduling view — it does not verify that the underlying
-    observation exists or remains adequate.
-    """
-
-    review = as_of if isinstance(as_of, date) else date.fromisoformat(str(as_of))
-    required = _required_label_practices(practices)
-    items: list[RefreshHorizonItem] = []
-    for item in attempt.dated_evidence:
-        if item.noted_on is None:
-            continue
-        practice_ids = required.get(item.label)
-        if not practice_ids:
-            continue
-        try:
-            noted = date.fromisoformat(item.noted_on)
-        except (TypeError, ValueError):
-            continue
-        if noted > review:
-            continue
-        remaining = max_evidence_age_days - (review - noted).days
-        if remaining < 0:
-            continue
-        items.append(
-            RefreshHorizonItem(
-                label=item.label,
-                noted_on=item.noted_on,
-                days_until_stale=remaining,
-                practice_ids=practice_ids,
-            )
-        )
-    return tuple(sorted(items, key=lambda row: (row.days_until_stale, row.label)))
+    return _refresh_inventory(attempt, practices, as_of, max_evidence_age_days).items
 
 
 def refresh_horizon_omissions(
@@ -256,38 +285,86 @@ def refresh_horizon_omissions(
     *,
     practices: Iterable[BlackPractice] = BLACK_PRACTICES,
     as_of: str | date,
-    max_evidence_age_days: int,
+    max_evidence_age_days: int | None,
 ) -> tuple[OmittedEvidence, ...]:
-    """Name every dated declaration :func:`refresh_horizon` leaves out.
+    return _refresh_inventory(
+        attempt, practices, as_of, max_evidence_age_days
+    ).omissions
 
-    The omission rules live once, here and in :func:`refresh_horizon`, so a
-    reader or a figure can show what the schedule does not cover instead of
-    inferring it. Rows are sorted by label; the first applicable reason wins.
-    Like the evaluator, the omissions never comment on whether the underlying
-    observation exists — only on the shape and reachability of the declaration.
-    """
 
-    review = as_of if isinstance(as_of, date) else date.fromisoformat(str(as_of))
-    required = _required_label_practices(practices)
-    omitted: list[OmittedEvidence] = []
-    for item in attempt.dated_evidence:
-        if item.noted_on is None:
-            omitted.append(OmittedEvidence(item.label, OMISSION_UNDATED))
+def effective_refresh_queue(
+    attempt: WorkAttempt,
+    *,
+    practices: Iterable[BlackPractice] = BLACK_PRACTICES,
+    as_of: str | date,
+    max_evidence_age_days: int | None,
+) -> RefreshQueue:
+    practice_set = tuple(practices)
+    inventory = _refresh_inventory(attempt, practice_set, as_of, max_evidence_age_days)
+    tags, _ = clean_labels(getattr(attempt, "tags", None), "tag")
+    applicable = _required_label_practices(p for p in practice_set if p.tags & tags)
+    declared, _ = clean_labels(getattr(attempt, "evidence", None), "evidence")
+    occurrences = dated_intake(
+        getattr(attempt, "dated_evidence", ()),
+        resolve_review_date(as_of),
+        resolve_max_age(max_evidence_age_days),
+    )
+    undated = declared | frozenset(
+        row.label for row in occurrences if row.category == "undated"
+    )
+    kept = []
+    omitted = list(inventory.omissions)
+    for row in inventory.items:
+        reason = None
+        if row.label not in applicable:
+            reason = "non_applicable"
+        elif row.label in undated:
+            reason = "shadowed_by_undated"
+        elif any(
+            other.label == row.label and other.noted_on > row.noted_on
+            for other in inventory.items
+        ):
+            reason = "superseded_by_newer_declaration"
+        if reason is not None:
+            omitted.append(
+                OmittedEvidence(row.label, reason, row.occurrence_index, row.raw_label)
+            )
             continue
-        if item.label not in required:
-            omitted.append(OmittedEvidence(item.label, OMISSION_UNREQUIRED))
+        before = evaluate_with_surfaces(
+            attempt,
+            practice_set,
+            as_of=row.last_fresh_on,
+            max_evidence_age_days=max_evidence_age_days,
+        )[1]
+        after = evaluate_with_surfaces(
+            attempt,
+            practice_set,
+            as_of=row.stale_on,
+            max_evidence_age_days=max_evidence_age_days,
+        )[1]
+        transitions = tuple(
+            (a, b)
+            for a, b in zip(before, after)
+            if row.label in a.present and row.label in b.missing
+        )
+        if not transitions:
+            omitted.append(
+                OmittedEvidence(
+                    row.label,
+                    "no_predicted_surface_change",
+                    row.occurrence_index,
+                    row.raw_label,
+                )
+            )
             continue
-        try:
-            noted = date.fromisoformat(item.noted_on)
-        except (TypeError, ValueError):
-            omitted.append(OmittedEvidence(item.label, OMISSION_UNREADABLE))
-            continue
-        if noted > review:
-            omitted.append(OmittedEvidence(item.label, OMISSION_FUTURE))
-            continue
-        if max_evidence_age_days - (review - noted).days < 0:
-            omitted.append(OmittedEvidence(item.label, OMISSION_STALE))
-    return tuple(sorted(omitted, key=lambda row: (row.label, row.reason)))
+        kept.append(
+            replace(
+                row,
+                practice_ids=tuple(a.practice_id for a, _ in transitions),
+                transitions=transitions,
+            )
+        )
+    return RefreshQueue(tuple(kept), tuple(omitted))
 
 
 def summarize_assessments(
@@ -298,28 +375,49 @@ def summarize_assessments(
 
     Pure aggregation over already-computed assessments: statuses are counted
     per :class:`AssessmentStatus`, and every finding whose status is not
-    ``ALIGNED`` is attributed to its practice's craft family via the supplied
-    registry. The summary is a reviewer's map of open declaration gaps — it
+    ``ALIGNED`` is attributed via a matching registry digest, otherwise UNKNOWN.
+    Digest partitions preserve unresolved method provenance. The summary is a reviewer's map of open declaration gaps — it
     does not certify any work and grants nothing.
     """
 
     batch = tuple(assessments)
-    kind_by_id = {practice.id: practice.kind.value for practice in practices}
+    practice_set = tuple(practices)
+    method_digest = registry_digest(practice_set)
+    kind_by_id = {practice.id: practice.kind.value for practice in practice_set}
     status_totals = {status: 0 for status in AssessmentStatus}
     kind_totals: dict[str, int] = {}
+    partitions: dict[str, dict[str, int]] = {}
+    partition_totals: dict[str, int] = {}
     for assessment in batch:
         status_totals[assessment.status] += 1
+        digest = assessment.registry_digest
+        counts = partitions.setdefault(digest, {})
+        partition_totals[digest] = partition_totals.get(digest, 0) + 1
         for finding in assessment.findings:
             if finding.status is PracticeStatus.ALIGNED:
                 continue
-            kind = kind_by_id.get(finding.practice_id, "UNKNOWN")
+            kind = (
+                kind_by_id.get(finding.practice_id, "UNKNOWN")
+                if digest == method_digest
+                else "UNKNOWN"
+            )
             kind_totals[kind] = kind_totals.get(kind, 0) + 1
+            counts[kind] = counts.get(kind, 0) + 1
     return AssessmentSummary(
         total=len(batch),
         status_counts=tuple(
             (status.value, status_totals[status]) for status in AssessmentStatus
         ),
         open_finding_kind_counts=tuple(sorted(kind_totals.items())),
+        registry_partitions=tuple(
+            RegistrySummary(
+                digest,
+                partition_totals[digest],
+                tuple(sorted(counts.items())),
+                digest == method_digest and "UNKNOWN" not in counts,
+            )
+            for digest, counts in sorted(partitions.items())
+        ),
     )
 
 

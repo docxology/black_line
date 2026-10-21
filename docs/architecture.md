@@ -3,6 +3,14 @@
 Black Line is a modular package. Each module answers one question and the
 public API in `__init__.py` re-exports every stable surface.
 
+`intake.py` shares label/date normalization and review configuration.
+`registry_validation.py` supplies shape defects and stable codes to evaluation
+and invariants, separately from shipped-family/vocabulary policy. `replay.py`
+retains supported original declarations, normalized intake, pinned configuration,
+registry snapshots, result/surfaces and evaluation context in a separate schema.
+Envelope contract, report correspondence, and replay context correspondence
+are separate predicates.
+
 ```text
 src/black_line/
 ├── __init__.py        public API

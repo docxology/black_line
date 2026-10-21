@@ -85,7 +85,9 @@ fresh, `age > window` is stale (strict inequality — age 51 flips only under a
 window of 50 or less). A stale label is a refresh request (`NEEDS_EVIDENCE`),
 not missing work (`NEEDS_REWORK`). `assessment.registry_digest` pins the
 registry content; `canonical_assessment(assessment)` gives byte-stable JSON
-for archiving. Statuses: `ALIGNED` (all required labels fresh),
+for result archiving. Retain `evaluation_record` for original declarations,
+configuration, registry snapshot and producing version; see `docs/usage.md`
+for serialization, loading and exact replay. Statuses: `ALIGNED` (all required labels fresh),
 `NEEDS_EVIDENCE` (no usable declaration, or only stale gaps), `NEEDS_REWORK`
 (some required labels missing; also blocking intake defects — fail-closed),
 `OUTSIDE_SCOPE` (no practice's tags intersect; overall status only).
@@ -110,12 +112,16 @@ or permission.
   `prop:fresh-monotonicity`), so `no_status_regression(path)` is `False` for the full path and
   `True` from the first non-empty declaration onward.
 - `summarize_assessments(batch)` → `AssessmentSummary` with status counts and
-  open-finding craft-family counts.
+  open-finding craft-family counts only for matching registry digests; unresolved
+  attribution is UNKNOWN and `registry_partitions` preserves mixed methods.
 - `refresh_horizon(attempt, practices=..., as_of=..., max_evidence_age_days=...)`
-  → dated evidence labels still fresh, sorted by ascending days until stale,
-  each naming the practices requiring it. Three classes are omitted and named
-  by `refresh_horizon_omissions`: undated, already stale, and not required by
-  the supplied registry.
+  → observation-expiry inventory, including shadowed/non-applicable occurrences,
+  sorted by days through the first stale day. `last_fresh_on` and `stale_on`
+  expose the strict boundary; `days_until_last_fresh_day` retains old arithmetic.
+  `refresh_horizon_omissions` explains undated, stale, unrequired, future,
+  unreadable, malformed, expiry-disabled and out-of-calendar-range occurrences.
+- `effective_refresh_queue` → applicable, unshadowed expiry predictions with
+  exact evaluator-derived surface transitions and structured exclusions.
 - `status_rank`: `NEEDS_REWORK` 0 < `NEEDS_EVIDENCE` 1 < `ALIGNED` 2.
   `OUTSIDE_SCOPE` deliberately raises `ValueError` — coverage statements are
   not rungs on the declaration ladder.
@@ -136,10 +142,16 @@ envelope = assessment_envelope(assessment, subject_id="your reference for the at
 
 `evaluate_with_surfaces` returns typed `EvidenceSurfaces` (present / missing /
 stale, in declared evidence order) beside a byte-identical assessment — the
-status is a projection of the surfaces, and the surfaces keep what it
+status projects surfaces plus attempt-wide evidence context
+(`assessment.evidence_declared`), and the surfaces keep what it
 compresses. `assessment_envelope` exports the `line.report-envelope/1.0`
 record pointing at `canonical_assessment` by SHA-256; `native_status` is one
 status word, never cross-line comparable.
+
+`envelope_matches_assessment` is report correspondence only;
+`validate_envelope_contract` checks structure and required non-claims.
+Subject/source/version correspondence requires `envelope_matches_record`.
+All checks establish structural consistency, never authenticity or authority.
 
 ## Gates
 

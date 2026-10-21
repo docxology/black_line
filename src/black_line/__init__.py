@@ -16,6 +16,8 @@ from .analytics import (
     declaration_status_path,
     no_status_regression,
     refresh_horizon,
+    effective_refresh_queue,
+    RefreshQueue,
     refresh_horizon_omissions,
     staleness_profile,
     status_rank,
@@ -29,8 +31,21 @@ from .envelope import (
     assessment_envelope,
     canonical_envelope,
     envelope_matches_assessment,
+    validate_envelope_contract,
+    EnvelopeDiagnostic,
+    EnvelopeValidation,
 )
-from .evaluator import evaluate_with_surfaces, evaluate_work
+from .evaluator import evaluate_with_surfaces, evaluate_work, project_finding
+from .replay import (
+    EvaluationRecord,
+    REPLAY_SCHEMA,
+    evaluation_record,
+    canonical_evaluation_record,
+    evaluation_record_digest,
+    load_evaluation_record,
+    replay_evaluation_record,
+    envelope_matches_record,
+)
 from .invariants import (
     RegistryCheck,
     all_invariants,
@@ -64,6 +79,18 @@ from .serialization import (
 from .version import __version__
 
 __all__ = [
+    "EvaluationRecord",
+    "REPLAY_SCHEMA",
+    "evaluation_record",
+    "canonical_evaluation_record",
+    "evaluation_record_digest",
+    "load_evaluation_record",
+    "replay_evaluation_record",
+    "envelope_matches_record",
+    "validate_envelope_contract",
+    "EnvelopeDiagnostic",
+    "EnvelopeValidation",
+    "project_finding",
     "AssessmentEnvelope",
     "AssessmentStatus",
     "AssessmentSummary",
@@ -113,6 +140,8 @@ __all__ = [
     "invariants_hold",
     "no_status_regression",
     "refresh_horizon",
+    "effective_refresh_queue",
+    "RefreshQueue",
     "refresh_horizon_omissions",
     "registry_digest",
     "registry_ids",

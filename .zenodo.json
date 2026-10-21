@@ -12,7 +12,7 @@
   ],
   "license": "cc-by-4.0",
   "access_right": "open",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "keywords": [
     "research practice",
     "declaration coverage",
@@ -23,6 +23,11 @@
     "engineering practice"
   ],
   "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.22833503",
+      "relation": "isNewVersionOf",
+      "scheme": "doi"
+    },
     {
       "identifier": "https://github.com/docxology/black_line",
       "relation": "isSupplementTo",
@@ -54,7 +59,7 @@
       "scheme": "url"
     },
     {
-      "identifier": "10.5281/zenodo.21754238",
+      "identifier": "10.5281/zenodo.22833506",
       "relation": "cites",
       "scheme": "doi"
     },
@@ -69,15 +74,15 @@
       "scheme": "doi"
     },
     {
-      "identifier": "10.5281/zenodo.21754244",
+      "identifier": "10.5281/zenodo.22833507",
       "relation": "cites",
       "scheme": "doi"
     },
     {
-      "identifier": "10.5281/zenodo.21754246",
+      "identifier": "10.5281/zenodo.22833511",
       "relation": "cites",
       "scheme": "doi"
     }
   ],
-  "notes": "One of six related works (the line set and its witness register). The five sibling DOIs are listed in related_identifiers with relation 'cites'; this work's own DOI is recorded in CITATION.cff identifiers and the record link."
+  "notes": "The current Line Set family is listed in README. Five earlier companion citation links are retained here. This software is 0.5.0 and has no assigned version DOI; the historical isNewVersionOf DOI identifies archived 0.4.1. Daniel's reserve-first publication remains pending."
 }

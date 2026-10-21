@@ -15,7 +15,7 @@ Black Line is standalone, and this repository is the whole instrument — see
 line set is stated in
 [`docs/manuscript/01b_line_set_relationship.md`](docs/manuscript/01b_line_set_relationship.md)
 and documented once for the whole set in the companion `line_set` work,
-<https://github.com/docxology/line_set>. The other three are
+<https://github.com/docxology/line_set>. The historical four-line core includes
 <https://github.com/docxology/red_line>,
 <https://github.com/docxology/golden_line>, and
 <https://github.com/docxology/white_line>. Those are orientation links: no
@@ -33,7 +33,7 @@ uv run ruff check src tests scripts
 uv run ruff format --check src tests scripts
 ```
 
-Every tool named there is declared in the `dev` extra of `pyproject.toml` and
+Every tool named there is declared in the `dev` dependency group of `pyproject.toml` and
 pinned in `uv.lock`; the figure build additionally needs `rsvg-convert` from
 librsvg, which is a system package rather than a Python one.
 
@@ -66,15 +66,17 @@ print(assessment.status, assessment.registry_digest)
 
 The status is a declaration-coverage prompt, not a truth, safety, or permission
 claim. The assessment digest pins the practice registry used for the decision;
-serialize the full record with `canonical_assessment(assessment)` when archiving
-a review.
+serialize the result with `canonical_assessment(assessment)`. For replay, retain
+an `evaluation_record` with its original declaration, pinned configuration,
+registry snapshot, typed surfaces and version; a result alone omits those inputs.
 
 ## Witness surfaces and the report envelope
 
 `evaluate_with_surfaces` returns the identical assessment plus one typed
 `EvidenceSurfaces` per finding — the practice's present, missing, and stale
 required labels as co-present data. The status word is a projection of those
-surfaces; the surfaces keep what it compresses, so a fully covered practice, a
+surfaces plus attempt-wide evidence context (`assessment.evidence_declared`);
+the surfaces keep what it compresses, so a fully covered practice, a
 half-covered one, and an untouched one stay distinguishable under the same
 overall status. `assessment_envelope` wraps an assessment in the
 cross-instrument report envelope (`line.report-envelope/1.0`): a digest
@@ -82,6 +84,12 @@ pointer to the complete canonical assessment plus the instrument's stated
 non-claims, for archiving one line's complete report beside reports from the
 sibling instruments without ranking, merging, or reinterpreting any of them.
 Worked recipes for both live in `docs/usage.md`.
+
+`envelope_matches_assessment` checks report correspondence only.
+`validate_envelope_contract` separately checks structural identity and required
+non-claims. Subject/source/version correspondence needs `envelope_matches_record`;
+neither check establishes authenticity. The envelope schema and exported enum
+member names are unchanged in 0.5.0.
 
 ## Analytics
 
@@ -91,8 +99,9 @@ the live registry `research` reaches 8 practices / 16 required labels while
 `data` reaches 1 / 2, across 27 applicable tag-practice cells of 55),
 `staleness_profile` (freshness-window sweeps through the real evaluator),
 `summarize_assessments` (batch status and open-finding family counts),
-`refresh_horizon` (dated evidence labels nearest to going stale under a pinned
-review date), and `declaration_status_path` / `no_status_regression` /
+`refresh_horizon` (observation-expiry inventory, including non-applicable and
+shadowed observations), `effective_refresh_queue` (applicable, unshadowed expiry
+with exact predicted surface transitions), and `declaration_status_path` / `no_status_regression` /
 `status_rank` for status-transition sweeps. Every sweep calls the real
 `evaluate_work`, never a reimplementation, and all views describe declaration
 coverage — never quality, safety, or permission. Worked recipes live in

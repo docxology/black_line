@@ -25,6 +25,14 @@ run rather than leaving it as prose.
 
 ## What it can do alone
 
+It can archive and replay supported declarations through the separate versioned
+`EvaluationRecord` schema, including the full registry snapshot and pinned
+configuration. Exact replay requires the producing package version. A digest
+alone cannot recover input data, and `canonical_assessment/1.0` remains a
+result-only format. Envelope contract and report/context correspondence checks
+establish structural consistency; none authenticate observations or grant
+authority. See the executable recipes in `docs/usage.md`.
+
 The whole local verification loop in
 [`docs/development.md`](docs/development.md) runs from the copy alone, offline:
 

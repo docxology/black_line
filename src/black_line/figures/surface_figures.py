@@ -299,7 +299,7 @@ def surfaces_panel_svg(attempt: WorkAttempt | None = None) -> str:
         text(
             left_x + 136,
             boundary_y + 24,
-            "A present label is a declaration, never verified evidence, and no surface shape grants permission.",
+            "Projection also uses attempt-wide evidence context. No surface shape grants permission or verifies evidence.",
             size=17,
             fill=MUTED,
         )

@@ -256,8 +256,8 @@ def test_refresh_queue_omission_wording_matches_the_executed_omissions() -> None
     }
     for name, surface in surfaces.items():
         assert f"{len(omitted)} dated declarations" not in surface, name
-    assert f"{len(omitted)} declarations the queue omits" in surfaces["caption"]
-    assert f"{len(omitted)} declarations the queue omits" in surfaces["manuscript"]
+    assert f"{len(omitted)} declarations the inventory omits" in surfaces["caption"]
+    assert f"{len(omitted)} declarations the inventory omits" in surfaces["manuscript"]
     assert f"Omitted from the queue ({len(omitted)} declarations)" in surfaces["svg"]
     # The kept rows really are all dated, so that half of the wording stands.
     from black_line.figures.horizon_figures import horizon_rows

@@ -1,6 +1,9 @@
 # Relationship to the line set
 
-Black Line is the positive-method work in the four-line set. Each of the four is
+Black Line is the positive-method work in the historical four-line core.
+The current family includes eight instruments, their reader and witness register;
+this section orients the historical core without importing sibling semantics.
+Each of the four is
 its own repository:
 [red_line](https://github.com/docxology/red_line) is the personal security
 boundary and explicit No document;

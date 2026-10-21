@@ -15,12 +15,12 @@ limits. The project is intentionally separate from Red Line's refusal evaluator.
   the adopted/deferred/declined decision record
 - [Development](development.md)
 - [Standalone guide](../STANDALONE.md) — what a separated copy is, can, and cannot do
-- [Method](../manuscript/02_method.md)
-- [Practice registry](../manuscript/03_practices.md)
-- [Limits](../manuscript/05_limits.md)
-- [Relationship to the line set](../manuscript/01b_line_set_relationship.md), and
+- [Method](manuscript/02_method.md)
+- [Practice registry](manuscript/03_practices.md)
+- [Limits](manuscript/05_limits.md)
+- [Relationship to the line set](manuscript/01b_line_set_relationship.md), and
   the companion `line_set` work at <https://github.com/docxology/line_set> that
-  documents the set once for all five works
+  documents the current family; the historical core is an orientation within it
 
 The figure builder writes deterministic SVG and PNG outputs under
 `../output/figures/` and records the figure contract, package version, and

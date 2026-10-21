@@ -294,7 +294,7 @@
   {
    "claim_id": "formal_refresh_queue_max_days",
    "kind": "number",
-   "value": 113,
+   "value": 114,
    "source": "black_line.figures.horizon_figures.horizon_rows(): days_until_stale of the last scheduled item ('scope')",
    "source_path": "src/black_line/figures/horizon_figures.py",
    "source_tier": "package_constant",

@@ -71,7 +71,7 @@ Inside the scoring stage, the status word is the last step, not the whole
 state. Each selected practice is first split into typed *evidence surfaces* —
 its present, missing, and merely-stale required labels, co-present in declared
 order — and the finding's status and reasons trail are projected from those
-surfaces ([@def:evidence-surfaces] and [@prop:surfaces-projection]). The
+surfaces plus attempt-wide evidence context ([@def:evidence-surfaces] and [@prop:surfaces-projection]). The
 projection selects the most demanding reading for action; the surfaces
 preserve what it compresses, so strong support and strong resistance on one
 practice stay readable together instead of collapsing into the projected word.

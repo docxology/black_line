@@ -11,7 +11,14 @@ never turns labels into truth, safety, or permission for anything.
 from __future__ import annotations
 
 from collections.abc import Iterable
-from datetime import date, datetime
+from datetime import date
+
+from .intake import (
+    resolve_review_date as _resolve_review_date,
+    resolve_max_age as _resolve_max_age,
+    clean_labels as _clean_labels,
+    dated_labels as _dated_labels,
+)
 
 from .model import (
     AssessmentStatus,
@@ -19,146 +26,13 @@ from .model import (
     BlackPractice,
     EvidenceSurfaces,
     PracticeFinding,
-    PracticeKind,
     PracticeStatus,
     WorkAttempt,
 )
 from .registry import BLACK_PRACTICES
 from .serialization import registry_digest
-
-
-def _resolve_review_date(as_of: str | date | None) -> date:
-    """Resolve the review date the staleness rules are anchored to."""
-
-    if as_of is None:
-        return date.today()
-    if isinstance(as_of, str):
-        try:
-            return date.fromisoformat(as_of)
-        except ValueError as exc:
-            raise ValueError("as_of must be an ISO date in YYYY-MM-DD form") from exc
-    if isinstance(as_of, datetime):
-        raise TypeError("as_of must be None, an ISO date string, or a datetime.date")
-    if isinstance(as_of, date):
-        return as_of
-    raise TypeError("as_of must be None, an ISO date string, or a datetime.date")
-
-
-def _resolve_max_age(max_age_days: int | None) -> int | None:
-    """Validate the optional freshness window before it changes scoring."""
-
-    if max_age_days is None:
-        return None
-    if isinstance(max_age_days, bool) or not isinstance(max_age_days, int):
-        raise TypeError("max_evidence_age_days must be a non-negative integer or None")
-    if max_age_days < 0:
-        raise ValueError("max_evidence_age_days must be non-negative")
-    return max_age_days
-
-
-def _registry_shape_error(practices: tuple[BlackPractice, ...]) -> str | None:
-    """Return a blocking note when a custom registry cannot be safely scored."""
-
-    seen_ids: set[str] = set()
-    for index, practice in enumerate(practices):
-        if not isinstance(practice, BlackPractice):
-            return f"practice registry entry {index} is not a BlackPractice record"
-        if any(
-            not isinstance(value, str) or not value.strip()
-            for value in (practice.id, practice.title, practice.wire)
-        ):
-            return f"practice registry entry {index} has blank or non-text fields"
-        if practice.id in seen_ids:
-            return f"practice registry contains duplicate id '{practice.id}'"
-        seen_ids.add(practice.id)
-        if (
-            not isinstance(practice.tags, frozenset)
-            or not practice.tags
-            or any(not isinstance(tag, str) or not tag.strip() for tag in practice.tags)
-        ):
-            return f"practice '{practice.id}' has malformed tags"
-        if (
-            not isinstance(practice.required_evidence, tuple)
-            or not practice.required_evidence
-            or any(
-                not isinstance(label, str) or not label.strip()
-                for label in practice.required_evidence
-            )
-        ):
-            return f"practice '{practice.id}' has malformed required evidence"
-        if not isinstance(practice.kind, PracticeKind):
-            return f"practice '{practice.id}' has an invalid kind"
-    return None
-
-
-def _clean_labels(raw: object, field: str) -> tuple[frozenset[str], tuple[str, ...]]:
-    """Normalize a declared label collection without letting bad input crash.
-
-    Returns the kept labels (stripped, lowercased) and intake notes for every
-    declaration or token that had to be ignored.
-    """
-
-    if isinstance(raw, str) or not isinstance(raw, Iterable):
-        return frozenset(), (
-            f"{field} declaration is not a collection of labels and was ignored",
-        )
-    kept: set[str] = set()
-    notes: list[str] = []
-    for token in raw:
-        if not isinstance(token, str) or not token.strip():
-            notes.append(f"ignored a malformed {field} label")
-            continue
-        kept.add(token.strip().lower())
-    return frozenset(kept), tuple(notes)
-
-
-def _dated_labels(
-    records: object,
-    review_date: date,
-    max_age_days: int | None,
-) -> tuple[frozenset[str], frozenset[str], tuple[str, ...]]:
-    """Split dated evidence into fresh labels, stale labels, and intake notes.
-
-    Undated records count as fresh. Future-dated or unreadable dates are
-    never counted; they are surfaced as notes so the declarer can fix them.
-    """
-
-    if isinstance(records, str) or not isinstance(records, Iterable):
-        return (
-            frozenset(),
-            frozenset(),
-            ("dated evidence declaration is not a collection of records",),
-        )
-    fresh: set[str] = set()
-    stale: set[str] = set()
-    notes: list[str] = []
-    for item in records:
-        raw_label = getattr(item, "label", None)
-        if not isinstance(raw_label, str) or not raw_label.strip():
-            notes.append("ignored a dated evidence record without a usable label")
-            continue
-        label = raw_label.strip().lower()
-        noted_on = getattr(item, "noted_on", None)
-        if noted_on is None:
-            fresh.add(label)
-            continue
-        try:
-            noted = date.fromisoformat(noted_on)
-        except (TypeError, ValueError):
-            notes.append(
-                f"evidence '{label}' has an unreadable date and was not counted"
-            )
-            continue
-        if noted > review_date:
-            notes.append(
-                f"evidence '{label}' is dated in the future and was not counted"
-            )
-            continue
-        if max_age_days is not None and (review_date - noted).days > max_age_days:
-            stale.add(label)
-            continue
-        fresh.add(label)
-    return frozenset(fresh), frozenset(stale), tuple(notes)
+from .version import __version__
+from .registry_validation import registry_defects
 
 
 def _surfaces(
@@ -170,7 +44,7 @@ def _surfaces(
 
     ``present`` and ``missing`` partition the practice's declared evidence
     order; ``stale`` is the subset of the missing that only needs a refresh.
-    The surfaces are the state the finding's status projects from.
+    Status projects these surfaces plus attempt-wide evidence context.
     """
 
     present = tuple(item for item in practice.required_evidence if item in fresh)
@@ -179,7 +53,7 @@ def _surfaces(
     return EvidenceSurfaces(practice.id, present, missing, stale_missing)
 
 
-def _finding(
+def project_finding(
     surfaces: EvidenceSurfaces,
     evidence_declared: bool,
 ) -> PracticeFinding:
@@ -249,11 +123,12 @@ def _evaluate(
             "practices must be an iterable of BlackPractice records"
         ) from exc
     notes: list[str] = []
-    shape_error = _registry_shape_error(practice_set)
-    if shape_error:
+    defects = registry_defects(practice_set)
+    if defects:
         method_digest = ""
-        notes.append(
-            f"practice registry is not safe to score and must be repaired: {shape_error}"
+        notes.extend(
+            f"practice registry is not safe to score and must be repaired: {defect.code}: {defect.detail}"
+            for defect in defects
         )
     else:
         try:
@@ -271,6 +146,9 @@ def _evaluate(
                 tuple(notes),
                 review_date.isoformat(),
                 method_digest,
+                evaluator_version=__version__,
+                intake_codes=tuple(defect.code for defect in defects)
+                or ("registry_digest_failed",),
             ),
             (),
         )
@@ -298,6 +176,8 @@ def _evaluate(
                 tuple(notes),
                 review_date.isoformat(),
                 method_digest,
+                evaluator_version=__version__,
+                intake_codes=("description_invalid",),
             ),
             (),
         )
@@ -308,7 +188,7 @@ def _evaluate(
         for practice in practice_set
         if practice.tags & tags
     )
-    findings = tuple(_finding(item, evidence_declared) for item in surfaces)
+    findings = tuple(project_finding(item, evidence_declared) for item in surfaces)
     return (
         BlackAssessment(
             _overall(findings),
@@ -316,6 +196,8 @@ def _evaluate(
             tuple(notes),
             review_date.isoformat(),
             method_digest,
+            evaluator_version=__version__,
+            evidence_declared=evidence_declared,
         ),
         surfaces,
     )

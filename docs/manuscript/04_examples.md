@@ -113,24 +113,36 @@ over ages 0–70.
 
 ![Evidence decay from executed `evaluate_work` sweeps over the `data-provenance` practice with review date 2026-07-01: a full declaration stays `ALIGNED` while its evidence age is at most the freshness window and flips to `NEEDS_EVIDENCE` (a refresh request) exactly one day past it — the threshold is a strict inequality — while a declaration that never included one required label is `NEEDS_REWORK` at every age, and a declaration with no window never goes stale. A fresh date is a declaration property; it does not show the underlying observation was ever adequate or still holds.](../output/figures/black_evidence_decay.png){#fig:black-evidence-decay width=100%}
 
-## The refresh queue, executed
+## Observation expiry and effective refresh, executed
 
 Decay describes one label at a time. A reviewer holding a whole declaration
 has a different question: which part of it expires first? `refresh_horizon`
 answers that by ordering the dated labels from nearest to furthest from the
-freshness boundary. The figure below runs it on an attempt tagged `data` and
+first stale day. This is an observation inventory: it preserves non-applicable
+and shadowed occurrences. The figure below runs it on an attempt tagged `data` and
 `research` at review date 2026-07-01 under a 120-day window.
 
-![The refresh queue for one declaration, drawn from `refresh_horizon` in its own ascending nearest-to-stale order: at review date 2026-07-01 under a 120-day window, 5 dated labels are scheduled, from 'data_origin' at 17 days to 'scope' at 113, each naming the practice that requires it. The named band below records the 3 declarations the queue omits and why — one of them undated, which is itself one of the omitted classes — so the omission rule is visible rather than implicit. Bar length is days until a declared date crosses the window; it is not a measure of how much the underlying observation matters or how good it was.](../output/figures/black_refresh_queue.png){#fig:black-refresh-queue width=100%}
+![The observation-expiry inventory for one declaration, drawn from `refresh_horizon` in its own ascending nearest-to-stale order: at review date 2026-07-01 under a 120-day window, 5 dated labels are scheduled, from 'data_origin' at 18 days to 'scope' at 114, each naming registry requirements without promising assessment impact. The named band below records the 3 declarations the inventory omits and why — one of them undated, which is itself one of the omitted classes — so the omission rule is visible rather than implicit. Bar length counts days through the first stale day, one day after the last-fresh boundary. Applicability and shadowing are handled by the separate effective queue; neither view measures observation quality.](../output/figures/black_refresh_queue.png){#fig:black-refresh-queue width=100%}
 
 Three declarations are absent from the queue, and the band names each one
 rather than dropping it. An undated label is treated as current, so it has no
 boundary to reach. An already-stale label is a refresh request now, not a
 schedule. And a label no practice in the registry requires — `dashboard_link`
-here — cannot move any status, so scheduling it would be misleading. The
+here — has no required-label expiry in this registry. The
 third case is why `refresh_horizon` takes the practice registry as an
-argument: the queue is a view of the registry's demands on a declaration, not
-an inventory of the declaration's dates.
+argument. Future, unreadable and malformed records also receive explicit
+omission reasons; `None` disables expiry. Shared intake normalization and
+configuration validation keep these classifications aligned with evaluation.
+For a valid window whose expiry lies beyond the representable calendar,
+`expiry_out_of_calendar_range` preserves the occurrence as an omission rather
+than raising or narrowing the evaluator's accepted configuration domain.
+
+The separate `effective_refresh_queue` filters applicable practices and
+explains undated shadowing and later fresh declarations. Each retained row
+contains exact surface transitions computed by evaluation on `last_fresh_on`
+and `stale_on`. Strict inequality is preserved: a label at the window is still
+fresh, and first becomes stale the following day. A predicted surface change
+need not change the overall status word. Neither view verifies observations.
 
 ## A batch, executed
 
@@ -138,7 +150,9 @@ Every example so far follows one attempt. A reviewer holding a quarter's work
 holds many, and the question changes again: across differently-tagged
 attempts, which wires stay open? `summarize_assessments` answers the first
 half by counting statuses and attributing every non-`ALIGNED` finding to its
-craft family; recounting the same findings per practice answers the second.
+craft family only under a matching registry digest; unresolved attribution is
+`UNKNOWN`, with mixed methods partitioned by digest. Recounting the same
+findings per practice answers the second.
 The panel below runs both over a pinned battery of eight attempts — one for
 each reviewed tag, one dated declaration aged past the window, one attempt
 declaring two tags at once, and one tagged outside the vocabulary — at review

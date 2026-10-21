@@ -17,6 +17,16 @@ non-zero on any failure). Each check returns a frozen
 
 ## Proof-of-detection discipline
 
+The evaluator and battery share `registry_validation.registry_defects`.
+Required labels must be distinct and strip/lowercase-normalized; tags must be
+normalized too. Runtime defects produce `NEEDS_REWORK`, no findings, and stable
+`intake_codes` alongside readable notes. Shipped-vocabulary membership and
+whole-family coverage remain battery policy, so normalized small/custom
+registries are usable. Mixed tag types, unhashable requirements and non-record
+entries return named failures. Blocked checks retain all seven identities and
+state the structural reason. Hostile user-defined iteration remains outside
+the documented intake domain.
+
 Every check has paired tests in `tests/test_invariants.py`:
 
 - an assertion that the check **passes** on the real `BLACK_PRACTICES`, and

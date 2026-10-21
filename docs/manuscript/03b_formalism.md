@@ -59,11 +59,15 @@ optional ISO date $\tau$ (with $\tau = \bot$ meaning undated).
 :::
 
 ::: {.definition #def:assessment-record title="Assessment record"}
-An assessment is a record $A = (s, \mathcal{F}, N, d, h)$ containing an overall
+The canonical result is a record $A = (s, \mathcal{F}, N, d, h)$ containing an overall
 status $s$, ordered practice findings $\mathcal{F}$, intake notes $N$, review
 date $d$, and registry digest $h$. Each finding is itself a triple of a practice
 id, a practice status, and an ordered reasons trail. The digest identifies
 method content only; it is not a signature of the evidence or the work.
+The runtime `BlackAssessment` appends `evaluator_version`, `evidence_declared`
+and `intake_codes` as evaluation context with defaults for older constructors.
+They are retained by the replay schema, excluded from the unchanged canonical
+result format, and cannot be inferred from old result bytes.
 :::
 
 ## Status codomains
@@ -197,16 +201,21 @@ erases the other — and, like every object in this section, they describe
 declaration coverage only.
 :::
 
-The finding is then a *projection* of that state: precedence selects the most
+The finding is then a *projection* of that state plus attempt-wide evidence
+context: precedence selects the most
 demanding reading for action, and the surfaces preserve what the selection
 compresses.
 
-::: {.proposition #prop:surfaces-projection title="The finding is a projection of its surfaces"}
+::: {.proposition #prop:surfaces-projection title="Projection from surfaces plus attempt-wide evidence context"}
 For every applicable practice, the finding's status and its ordered reasons
 trail are functions of $(\sigma(p), e)$ alone, where
 $e \equiv (F \cup \Sigma \neq \emptyset)$ is the attempt-wide
 evidence-declared bit whose reading [@prop:global-local] gives; every reasons
-trail is re-derivable from its surfaces. The two public forms report one
+trail is re-derivable from its surfaces plus attempt-wide evidence context,
+exported as `assessment.evidence_declared`. `project_finding` reconstructs both
+status and reasons without consulting the expected finding. Empty evidence
+and an irrelevant label have identical required-label surfaces but different
+context and therefore different readings. The two public forms report one
 staged computation: `evaluate_with_surfaces` returns the surfaces beside an
 assessment that is byte-identical, under canonical serialization, to what
 `evaluate_work` returns for the same arguments — one staged core, never a
@@ -251,6 +260,25 @@ by importing one another. $\mathrm{source\_snapshot\_refs}$ is
 caller-supplied provenance that the envelope stores and does not verify.
 :::
 
+`envelope_matches_assessment` compares only report digest, review date,
+registry digest and status. `validate_envelope_contract` separately checks
+identity, schema, field shapes, native vocabulary and required non-claims;
+subject/source/version correspondence requires an `EvaluationRecord`.
+An incomplete old result is rejected by strict envelope export, rather than
+being represented as a verified archival pair.
+
+The separate `black_line.evaluation-record/1.0` schema retains original
+supported declarations, normalized intake, pinned review date and freshness
+window, producing package version, complete ordered registry snapshot and
+digest, assessment, typed surfaces, projection context, and declared
+subject/source references. Replaying with the recorded package compares the
+whole retained computation; changing an input can change the bundle identity
+even when canonical result bytes stay identical. `canonical_assessment/1.0`
+and existing report digests remain unchanged. Neither serialization nor
+replay is evidence authenticity or semantic verification.
+Replay compares canonical identity rather than Python value equality, so
+numeric values cannot stand in for the exact boolean projection context.
+
 An envelope is a witness record, not a score: it makes one instrument's
 complete report co-registrable beside the others' without granting any
 reader a licence to aggregate the status words.
@@ -260,10 +288,15 @@ reader a licence to aggregate the status words.
 ::: {.proposition #prop:registry-fail-closed title="A malformed registry fails closed"}
 Before any attempt is read, the supplied registry is checked for entries that
 are not practice records, for blank or non-text ids, titles, and wires, for
-duplicate ids, for malformed tag or evidence fields, and for invalid families;
+duplicate ids, for malformed tag or evidence fields, for unnormalized tags or
+required labels, for duplicate requirements, and for invalid families;
 the canonical digest is then computed. If either step fails, the assessment is
 `NEEDS_REWORK` with no findings, an empty digest, and an intake note naming the
-defect. The direction is deliberate: a registry that cannot be scored must not
+defect with stable `intake_codes`. Shape validation is shared with the invariant
+battery; shipped-vocabulary and family-coverage policy remains separate, so a
+normalized one-practice custom registry can be evaluated. Checks blocked by a
+malformed record retain their identities and report the structural reason.
+The direction is deliberate: a registry that cannot be scored must not
 produce a permissive status. *Evidence:*
 `tests/test_evaluator.py::test_custom_registry_failures_are_blocking` and
 `tests/test_evaluator.py::test_malformed_custom_registry_is_blocked_before_tag_matching`.

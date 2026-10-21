@@ -23,13 +23,14 @@ An envelope is a witness record, not a score.
 from __future__ import annotations
 
 import json
+import re
+from datetime import date
 from dataclasses import dataclass
 
 from collections.abc import Iterable
 
-from .model import BlackAssessment
+from .model import AssessmentStatus, BlackAssessment
 from .serialization import assessment_digest
-from .version import __version__
 
 #: The cross-instrument envelope shape this module exports.
 ENVELOPE_SCHEMA = "line.report-envelope/1.0"
@@ -58,7 +59,7 @@ class AssessmentEnvelope:
     reasons trail and every intake note. ``native_status`` is this line's own
     overall status word; it is a projection, and the state it projects from
     is behind the reference, not restated here. ``registry_version`` is the
-    package version that shipped the registry — practice content itself is
+    package version captured when the assessment was evaluated — practice content is
     pinned by ``registry_digest``, which the referenced assessment also
     carries. ``source_snapshot_refs`` is caller-supplied provenance for the
     material the declarations were made about; the envelope stores, and does
@@ -81,6 +82,8 @@ def assessment_envelope(
     assessment: BlackAssessment,
     subject_id: str = "",
     source_snapshot_refs: Iterable[str] = (),
+    *,
+    strict: bool = False,
 ) -> AssessmentEnvelope:
     """Wrap an assessment in the common envelope, pointing at — never
     re-reading — its complete canonical form.
@@ -91,31 +94,119 @@ def assessment_envelope(
     ever point at the derivation that produced its status.
     """
 
-    refs = tuple(source_snapshot_refs)
-    if not all(isinstance(ref, str) and ref.strip() for ref in refs):
-        raise ValueError("source_snapshot_refs must be non-blank strings")
+    refs = source_references(source_snapshot_refs)
     if not isinstance(subject_id, str):
         raise TypeError("subject_id must be a string")
-    return AssessmentEnvelope(
+    envelope = AssessmentEnvelope(
         ENVELOPE_SCHEMA,
         BLACK_LINE_ID,
         subject_id,
         assessment.evaluated_as_of,
-        __version__,
+        assessment.evaluator_version,
         assessment.registry_digest,
         assessment.status.value,
         assessment_digest(assessment),
         refs,
         SCOPE_AND_NONCLAIMS,
     )
+    if strict and not validate_envelope_contract(envelope).passed:
+        raise ValueError("incomplete or invalid envelope contract")
+    return envelope
+
+
+def source_references(refs: Iterable[str]) -> tuple[str, ...]:
+    if isinstance(refs, (str, bytes)):
+        raise TypeError(
+            "source_snapshot_refs must be a collection, not a string/bytes container"
+        )
+    result = tuple(refs)
+    if not all(isinstance(ref, str) and ref.strip() for ref in result):
+        raise ValueError("source_snapshot_refs must be non-blank strings")
+    return result
+
+
+@dataclass(frozen=True)
+class EnvelopeDiagnostic:
+    field: str
+    code: str
+    detail: str
+
+
+@dataclass(frozen=True)
+class EnvelopeValidation:
+    diagnostics: tuple[EnvelopeDiagnostic, ...]
+    unverified_context: tuple[str, ...] = (
+        "subject_id",
+        "source_snapshot_refs",
+        "registry_version",
+    )
+
+    @property
+    def passed(self) -> bool:
+        return not self.diagnostics
+
+
+def validate_envelope_contract(envelope: AssessmentEnvelope) -> EnvelopeValidation:
+    diagnostics = []
+
+    def require(field, condition, code="invalid_contract"):
+        if not condition:
+            diagnostics.append(
+                EnvelopeDiagnostic(
+                    field, code, f"invalid or incomplete {field}; structural check only"
+                )
+            )
+
+    require("schema_version", envelope.schema_version == ENVELOPE_SCHEMA)
+    require("line_id", envelope.line_id == BLACK_LINE_ID)
+    require("subject_id", isinstance(envelope.subject_id, str))
+    try:
+        review = date.fromisoformat(envelope.review_date)
+        date_valid = review.isoformat() == envelope.review_date
+    except (TypeError, ValueError):
+        date_valid = False
+    require("review_date", date_valid, "incomplete_or_invalid_date")
+    require(
+        "registry_version",
+        isinstance(envelope.registry_version, str)
+        and re.fullmatch(r"\d+\.\d+\.\d+", envelope.registry_version) is not None,
+        "incomplete_or_invalid_version",
+    )
+    for name in ("registry_digest", "report_ref"):
+        value = getattr(envelope, name)
+        require(
+            name,
+            isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) is not None,
+        )
+    require(
+        "native_status",
+        isinstance(envelope.native_status, str)
+        and envelope.native_status in {item.value for item in AssessmentStatus},
+    )
+    require(
+        "source_snapshot_refs",
+        isinstance(envelope.source_snapshot_refs, tuple)
+        and all(
+            isinstance(ref, str) and bool(ref.strip())
+            for ref in envelope.source_snapshot_refs
+        ),
+    )
+    claims = envelope.scope_and_nonclaims
+    require(
+        "scope_and_nonclaims",
+        isinstance(claims, tuple)
+        and all(isinstance(claim, str) and bool(claim.strip()) for claim in claims)
+        and all(claim in claims for claim in SCOPE_AND_NONCLAIMS),
+    )
+    return EnvelopeValidation(tuple(diagnostics))
 
 
 def canonical_envelope(envelope: AssessmentEnvelope) -> str:
     """Serialize an envelope to stable JSON for archiving beside its report.
 
     Store this string next to the ``canonical_assessment`` output it points
-    at; the pair is the smallest archive from which a later review can verify
-    that the envelope and the derivation still agree.
+    at; the pair permits report correspondence checks. Contract and original
+    input/context checks are separate; replay needs an EvaluationRecord.
     """
 
     payload = {
@@ -140,10 +231,9 @@ def envelope_matches_assessment(
 ) -> bool:
     """Return whether an envelope still points at exactly this assessment.
 
-    This is the read-back check for an archived pair: the digest, the review
-    date, the registry digest, and the status word must all agree. A mismatch
-    means one of the two was edited after export; the check cannot say which,
-    and it says nothing about the truth of either.
+    Only the digest, review date, registry digest, and status are compared.
+    Use validate_envelope_contract separately for structure; subject, sources,
+    and producing version require an EvaluationRecord for correspondence.
     """
 
     return (

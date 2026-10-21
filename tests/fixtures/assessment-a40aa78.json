@@ -1,0 +1,1 @@
+{"evaluated_as_of":"2026-07-18","findings":[{"practice_id":"data-provenance","reasons":["required evidence is missing: transform_log","evidence already present: data_origin"],"status":"NEEDS_REWORK"}],"intake_notes":[],"registry_digest":"a02bff47a767b545bdeca7677bd1a2e1b24f1147d0847ec361fa9ee8b9ea1846","schema_version":"1.0","status":"NEEDS_REWORK"}

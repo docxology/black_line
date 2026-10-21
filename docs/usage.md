@@ -7,7 +7,7 @@ Black Line is most useful as a small review loop, not as a one-time score:
 3. Pin `as_of` when the review must be reproducible.
 4. Add `EvidenceItem` dates when evidence is expected to age.
 5. Read the per-practice reasons and intake notes before acting on the overall status.
-6. Archive `canonical_assessment(assessment)` together with the source files or links that make the labels inspectable.
+6. Archive an `evaluation_record` with the inspectable source files or links. `canonical_assessment/1.0` retains results, not original declarations or replay configuration.
 
 ```python
 from black_line import EvidenceItem, WorkAttempt, evaluate_work
@@ -32,7 +32,8 @@ NEEDS_REWORK
 
 The attempt is tagged `research` and `engineering`, so it is scored against
 every practice either tag reaches; four declared labels do not cover them.
-Serialize the record with `canonical_assessment(assessment)` when archiving.
+Serialize results with `canonical_assessment(assessment)`; retain a replay record
+when the original input and method must be reconstructable.
 
 ## Status semantics
 
@@ -109,7 +110,11 @@ rework.
 
 Use `summarize_assessments` after evaluating a cohort. Status counts include
 every enum value (zeros included) so reports stay shape-stable; open finding
-counts group non-`ALIGNED` practice findings by craft family.
+counts group non-`ALIGNED` practice findings by craft family only when the
+assessment's registry digest matches the supplied snapshot. Otherwise family
+attribution is `UNKNOWN`; `registry_partitions` preserves each digest's counts
+and whether attribution is available. Missing IDs and old empty digests are
+also unavailable. Overall status counts are retained regardless.
 
 ```python
 from black_line import WorkAttempt, evaluate_work, summarize_assessments
@@ -148,13 +153,22 @@ as missing.
 
 ### Refresh horizon
 
-Use `refresh_horizon` to list dated evidence labels nearest to going stale under
-a pinned review date, sorted by remaining days. Three classes are left out, and
-`refresh_horizon_omissions` names each one: undated labels (treated as current,
-so they have no boundary), already-stale labels (a refresh request rather than
-a schedule), labels no practice in the supplied registry requires, and
-declarations the evaluator itself never counts — future-dated or unreadable
-dates.
+Use `refresh_horizon` as an observation-expiry inventory, sorted by days to the
+first stale day. It preserves qualifying dated occurrences, including
+non-applicable practices and shadowed labels; its `practice_ids` identifies
+registry requirements, not a promise of status impact. `last_fresh_on` and
+`stale_on` disambiguate the boundary. In 0.5.0, `days_until_stale` changes to
+count through the first stale day; `days_until_last_fresh_day` retains the old
+arithmetic. At age equal to the window the former is one and the latter zero.
+
+`refresh_horizon_omissions` gives each excluded occurrence a reason and index:
+undated, already stale, unrequired, future, unreadable, malformed, or expiry
+disabled (`None`). Labels use the evaluator's strip/lowercase normalization;
+an expiry beyond the representable calendar receives
+`expiry_out_of_calendar_range`, without changing evaluation's valid window policy.
+raw labels remain available for diagnostics. Both views reject negative,
+boolean and non-integer windows and datetime review values, like evaluation.
+None disables expiry while retaining evaluator freshness semantics.
 
 ```python
 from black_line import (
@@ -182,14 +196,22 @@ for omitted in refresh_horizon_omissions(
 ```
 
 ```text
-transform_log 57 | data-provenance
+transform_log 58 | data-provenance
 omitted: dashboard_link
 omitted: data_origin
 ```
 
 `data_origin` is already past the window and `dashboard_link` is not a label
-the registry requires, so neither has a place in a schedule. Passing a narrower
-`practices=` registry narrows the queue the same way.
+the registry requires. Passing a narrower `practices=` registry narrows the
+inventory. For assessment impact use `effective_refresh_queue`: its `items`
+filter applicable practices, undated shadowing, and later fresh declarations;
+its `omissions` retains excluded occurrences with `non_applicable`,
+`shadowed_by_undated`, `superseded_by_newer_declaration`, or
+`no_predicted_surface_change`. Each retained row includes exact before/after
+`transitions` computed through the evaluator at `last_fresh_on` and `stale_on`.
+Equal-date duplicates describe the same expiry cohort. Future declarations
+are not counted now but may become usable by a predicted boundary; transitions
+include that effect. A surface can change while the overall word stays fixed.
 
 ### Typed surfaces and the report envelope
 
@@ -197,7 +219,7 @@ the registry requires, so neither has a place in a schedule. Passing a narrower
 shared staged implementation, not a second evaluator — plus one
 `EvidenceSurfaces` per finding: the practice's present, missing, and stale
 required labels as typed co-present data. The status word is a projection of
-those surfaces; strong support and strong resistance on the same practice
+those surfaces plus attempt-wide evidence context; strong support and strong resistance on the same practice
 stay readable together instead of collapsing into it. `assessment_envelope`
 then wraps the assessment in the cross-instrument report envelope
 (`line.report-envelope/1.0`): a reference by digest to the complete canonical
@@ -247,10 +269,65 @@ envelope points at this exact assessment: True
 One `NEEDS_REWORK` covers three different shapes — a fully covered practice,
 a half-covered one, and five untouched ones — and the surfaces keep the
 difference. Archive `canonical_envelope(envelope)` beside
-`canonical_assessment(assessment)`; `envelope_matches_assessment` is the
-read-back check that the stored pair still agrees. None of this changes what
+`canonical_assessment(assessment)`; `envelope_matches_assessment` checks only report correspondence
+(digest, date, registry digest and status). `validate_envelope_contract` checks
+schema, line identity, field types, native vocabulary, and required non-claims.
+It explicitly leaves subject, source references, and producing version
+unverified against the result alone. `envelope_matches_record` also checks
+those fields against a replay record. These are structural checks only.
+Bare string/bytes reference containers are rejected; collections and generators
+of nonblank strings are accepted. `strict=True` rejects incomplete envelope
+exports from old results lacking date, digest, or producing version. None of this changes what
 a status means: coverage of self-declared labels, never quality, truth,
 safety, or permission.
+
+## Replay records and migration
+
+`evaluation_record(attempt, as_of=..., max_evidence_age_days=...)` captures
+`black_line.evaluation-record/1.0`: original text/set/dated declarations,
+normalized tags and fresh/stale labels, pinned date/window and producing
+package version, complete ordered registry snapshot and digest, assessment,
+typed surfaces and attempt-wide `evidence_declared`, subject/source references,
+and non-claims. Serialize with `canonical_evaluation_record`, identify with
+`evaluation_record_digest`, deserialize with `load_evaluation_record`, and
+recompute with `replay_evaluation_record`. Replay compares the whole retained
+record by canonical identity, including exact boolean types, assessment and
+surfaces, and requires the recorded released
+package version. It never silently replays an older method with today's code.
+
+The safe JSON intake supports `WorkAttempt` with text description, frozensets
+of text tags/labels, and a tuple of `EvidenceItem` records with text labels and
+text/None dates. Blank labels and unreadable/future dates are retained with
+the evaluator's normalization notes. Arbitrary Python objects are rejected;
+the bundle does not claim to preserve hostile or unsupported object behavior.
+Set order is not meaningful; dated occurrence and registry order are retained.
+
+Old `canonical_assessment/1.0` bytes and their `report_ref` digests do not
+change. They cannot be upgraded into faithful input records without the
+original declaration and configuration. Producing version is captured on new
+assessments, rather than stamped by the package exporting an old result.
+Hashing and replay demonstrate input retention and structural consistency,
+not signatures, authenticity, source existence, truth, safety, or permission.
+
+```python
+from black_line import (
+    WorkAttempt, evaluation_record, canonical_evaluation_record,
+    load_evaluation_record, replay_evaluation_record,
+)
+
+record = evaluation_record(
+    WorkAttempt("Inspect the provenance record", frozenset({"data"})),
+    as_of="2026-07-18", max_evidence_age_days=30,
+)
+restored = load_evaluation_record(canonical_evaluation_record(record))
+print(replay_evaluation_record(restored) == (record.assessment, record.surfaces))
+print(record.evidence_declared)
+```
+
+```text
+True
+False
+```
 
 ## What a reviewer still has to do
 

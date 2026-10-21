@@ -244,7 +244,7 @@ def test_refresh_horizon_sorts_by_remaining_days_and_omits_stale() -> None:
     )
     horizon = refresh_horizon(attempt, as_of="2026-07-18", max_evidence_age_days=90)
     assert [item.label for item in horizon] == ["transform_log"]
-    assert horizon[0].days_until_stale == 57
+    assert horizon[0].days_until_stale == 58
 
 
 def test_refresh_horizon_skips_undated_evidence_items() -> None:

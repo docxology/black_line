@@ -9,7 +9,7 @@ evidence and nothing more — the strongest honest reading of it is "this work h
 laid out the pieces a reviewer would want," not "this work is correct." The
 formal propositions are careful about exactly this:
 [@prop:surfaces-projection] states that the finding is a projection of its
-surfaces — a reading of declared labels, not of the work — and
+surfaces plus attempt-wide evidence context — a reading of declared labels, not of the work — and
 [@prop:determinism] pins the scoring as deterministic. Under fixed inputs, the
 tests establish registry shape and deterministic scoring. Conditional
 monotonicity is exercised rather than asserted ([@prop:fresh-monotonicity]):
@@ -75,7 +75,9 @@ launder bad work into apparent good work. Black Line's design response is to
 refuse the certifying role entirely: a status reports declaration coverage,
 so a gamed `ALIGNED` overstates nothing but coverage. The attacks also stay
 inspectable rather than hidden — the declared tag set, the declared labels,
-and the declared dates are the very record a reviewer reads, so a reviewer
+and the declared dates are retained when the caller archives the original
+attempt or the versioned replay record. A canonical assessment alone omits
+these inputs. With a retained declaration, a reviewer
 who asks "do 22 labels correspond to 22 artifacts?", "do these tags describe
 this work?", or "what changed at this refresh?" is asking questions the
 declaration itself exposes. The instrument narrows what gaming can
@@ -110,7 +112,10 @@ that using the instrument improves anything.
 
 ## Bounded by the line set
 
-Finally, Black Line is bounded by the rest of the line set on purpose. Golden
+Finally, Black Line is bounded by the rest of the line set on purpose. Its
+historical four-line core is an orientation within the current family of eight
+instruments, their reader and witness register; it is not the entire family.
+Golden
 Line addresses direction and aspiration; Red Line holds the refusal boundary;
 White Line marks absence, restraint, and unknowability. Black Line should not
 absorb those questions merely because they are difficult to measure, and a

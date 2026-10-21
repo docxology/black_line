@@ -22,8 +22,10 @@ lets dated evidence age into a refresh request rather than a rework. Seven
 structural invariants check the registry's own shape, and each is shown firing
 on a planted-bad registry rather than merely passing on the real one. A
 deterministic digest makes any edit to a wire visible in a diff and travels on
-each serialized assessment, so the method version behind a review stays
-recoverable.
+each serialized assessment, so method content can be compared for drift.
+The separate replay record retains the registry itself, declaration inputs,
+configuration, producing version and projection context; a digest alone
+cannot recover any of them.
 
 What comes back is a prompt for better work, not a safety verdict, an
 institutional accreditation, or permission to cross the Red Line security
@@ -31,7 +33,8 @@ boundary. An `ALIGNED` status means only that every required label for every
 applicable practice was declared as fresh under the chosen review date — never
 that a source is real or a claim is true. The clean-rerun wire targets
 computational reproducibility and stops well short of independent replication or
-inferential agreement. Black Line is the second work in the four-line set: it
+inferential agreement. Black Line belongs to the historical four-line core of
+the current Line Set family: it
 cross-references Red Line as the refusal boundary, Golden Line as the
 aspirational thread, and White Line as the record of absence, restraint, and
 unknowability, and it copies none of their registries, evaluators, or

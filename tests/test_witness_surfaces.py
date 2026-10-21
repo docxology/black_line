@@ -33,6 +33,7 @@ from black_line import (
     envelope_matches_assessment,
     evaluate_with_surfaces,
     evaluate_work,
+    project_finding,
 )
 
 AS_OF = "2026-07-18"
@@ -129,6 +130,7 @@ def test_surfaces_align_one_to_one_with_findings_and_generate_their_reasons() ->
             finding.practice_id for finding in assessment.findings
         ], label
         for finding, surface in zip(assessment.findings, surfaces):
+            assert project_finding(surface, assessment.evidence_declared) == finding
             assert tuple(sorted(surface.stale)) == tuple(
                 sorted(set(surface.stale) & set(surface.missing))
             )
@@ -137,8 +139,8 @@ def test_surfaces_align_one_to_one_with_findings_and_generate_their_reasons() ->
                     "required evidence is present: " + ", ".join(surface.present),
                 )
                 assert surface.missing == ()
-            elif finding.reasons == ("no evidence was declared",):
-                continue
+            elif not assessment.evidence_declared:
+                assert finding.reasons == ("no evidence was declared",)
             else:
                 expected = [
                     "required evidence is missing: " + ", ".join(surface.missing)

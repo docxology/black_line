@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use or refer to this work, please cite it as below."
 type: software
 title: "Black Line: Strong Work in Public"
-version: "0.4.1"
-date-released: "2026-09-18"
+version: "0.5.0"
+date-released: "2026-10-21"
 authors:
   - family-names: "Friedman"
     given-names: "Daniel Ari"
@@ -13,8 +13,6 @@ authors:
 repository-code: "https://github.com/docxology/black_line"
 url: "https://github.com/docxology/black_line"
 identifiers:
-  - type: doi
-    value: "10.5281/zenodo.22833503"
   - type: url
     value: "https://github.com/docxology/black_line"
 license:
@@ -36,6 +34,14 @@ abstract: >-
   declared — never whether the work is true, good, or permitted; an
   ALIGNED reading authorizes nothing.
 references:
+  - type: software
+    title: "Black Line: Strong Work in Public (previous archived edition)"
+    version: "0.4.1"
+    authors:
+      - family-names: "Friedman"
+        given-names: "Daniel Ari"
+    doi: "10.5281/zenodo.22833503"
+    notes: "Historical edition only; 0.5.0 awaits reserve-first DOI publication."
   - type: software
     title: "red_line"
     authors:

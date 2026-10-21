@@ -41,7 +41,7 @@ def _run(code: str) -> str:
 def test_usage_has_the_expected_number_of_executable_recipes() -> None:
     """A vacuous sweep is itself a defect, so pin that the scan set is non-empty."""
 
-    assert len(_recipes("usage.md")) == 5
+    assert len(_recipes("usage.md")) == 6
 
 
 @pytest.mark.parametrize("line, code, expected", _recipes("usage.md"))

@@ -74,7 +74,8 @@ class PracticeFinding:
 class EvidenceSurfaces:
     """One practice's support and resistance, co-present and typed.
 
-    A finding's status is a projection: precedence selects the most demanding
+    A finding's status projects surfaces plus attempt-wide evidence context:
+    precedence selects the most demanding
     reading for action. The surfaces keep what the projection compresses —
     the required labels that were declared fresh (``present``), the required
     labels that were not (``missing``), and the subset of the missing that is
@@ -109,3 +110,6 @@ class BlackAssessment:
     intake_notes: tuple[str, ...] = ()
     evaluated_as_of: str = ""
     registry_digest: str = ""
+    evaluator_version: str = ""
+    evidence_declared: bool | None = None
+    intake_codes: tuple[str, ...] = ()
