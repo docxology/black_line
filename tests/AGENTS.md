@@ -28,6 +28,12 @@ contracts.
 - `test_witness_surfaces.py` — witness-layer contracts and envelope format
 - `test_no_mocks.py` — lexical ban on mocks, stand-in names, path hardcodes, and import-path insertion
 - `test_docs_recipes.py` — documentation recipes produce expected output
+- `test_archive_integrity.py` — canonical result pinned to a stored fixture; loader rejects unsupported or incomplete fields, and replay retains unusable dates and intake
+- `test_formalism_claim_ledger.py` — re-derives `data/formalism_claim_ledger.json` from the manuscript and the package
+- `test_release_audit.py` — projected context typing, unrepresentable expiry omissions, and the previous edition's DOI staying out of current-edition metadata
+- `test_review_archive.py` — replay-record round trips, retained configuration, and envelope contract diagnostics
+- `test_review_coherence.py` — shared registry-shape preflight, digest-aware batch attribution, and exported projection context
+- `test_review_refresh.py` — observation-expiry inventory and the effective refresh queue with structured exclusions
 
 ## Invariants
 

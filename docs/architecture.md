@@ -29,6 +29,12 @@ src/black_line/
 │                      (line.report-envelope/1.0): assessment_envelope,
 │                      canonical_envelope, envelope_matches_assessment
 ├── invariants.py      structural review checks + all_invariants battery
+├── intake.py          shared label/date normalization and review configuration
+├── registry_validation.py
+│                      shape defects and stable codes, apart from shipped policy
+├── replay.py          versioned replay records and exact-replay comparison
+├── formalism_ledger.py
+│                      derived ledger for the manuscript's formalism labels
 ├── analytics.py       pure derived views: coverage_matrix, staleness_profile,
 │                      summarize_assessments, declaration_status_path,
 │                      refresh_horizon, refresh_horizon_omissions

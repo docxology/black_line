@@ -35,7 +35,7 @@ SHA-256 registry digest so the method version behind a review is recoverable.
 
 ```bash
 uv run python scripts/build_figures.py        # 15 figures + cover + figure_registry.json (needs rsvg-convert)
-.venv/bin/python -m pytest -q                 # full suite must be green; five gates read the built mirror
+uv run pytest -q                              # full suite must be green; five gates read the built mirror
 uv run python scripts/check_registry.py       # structural invariants + digest; non-zero exit on failure
 uv run python scripts/check_figures.py        # fail if the generated registry drifts from the live contract
 ```
@@ -53,7 +53,7 @@ Undated labels in `evidence` never age. Route labels that should age through
 `dated_evidence` only — an undated duplicate silently masks staleness.
 
 ```bash
-.venv/bin/python -c "
+uv run python -c "
 from black_line import EvidenceItem, WorkAttempt, evaluate_work
 attempt = WorkAttempt(
     'Trace the dataset behind the headline comparison figure',
