@@ -7,7 +7,7 @@ name = "black_line"
 version = "0.5.0"
 description = "A positive practice instrument for concise, inspectable, revisable work"
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = []
 
 [dependency-groups]
