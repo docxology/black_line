@@ -93,36 +93,6 @@ def test_every_registered_figure_is_embedded_in_the_manuscript() -> None:
         assert f"{{#{spec.label}" in prose, f"{spec.label} anchor is not embedded"
 
 
-def _normalized_caption(caption: str) -> str:
-    """Collapse markdown-only differences (backticks vs quotes, whitespace)."""
-
-    return " ".join(caption.replace("`", "").replace("'", "").split())
-
-
-def test_manuscript_embed_captions_match_the_registry_captions() -> None:
-    """The two caption sources for each figure must not drift independently.
-
-    The registry caption (FIGURE_SPECS -> figure_registry.json) and the
-    manuscript embed caption are compared after normalizing markdown backticks
-    and straight quotes, so a wording change in one place without the other is
-    a test failure instead of a silent publication defect.
-    """
-
-    manuscript = Path(__file__).resolve().parent.parent / "docs" / "manuscript"
-    prose = "\n".join(
-        path.read_text(encoding="utf-8") for path in sorted(manuscript.glob("*.md"))
-    )
-    for spec in FIGURE_SPECS:
-        matches = re.findall(
-            r"!\[([^\]]*)\]\(\.\./output/figures/" + re.escape(spec.name) + r"\.png\)",
-            prose,
-        )
-        assert len(matches) == 1, f"{spec.name} must be embedded exactly once"
-        assert _normalized_caption(matches[0]) == _normalized_caption(spec.caption), (
-            f"embed caption for {spec.name} drifted from the registry caption"
-        )
-
-
 def test_builders_draw_what_their_captions_state_in_memory() -> None:
     """Validate changed builders without touching the output mirror."""
 

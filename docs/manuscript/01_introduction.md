@@ -37,4 +37,4 @@ restated for this paper in the next section.
 The paper states the method; the package makes the same declarations and
 boundaries repeatable, so a reader can run what the prose describes.
 
-The rest of this paper is organised as follows. [Section @sec:method](#sec:method) defines the method and its evidence wires. [Section @sec:formalism](#sec:formalism) states the evaluator formally as definitions and propositions. The worked examples in [Section @sec:examples](#sec:examples) demonstrate the instrument over real declarations, and [Section @sec:limits](#sec:limits) names the epistemic boundaries that the instrument cannot cross.
+The rest of this paper is organized as follows. [Section @sec:method](#sec:method) defines the method and its evidence wires. [Section @sec:formalism](#sec:formalism) states the evaluator formally as definitions and propositions. The worked examples in [Section @sec:examples](#sec:examples) demonstrate the instrument over real declarations, and [Section @sec:limits](#sec:limits) names the epistemic boundaries that the instrument cannot cross.

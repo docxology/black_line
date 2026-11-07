@@ -26,21 +26,10 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
+import tomllib
 
 import pytest
 
-try:  # ``tomllib`` entered the standard library in 3.11.
-    import tomllib
-except ModuleNotFoundError:  # pragma: no cover - depends on the interpreter
-    tomllib = None  # type: ignore[assignment]
-
-#: The package itself runs on the declared ``>=3.10`` floor; only these
-#: pyproject-reading gates need a TOML parser, so they skip rather than
-#: making the whole module uncollectable on 3.10.
-needs_tomllib = pytest.mark.skipif(
-    tomllib is None,
-    reason="reading pyproject.toml needs tomllib, added to the standard library in Python 3.11",
-)
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -147,7 +136,7 @@ def _ignored_by(repository: Path, paths: tuple[str, ...]) -> set[str]:
     """Return which of ``paths`` git considers ignored inside ``repository``."""
 
     result = subprocess.run(  # noqa: S603
-        ["git", "check-ignore", "-z", "--stdin"],
+        ["git", "-c", "core.excludesFile=", "check-ignore", "-z", "--stdin"],
         cwd=repository,
         input=b"\0".join(p.encode("utf-8") for p in paths) + b"\0",
         capture_output=True,
@@ -303,7 +292,6 @@ def _invoked_tools(text: str) -> set[str]:
     return tools
 
 
-@needs_tomllib
 def test_every_tool_the_contract_invokes_is_declared_and_pinned() -> None:
     """`ruff` was in the contract and in neither pyproject.toml nor uv.lock."""
 
@@ -325,24 +313,12 @@ def test_every_tool_the_contract_invokes_is_declared_and_pinned() -> None:
     assert not unpinned, unpinned
 
 
-@needs_tomllib
 def test_the_undeclared_tool_check_can_fail() -> None:
     """Positive control: an undeclared tool in a contract block is reported."""
 
     planted = "```bash\nuv run mypy src\nuv run python scripts/check_registry.py\n```\n"
     assert _invoked_tools(planted) == {"mypy"}
     assert "mypy" not in _declared_dev_tools()
-
-
-@needs_tomllib
-def test_ruff_carries_a_configuration_in_this_repository() -> None:
-    """An unconfigured ruff makes "ruff clean" a claim about someone's defaults."""
-
-    data = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    ruff = data["tool"]["ruff"]
-    assert ruff["target-version"] == "py310", ruff
-    assert data["project"]["requires-python"] == ">=3.10"
-    assert ruff["lint"]["select"], "an empty rule selection lints nothing"
 
 
 # --- the code the contract lints is actually lint-clean and format-clean ------

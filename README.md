@@ -24,6 +24,8 @@ imports, installs, or consults a sibling line project.
 
 ## Quick start
 
+Python 3.11 or newer is required.
+
 ```bash
 uv run python scripts/build_figures.py   # output/ is ignored; five gates read the mirror
 uv run pytest tests/ --cov=src --cov-branch --cov-report=term-missing
@@ -69,6 +71,8 @@ claim. The assessment digest pins the practice registry used for the decision;
 serialize the result with `canonical_assessment(assessment)`. For replay, retain
 an `evaluation_record` with its original declaration, pinned configuration,
 registry snapshot, typed surfaces and version; a result alone omits those inputs.
+Archive loading rejects duplicate JSON fields rather than choosing a value;
+only explicit replay checks the retained outputs against their producing version.
 
 ## Witness surfaces and the report envelope
 
@@ -89,7 +93,7 @@ Worked recipes for both live in `docs/usage.md`.
 `validate_envelope_contract` separately checks structural identity and required
 non-claims. Subject/source/version correspondence needs `envelope_matches_record`;
 neither check establishes authenticity. The envelope schema and exported enum
-member names are unchanged in 0.5.0.
+member names are unchanged in 0.6.0.
 
 ## Analytics
 
@@ -143,7 +147,7 @@ The manuscript's scholarship map distinguishes computational reproducibility
 from independent replication, treats openness as a socio-technical practice, and
 keeps craft and tacit knowledge outside the evaluator's authority. Its formalism
 section carries no hand-written numbers: definitions and propositions are
-labelled fenced blocks, the renderer numbers them in document order, and every
+labeled fenced blocks, the renderer numbers them in document order, and every
 cross-reference resolves from the label. The deterministic
 figure builder also creates the title-page cover art from the same protocol
 semantics, so the visual argument is versioned with the method.

@@ -4,9 +4,10 @@ Use `uv` for the project environment. Run the tests, the gates, and the figure
 builder from this repository's own root; nothing in that loop reaches outside
 this checkout.
 
-The package has no runtime dependencies beyond the Python standard library. Its
-declared development tools — `pytest`, `pytest-cov`, and `ruff` — are in the
-`dev` dependency group of `pyproject.toml` and pinned in `uv.lock`, so the contract below
+The package requires Python 3.11 or newer and has no runtime dependencies beyond
+the Python standard library. Its declared development tools — `pytest`,
+`pytest-cov`, and `ruff` — are in the `dev` dependency group of `pyproject.toml`
+and pinned in `uv.lock`, so the contract below
 runs from this repository's declarations rather than from whatever happens to be
 on the ambient PATH.
 
@@ -39,8 +40,13 @@ green in either order. Where `rsvg-convert` is not installed those five gates
 skip with a named reason, after asserting the mirror really is absent, instead
 of failing for want of an artifact the checkout cannot produce.
 
-Every script here takes no options and no operands and exits non-zero on any
-argument, so a typo in one of these lines cannot exit 0.
+Every script here takes no options and no operands and exits with usage status 2
+on any argument, so a typo in one of these lines cannot exit 0.
+
+CLI tests run writing scripts against temporary copies of the real source and
+manuscript inputs, including a separate formalism-ledger output directory.
+Git ignore probes disable host-wide excludes per command, so a contributor's
+global ignore rules cannot supply the missing-`.gitignore` negative control.
 
 ## Rendering the manuscript (external toolchain)
 

@@ -119,3 +119,25 @@ def test_full_structural_checks_accept_retained_archival_pair(record):
     )
     assert bl.validate_envelope_contract(envelope).passed
     assert bl.envelope_matches_record(envelope, record)
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["schema_version", "subject_id", "description", "evidence_declared", "practice_id"],
+)
+def test_archive_rejects_duplicate_fields_at_every_object_depth(record, field):
+    serialized = bl.canonical_evaluation_record(record)
+    marker = json.dumps(field) + ":"
+    ambiguous = serialized.replace(marker, marker + "null," + marker, 1)
+    with pytest.raises(ValueError, match="duplicate replay JSON field"):
+        bl.load_evaluation_record(ambiguous)
+
+
+def test_loading_does_not_claim_replay_or_repair_retained_output(record):
+    changed = replace(
+        record, assessment=replace(record.assessment, intake_notes=("edited",))
+    )
+    restored = bl.load_evaluation_record(bl.canonical_evaluation_record(changed))
+    assert restored == changed
+    with pytest.raises(ValueError, match="replay differs"):
+        bl.replay_evaluation_record(restored)

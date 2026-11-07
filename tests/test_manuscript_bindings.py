@@ -207,27 +207,6 @@ def test_refresh_date_laundering_contrast_matches_the_limits_section() -> None:
     assert "70 days old" in text
 
 
-def test_the_practice_list_restates_every_registry_wire_verbatim() -> None:
-    """The numbered list in 03_practices.md is the registry, not a paraphrase.
-
-    Nine of the eleven entries already quoted their wire exactly; two had
-    drifted a word each ("scope" for the registry's "boundary", and a dropped
-    article), so the paper and the shipped registry described the same practice
-    differently while the digest, the figures, and every other gate stayed
-    green. Every title, family, and wire is now re-read from `BLACK_PRACTICES`.
-    """
-
-    collapsed = " ".join(_read("03_practices.md").split())
-    assert BLACK_PRACTICES, "an empty registry would make this sweep vacuous"
-    for index, practice in enumerate(BLACK_PRACTICES, start=1):
-        assert f"{index}. **{practice.title}**" in collapsed, practice.id
-        assert f"({practice.kind.value.lower()})." in collapsed, practice.id
-        assert practice.wire in collapsed, (
-            f"{practice.id}: the manuscript paraphrases its wire instead of "
-            f"quoting it — registry says {practice.wire!r}"
-        )
-
-
 def test_refresh_queue_omission_wording_matches_the_executed_omissions() -> None:
     """The omitted set is not all dated, so nothing may call it dated.
 

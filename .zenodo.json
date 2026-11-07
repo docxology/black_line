@@ -12,7 +12,7 @@
   ],
   "license": "cc-by-4.0",
   "access_right": "open",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "keywords": [
     "research practice",
     "declaration coverage",
@@ -84,5 +84,5 @@
       "scheme": "doi"
     }
   ],
-  "notes": "The current Line Set family is listed in README. Five earlier companion citation links are retained here. This software is 0.5.0 and has no assigned version DOI; the historical isNewVersionOf DOI identifies archived 0.4.1. Daniel's reserve-first publication remains pending."
+  "notes": "The current Line Set family is listed in README. Five earlier companion citation links are retained here. This software is 0.6.0 and has no assigned version DOI; the historical isNewVersionOf DOI identifies archived 0.4.1. Daniel's reserve-first publication remains pending."
 }

@@ -49,7 +49,7 @@ from black_line.figures.svg import (
 WIDTH = 1400
 #: The refresh marking for a stale chip: an amber fill under a dashed outline,
 #: so the state stays distinguishable from present (solid fill) and missing
-#: (hollow) even in greyscale print.
+#: (hollow) even in grayscale print.
 STALE_FILL = AMBER
 
 

@@ -94,7 +94,7 @@ inference holds.
 
 The confusion is historical, not careless. Claerbout and Karrenbach coined
 *reproducible research* for a specific engineering practice — one-command
-figure regeneration [@claerbout1992electronic] — and the term travelled into
+figure regeneration [@claerbout1992electronic] — and the term traveled into
 fields that already spoke of replication. Plesser traces the cross-
 disciplinary swap: the same word names re-running the author's artifacts in
 one literature and an independent redo in another

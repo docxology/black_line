@@ -16,7 +16,7 @@ from black_line.figures.svg import (
     CARD_H,
     CARD_W,
     COLS,
-    COOL_GREY,
+    COOL_GRAY,
     CREAM,
     FOOTER_Y,
     GRID,
@@ -307,7 +307,7 @@ def evidence_matrix_svg(practices: tuple[BlackPractice, ...] = BLACK_PRACTICES) 
         )
         x = 610
         for tag in sorted(practice.tags):
-            x += chip(x, y + 6, tag, fill=COOL_GREY, stroke=GRID) + 6
+            x += chip(x, y + 6, tag, fill=COOL_GRAY, stroke=GRID) + 6
         x = 930
         for label in practice.required_evidence:
             x += chip(x, y + 6, label, fill=MINT, stroke=TEAL) + 6

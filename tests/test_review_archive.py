@@ -43,6 +43,29 @@ def test_finding_4_result_is_not_input_identity_and_bundle_replays():
     assert original.attempt == first
 
 
+def test_same_result_retains_distinct_declaration_and_effective_configuration():
+    original = record()
+    changed = bl.evaluation_record(
+        replace(work(), description="different description"),
+        as_of="2026-07-18",
+        max_evidence_age_days=60,
+        subject_id="subject",
+        source_snapshot_refs=("snapshot-1",),
+    )
+    assert bl.canonical_assessment(original.assessment) == bl.canonical_assessment(
+        changed.assessment
+    )
+    assert bl.evaluation_record_digest(original) != bl.evaluation_record_digest(changed)
+    restored = bl.load_evaluation_record(bl.canonical_evaluation_record(changed))
+    assert restored.attempt.description == "different description"
+    assert restored.as_of == "2026-07-18"
+    assert restored.max_evidence_age_days == 60
+    assert bl.replay_evaluation_record(restored) == (
+        changed.assessment,
+        changed.surfaces,
+    )
+
+
 @pytest.mark.parametrize(
     "field, value",
     [

@@ -85,6 +85,30 @@ def test_finding_8_empty_versus_irrelevant_projection_context(evidence, expected
     assert (projected,) == assessment.findings
 
 
+def test_identical_surfaces_require_distinct_attempt_wide_projection_context():
+    empty, empty_surfaces = bl.evaluate_with_surfaces(
+        bl.WorkAttempt("work", PRACTICE.tags),
+        (PRACTICE,),
+        as_of="2026-07-18",
+    )
+    unrelated, unrelated_surfaces = bl.evaluate_with_surfaces(
+        bl.WorkAttempt("work", PRACTICE.tags, frozenset({"unrelated"})),
+        (PRACTICE,),
+        as_of="2026-07-18",
+    )
+    assert empty_surfaces == unrelated_surfaces
+    assert empty.evidence_declared is False
+    assert unrelated.evidence_declared is True
+    assert empty.findings[0].status is bl.PracticeStatus.NEEDS_EVIDENCE
+    assert unrelated.findings[0].status is bl.PracticeStatus.NEEDS_REWORK
+    empty_projection = bl.project_finding(empty_surfaces[0], empty.evidence_declared)
+    unrelated_projection = bl.project_finding(
+        unrelated_surfaces[0], unrelated.evidence_declared
+    )
+    assert empty_projection == empty.findings[0]
+    assert unrelated_projection == unrelated.findings[0]
+
+
 @pytest.mark.parametrize(
     "digest_mode", ["different_kind", "missing_id", "mixed", "empty"]
 )

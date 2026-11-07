@@ -22,6 +22,12 @@ limits. The project is intentionally separate from Red Line's refusal evaluator.
   the companion `line_set` work at <https://github.com/docxology/line_set> that
   documents the current family; the historical core is an orientation within it
 
+The maintained manuscript is `docs/manuscript/`. The two root `manuscript/`
+files are retained snapshots, not alternate current sources. Their exact
+revision provenance is not established here; original spelling is preserved.
+Published release packets, completed execution narratives in `TODO.md`, and
+earlier changelog entries likewise retain their historical wording.
+
 The figure builder writes deterministic SVG and PNG outputs under
 `../output/figures/` and records the figure contract, package version, and
 registry digest in `../output/figures/figure_registry.json`. Each figure entry

@@ -22,12 +22,11 @@ contracts.
 - `test_claim_ledger.py` — claim ledger registration and digest binding
 - `test_references.py` — bibliography key citation both directions
 - `test_publication_metadata.py` — publication metadata across config and package
-- `test_scripts_cli.py` — every read-only script passes on good input
+- `test_scripts_cli.py` — paired argument controls; writing scripts use copied source/manuscript inputs and temporary outputs
 - `test_standalone_contract.py` — the package works without sibling repos
 - `test_version_sync.py` — version markers across package, manuscript, and figures
 - `test_witness_surfaces.py` — witness-layer contracts and envelope format
 - `test_no_mocks.py` — lexical ban on mocks, stand-in names, path hardcodes, and import-path insertion
-- `test_docs_recipes.py` — documentation recipes produce expected output
 - `test_archive_integrity.py` — canonical result pinned to a stored fixture; loader rejects unsupported or incomplete fields, and replay retains unusable dates and intake
 - `test_formalism_claim_ledger.py` — re-derives `data/formalism_claim_ledger.json` from the manuscript and the package
 - `test_release_audit.py` — projected context typing, unrepresentable expiry omissions, and the previous edition's DOI staying out of current-edition metadata

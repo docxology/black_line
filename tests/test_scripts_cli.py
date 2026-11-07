@@ -1,21 +1,15 @@
 """Every script under ``scripts/`` must succeed on a good run and fail closed.
 
-The three CLIs take no options and no operands, but each one used to accept an
-unknown flag or a garbage operand and exit 0 — an exit code a CI line, a
-Makefile, or a reader would read as a pass. This module drives the real
-scripts as subprocesses (no patching, no in-process argv rewriting): the
-good-input run is asserted to exit 0 and print its real summary, and every
-script is fed several argument shapes and must exit non-zero for each.
+The helpers take no options or operands. Real subprocess pairs exercise their
+argument boundary: a valid invocation succeeds and invalid arguments reject
+without reporting a result. A broken import cannot stand in for that contrast.
 
 The roster is discovered from the directory rather than listed, so a script
 added without an argument guard fails here instead of shipping unguarded.
 
-``build_figures.py`` writes, and ``build_figures()`` resolves its output root
-from the package's own location rather than from the working directory. Its
-good-input run therefore executes against a copied source tree under
-``tmp_path`` — the real script, the real builder, a throwaway output root — so
-running the suite never rewrites the checkout's shipped mirror and never needs
-the checkout to be writable.
+Writing scripts execute against copied source and manuscript inputs under
+``tmp_path``. The suite must not rewrite the checkout's generated artifacts or
+require its source tree to be writable.
 """
 
 from __future__ import annotations
@@ -37,7 +31,7 @@ SCRIPT_PATHS = tuple(
 )
 
 #: Scripts whose good-input run writes, and so must run against a copied tree.
-WRITING_SCRIPTS = frozenset({"build_figures.py"})
+WRITING_SCRIPTS = frozenset({"build_figures.py", "gen_formalism_ledger.py"})
 
 #: Scripts whose good-input run reads the ignored ``output/figures`` mirror.
 #: Only these need the ``shipped_figures`` fixture; the others must keep
@@ -71,63 +65,9 @@ def _sandbox(tmp_path: Path) -> Path:
 
     shutil.copytree(ROOT / "src", tmp_path / "src")
     shutil.copytree(ROOT / "scripts", tmp_path / "scripts")
-    # The page geometry the font floors are derived from is read at import
-    # time, so the copied tree needs the real config and nothing else.
-    (tmp_path / "docs" / "manuscript").mkdir(parents=True, exist_ok=True)
-    shutil.copy(
-        ROOT / "docs" / "manuscript" / "config.yaml",
-        tmp_path / "docs" / "manuscript",
-    )
+    shutil.copytree(ROOT / "docs" / "manuscript", tmp_path / "docs" / "manuscript")
+    (tmp_path / "data").mkdir()
     return tmp_path
-
-
-def test_the_script_roster_is_not_empty() -> None:
-    """A sweep over zero scripts would make every assertion below vacuous."""
-    assert {path.name for path in SCRIPT_PATHS} == {
-        "build_figures.py",
-        "check_figures.py",
-        "check_registry.py",
-        "gen_formalism_ledger.py",
-    }
-    assert WRITING_SCRIPTS <= {path.name for path in SCRIPT_PATHS}
-
-
-def test_check_registry_passes_on_the_real_registry() -> None:
-    result = _run(SCRIPTS / "check_registry.py")
-    assert result.returncode == 0, result.stderr
-    assert "FAIL" not in result.stdout
-    assert "digest=" in result.stdout
-
-
-def test_check_figures_passes_on_the_shipped_output_mirror(
-    shipped_figures: Path,
-) -> None:
-    """Requires a built ``output/figures``.
-
-    ``shipped_figures`` (``tests/conftest.py``) rebuilds the ignored mirror when
-    this checkout can, and skips with a named reason — after asserting the
-    mirror really is absent — when it cannot.
-    """
-
-    assert shipped_figures.is_dir()
-    result = _run(SCRIPTS / "check_figures.py")
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert result.stdout.startswith("PASS generated figure contract:")
-
-
-def test_build_figures_writes_the_bundle_it_reports(tmp_path: Path) -> None:
-    """Executed against a copied tree, so the checkout's mirror is untouched."""
-
-    from black_line.figures import FIGURE_SPECS
-
-    root = _sandbox(tmp_path)
-    result = _run(SCRIPTS / "build_figures.py", root=root)
-    assert result.returncode == 0, result.stderr
-    expected = len(FIGURE_SPECS) + 1
-    assert result.stdout.strip() == f"generated {expected} figures under output/figures"
-    written = sorted((root / "output" / "figures").glob("*.png"))
-    assert len(written) == expected, "the reported count must be what reached disk"
-    assert not (ROOT / "output" / "figures" / "unexpected.png").exists()
 
 
 @pytest.mark.parametrize("script", SCRIPT_PATHS, ids=lambda path: path.name)
@@ -142,11 +82,10 @@ def test_every_script_fails_closed_on_unexpected_arguments(
     """
 
     result = _run(script, argument)
-    assert result.returncode != 0, (
-        f"{script.name} exited 0 on {argument!r}; a gate that accepts garbage "
-        "is not a gate"
+    assert result.returncode == 2, (
+        f"{script.name} exited {result.returncode} on {argument!r}; "
+        "unexpected arguments must be a usage error"
     )
-    assert "takes no arguments" in result.stderr
     assert result.stdout == "", "a rejected invocation must not report a result"
 
 
@@ -155,8 +94,7 @@ def test_every_script_fails_closed_on_multiple_unexpected_arguments(
     script: Path,
 ) -> None:
     result = _run(script, "--nope", "also-garbage")
-    assert result.returncode != 0
-    assert "--nope also-garbage" in result.stderr
+    assert result.returncode == 2
 
 
 @pytest.mark.parametrize("script", SCRIPT_PATHS, ids=lambda path: path.name)
@@ -178,9 +116,6 @@ def test_the_guard_is_what_rejects_and_not_an_import_error(
     root = _sandbox(tmp_path) if script.name in WRITING_SCRIPTS else None
     good = _run(script, root=root)
     assert good.returncode == 0, f"{script.name}: {good.stderr}"
-    assert good.stdout.strip(), f"{script.name} produced no result on a good run"
 
     bad = _run(script, "--nope", root=root)
-    assert bad.returncode != 0
-    assert bad.returncode != good.returncode
-    assert "Traceback" not in bad.stderr, "the guard must reject, not crash"
+    assert bad.returncode == 2

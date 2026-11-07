@@ -15,7 +15,7 @@ from collections.abc import Sequence
 
 
 def require_no_arguments(name: str, argv: Sequence[str] | None = None) -> None:
-    """Exit non-zero when the caller passed anything this script cannot honour.
+    """Exit non-zero when the caller passed anything this script cannot honor.
 
     Args:
         name: Script name to print in the usage line.
@@ -26,9 +26,11 @@ def require_no_arguments(name: str, argv: Sequence[str] | None = None) -> None:
         SystemExit: With status 2 when any argument was supplied.
     """
 
-    arguments = list(sys.argv[1:] if argv is None else list(argv)[1:])
+    arguments = (sys.argv if argv is None else argv)[1:]
     if arguments:
-        raise SystemExit(
+        print(
             f"{name}: takes no arguments, got {' '.join(arguments)!r}\n"
-            f"usage: python scripts/{name} (no options, no operands)"
+            f"usage: python scripts/{name} (no options, no operands)",
+            file=sys.stderr,
         )
+        raise SystemExit(2)

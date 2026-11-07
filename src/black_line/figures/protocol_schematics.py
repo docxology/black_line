@@ -294,12 +294,12 @@ def operating_loop_svg() -> str:
         ("M 565 556 C 525 575 485 574 445 559", TEAL, "arrow_teal"),
         ("M 335 502 C 291 468 263 424 220 382", PURPLE, "arrow_purple"),
     )
-    for path_data, colour, marker in loop_segments:
+    for path_data, color, marker in loop_segments:
         body.append(
-            f'<path d="{path_data}" fill="none" stroke="{colour}" stroke-width="4" stroke-linecap="round" marker-end="url(#{marker})"/>'
+            f'<path d="{path_data}" fill="none" stroke="{color}" stroke-width="4" stroke-linecap="round" marker-end="url(#{marker})"/>'
         )
 
-    # Center question: the decision is the organising object, not the score.
+    # Center question: the decision is the organizing object, not the score.
     body.append(
         '<circle cx="500" cy="382" r="92" fill="#2d2d2d" stroke="#4a148c" stroke-width="4"/>'
     )
@@ -574,9 +574,9 @@ def claim_layers_svg() -> str:
             )
 
     for x1, x2 in ((290, 315), (535, 560), (780, 860), (1080, 1105)):
-        colour = RED if x1 == 780 else MUTED
+        color = RED if x1 == 780 else MUTED
         body.append(
-            f'<line x1="{x1}" y1="315" x2="{x2}" y2="315" stroke="{colour}" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow)"/>'
+            f'<line x1="{x1}" y1="315" x2="{x2}" y2="315" stroke="{color}" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow)"/>'
         )
     body.insert(1, _defs())
     body.extend(

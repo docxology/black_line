@@ -189,9 +189,18 @@ def _strings(values) -> tuple[str, ...]:
     return tuple(values)
 
 
+def _unique_object(pairs) -> dict:
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate replay JSON field: {key}")
+        result[key] = value
+    return result
+
+
 def load_evaluation_record(serialized: str) -> EvaluationRecord:
     try:
-        payload = json.loads(serialized)
+        payload = json.loads(serialized, object_pairs_hook=_unique_object)
         if payload["schema_version"] != REPLAY_SCHEMA:
             raise ValueError("unsupported replay schema version")
         raw = payload["attempt"]

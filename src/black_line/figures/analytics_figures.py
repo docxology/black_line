@@ -267,7 +267,7 @@ def evidence_decay_svg() -> str:
                 f'<rect x="{grid_x + age * cell_w}" y="{y}" width="{cell_w - 1}" height="{cell_h}" fill="{fill}"/>'
             )
         # Redundant to the fill: name each contiguous status run in the strip,
-        # so the figure carries its meaning in greyscale as well as in colour.
+        # so the figure carries its meaning in grayscale as well as in color.
         run_start = 0
         for index in range(len(statuses) + 1):
             if index < len(statuses) and statuses[index] is statuses[run_start]:

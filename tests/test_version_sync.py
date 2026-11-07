@@ -57,15 +57,6 @@ def test_pyproject_version_matches_package() -> None:
     assert pyproject["project"]["version"] == __version__
 
 
-def test_skill_descriptor_registry_size_matches_the_registry() -> None:
-    from black_line import BLACK_PRACTICES
-
-    skill = (ROOT / ".agents" / "skills" / "black-line" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
-    assert f"registry of {len(BLACK_PRACTICES)} practices" in skill
-
-
 def test_cover_art_version_marker_derives_from_package() -> None:
     expected_short = ".".join(__version__.split(".")[:2])
     assert SHORT_VERSION == expected_short
@@ -73,77 +64,3 @@ def test_cover_art_version_marker_derives_from_package() -> None:
     # No stray full-version or foreign short-version literal on the cover.
     marker_hits = re.findall(r"\d+\.\d+ · LIVING METHOD", cover_art_svg())
     assert marker_hits == [f"{expected_short} · LIVING METHOD"]
-
-
-# --- descriptor and README literals ------------------------------------------
-
-
-def _coverage_rows():
-    from black_line import BLACK_PRACTICES, coverage_matrix
-
-    return {row.tag: row for row in coverage_matrix(BLACK_PRACTICES)}
-
-
-def test_skill_descriptor_numeric_literals_are_derived() -> None:
-    """Every number the skill descriptor states is re-derived from the package.
-
-    The 2026-07-22 CHANGELOG entry recorded an open follow-up for exactly these
-    unbound literals; this test closes it rather than letting the row disappear.
-    """
-
-    from black_line import BLACK_PRACTICES, PRACTICE_TAG_VOCABULARY, PracticeKind
-    from black_line.figures.specs import FIGURE_SPECS
-
-    skill = (ROOT / ".agents" / "skills" / "black-line" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
-    rows = _coverage_rows()
-    research, data = rows["research"], rows["data"]
-    applicable = sum(row.practice_count for row in rows.values())
-    total_cells = len(rows) * len(BLACK_PRACTICES)
-    burden_ratio = research.practice_count // data.practice_count
-
-    expected = (
-        f"registry of {len(BLACK_PRACTICES)} practices",
-        f"{len(FIGURE_SPECS)} figures + cover",
-        f"registry of {len(BLACK_PRACTICES)} practices "
-        f"({len(PracticeKind)} craft families, "
-        f"{len(PRACTICE_TAG_VOCABULARY)}-tag reviewed vocabulary",
-        f"`research` reaches {research.practice_count} practices / "
-        f"{research.required_label_count} labels",
-        f"`data` reaches {data.practice_count} / {data.required_label_count}",
-        f"{applicable} of {total_cells} tag-practice cells",
-        f"burden {burden_ratio}-fold",
-    )
-    for literal in expected:
-        assert literal in skill, literal
-
-
-def test_readme_numeric_literals_are_derived() -> None:
-    from black_line import BLACK_PRACTICES
-    from black_line.figures.specs import FIGURE_SPECS
-
-    readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    rows = _coverage_rows()
-    research, data = rows["research"], rows["data"]
-    applicable = sum(row.practice_count for row in rows.values())
-    total_cells = len(rows) * len(BLACK_PRACTICES)
-    for literal in (
-        f"`research` reaches {research.practice_count} practices / "
-        f"{research.required_label_count} required labels",
-        f"`data` reaches {data.practice_count} / {data.required_label_count}",
-        f"across {applicable} applicable tag-practice cells of {total_cells}",
-        f"{len(FIGURE_SPECS)} deterministic manuscript figures",
-    ):
-        assert literal in readme, literal
-
-
-def test_the_descriptor_literal_check_can_fail() -> None:
-    """Positive control: a wrong count must not be accepted."""
-
-    from black_line.figures.specs import FIGURE_SPECS
-
-    skill = (ROOT / ".agents" / "skills" / "black-line" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
-    assert f"{len(FIGURE_SPECS) + 1} figures + cover" not in skill

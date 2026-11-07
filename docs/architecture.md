@@ -83,8 +83,10 @@ before scoring, then four numbered stages.
    selected.
 4. **Scoring and aggregation** — each selected practice is first split into
    typed `EvidenceSurfaces` (its present, missing, and stale required
-   labels), and the finding's status and reasons trail are projected from
-   those surfaces: what is present, what is missing, what only needs refresh.
+   labels), and the finding's status and reasons trail are projected with
+   `project_finding(surfaces, evidence_declared)`. The attempt-wide boolean says
+   whether any usable evidence was declared: empty and irrelevant-only evidence
+   can have identical required-label surfaces but different findings.
    The overall status takes the most demanding per-practice status. A finding
    whose only gaps are stale items is `NEEDS_EVIDENCE` (refresh), not
    `NEEDS_REWORK`. `evaluate_with_surfaces` returns the surfaces beside the

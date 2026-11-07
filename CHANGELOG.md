@@ -1,6 +1,38 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 — 2026-11-06
+
+- Reject duplicate JSON object fields in replay archives, including nested
+  objects, instead of silently choosing the final value before integrity checks.
+  Loading still checks supported structure; replay separately checks retained
+  results against the pinned evaluator and never repairs them.
+- Exit with usage status 2 on unexpected CLI arguments, as the guard contract
+  specifies; remove redundant argument-list copying.
+- Synchronize current package, manuscript, citation and deposit metadata for
+  0.6.0. Preserve historical release packets, citations and assessment bytes.
+- Separate the six practice families, five epistemic layers, and five protocol
+  actions in current method/protocol prose and claim-layer figure metadata.
+- Reuse the EvaluationRecord archive/replay contract, including original intake,
+  effective configuration, producing version, and projection context; clarify
+  that a digest identifies retained content rather than recovering it.
+- Distinguish Black's practice coverage from Green's capacity development and
+  label original-four symbolism and ordering as historical orientation.
+- Use American English in maintained prose and identifiers; replace the internal
+  figure constant `COOL_GREY` with `COOL_GRAY` without an alias. Align Ruff and
+  supported-Python guidance with the existing Python 3.11 minimum.
+- Retain behavioral replay/projection regressions instead of affected exact-copy,
+  documentation-output, and configuration-spelling tests. Documentation recipes
+  remain native smoke checks, not assertions over source wording.
+- Preserve published release notes, completed execution narratives, original
+  declarations, fixtures, and retained root `manuscript/` copies with their
+  original spelling. Current manuscript sources are in `docs/manuscript/`;
+  the root copies are retained snapshots of unestablished revision provenance,
+  not maintained sources or evidence of a publication.
+- Run figure and formalism writers against copied source/manuscript inputs in
+  CLI tests, and isolate Git ignore probes from host-wide excludes so the
+  missing-`.gitignore` negative control measures only the shipped rules.
+- Describe the retained citation cohort separately from the current line family;
+  preserve its original publication identities.
 
 ## 0.5.0 — 2026-10-21
 

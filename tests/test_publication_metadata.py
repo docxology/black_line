@@ -26,10 +26,8 @@ LICENSE = ROOT / "LICENSE"
 SELF = "black_line"
 SIBLINGS = ("red_line", "golden_line", "white_line", "line_set", "witness_register")
 
-#: The six real DOIs of the line-set works (this work + five siblings),
-#: asserted real and reserved via Zenodo. Adding any other DOI-shaped string to
-#: the metadata surfaces fails test_no_unverified_doi_appears_in_metadata.
-#: copy-and-paste into a bibliography and points nowhere.
+#: Verified DOI allowlist for the retained citation cohort, not an exhaustive
+#: declaration of current family membership.
 VERIFIED_DOIS: tuple[str, ...] = (
     "10.5281/zenodo.22833503",
     "10.5281/zenodo.22833506",
@@ -90,8 +88,8 @@ def test_the_citation_names_this_repository_exactly() -> None:
     assert supplements == [expected]
 
 
-def test_every_sibling_is_referenced_by_its_exact_public_url() -> None:
-    """All five siblings, each exactly once, at the canonical URL."""
+def test_retained_citation_cohort_uses_canonical_urls() -> None:
+    """Every retained citation reference uses its canonical public URL."""
 
     citation = CITATION.read_text(encoding="utf-8")
     zenodo = json.loads(ZENODO.read_text(encoding="utf-8"))
@@ -100,7 +98,6 @@ def test_every_sibling_is_referenced_by_its_exact_public_url() -> None:
         url = f"https://github.com/docxology/{sibling}"
         assert f'repository-code: "{url}"' in citation, sibling
         assert url in identifiers, sibling
-    assert len(SIBLINGS) == 5, "the set is six works; each names the other five"
 
 
 def test_no_unverified_doi_appears_in_metadata() -> None:

@@ -87,7 +87,7 @@ def _length_in_inches(value: str) -> float:
 def page_geometry(config_text: str) -> PageGeometry:
     """Derive the text block from the ``metadata.geometry`` string in config.
 
-    Only the margin keys the project actually declares are honoured; an
+    Only the margin keys the project actually declares are honored; an
     unreadable or absent geometry raises instead of falling back to a guess,
     because a wrong page size silently invalidates every point size below.
     """

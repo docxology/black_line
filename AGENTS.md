@@ -40,9 +40,10 @@ a thin CLI. Analytics helpers (`staleness_profile`, `summarize_assessments`,
 
 `evaluate_work` and `evaluate_with_surfaces` share one staged core in
 `src/black_line/evaluator.py`; never add a second scoring path. The typed
-`EvidenceSurfaces` are what a finding's status projects from, and the report
-envelope (`src/black_line/envelope.py`) points at `canonical_assessment` by
-digest without reinterpreting it — the envelope's non-claims travel with it.
+`EvidenceSurfaces` plus attempt-wide `evidence_declared` context determine a
+finding's projection, and the report envelope (`src/black_line/envelope.py`)
+points at `canonical_assessment` by digest without reinterpreting it — the
+envelope's non-claims travel with it.
 The shared witness register across the line set is a separate work by design;
 do not build cross-line logic here (see `docs/correspondence.md`).
 

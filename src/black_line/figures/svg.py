@@ -84,8 +84,8 @@ WARM_PALE = "#d6c7ba"
 CREAM = "#fffdf8"
 #: Sand tone for non-applicable cell backgrounds in heatmaps.
 SAND = "#f2ebe0"
-#: Cool grey for tag chip fills in the evidence matrix.
-COOL_GREY = "#f4f6f7"
+#: Cool gray for tag chip fills in the evidence matrix.
+COOL_GRAY = "#f4f6f7"
 #: Mint for evidence-label chip fills in the evidence matrix.
 MINT = "#e4f2ef"
 #: Family accent: Framing (dark teal).
@@ -244,7 +244,7 @@ def canvas_writers(
 
 def _defs() -> str:
     markers = []
-    for marker_id, colour in (
+    for marker_id, color in (
         ("arrow", MUTED),
         ("arrow_teal", TEAL),
         ("arrow_purple", PURPLE),
@@ -252,12 +252,12 @@ def _defs() -> str:
     ):
         markers.append(
             f'<marker id="{marker_id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
-            f'<path d="M 0 0 L 10 5 L 0 10 z" fill="{colour}"/></marker>'
+            f'<path d="M 0 0 L 10 5 L 0 10 z" fill="{color}"/></marker>'
         )
     return f"<defs>{''.join(markers)}</defs>"
 
 
-#: Deterministic status colours keyed by enum value, so a renamed enum shows up.
+#: Deterministic status colors keyed by enum value, so a renamed enum shows up.
 STATUS_FILL = {
     "ALIGNED": TEAL,
     "NEEDS_EVIDENCE": AMBER,
@@ -266,9 +266,9 @@ STATUS_FILL = {
 }
 
 #: A one-letter status channel drawn on top of the fill, so a status grid
-#: still reads when the colour does not (greyscale printing, colour vision
+#: still reads when the color does not (grayscale printing, color vision
 #: deficiency). The glyph repeats the fill; it never adds a distinction the
-#: colour does not already make.
+#: color does not already make.
 STATUS_GLYPH = {
     "ALIGNED": "A",
     "NEEDS_EVIDENCE": "E",
@@ -276,7 +276,7 @@ STATUS_GLYPH = {
     "OUTSIDE_SCOPE": "O",
 }
 
-#: Deterministic family accent colours keyed by PracticeKind value.
+#: Deterministic family accent colors keyed by PracticeKind value.
 FAMILY_FILL = {
     "FRAMING": FRAMING_TEAL,
     "TRACEABILITY": TRACE_BLUE,

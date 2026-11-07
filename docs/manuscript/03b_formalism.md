@@ -281,7 +281,7 @@ numeric values cannot stand in for the exact boolean projection context.
 
 An envelope is a witness record, not a score: it makes one instrument's
 complete report co-registrable beside the others' without granting any
-reader a licence to aggregate the status words.
+reader a license to aggregate the status words.
 
 ## Propositions
 
@@ -517,7 +517,7 @@ Each definition and proposition above names the executable test that verifies
 it. The two tables below collect those bindings so a reader can go from claim to
 failing condition without searching. A claim whose test cannot fail is not
 admitted — the invariants battery makes the same demand of itself through
-planted counter-examples. Every row is a statement about code behaviour under
+planted counter-examples. Every row is a statement about code behavior under
 declared inputs; none is a claim about the world, about safety, or about
 persons.
 
@@ -538,7 +538,7 @@ persons.
 | [@def:finding-rule] | All four branches, in order, with ordered trails | `tests/test_formalism_definitions.py::test_practice_finding_rule_matches_the_definition` |
 | [@def:aggregation] | All four aggregation branches, in order | `tests/test_formalism_definitions.py::test_overall_aggregation_matches_the_definition` |
 | [@def:evidence-surfaces] | Field names, order, stale ⊆ missing, declared evidence order | `tests/test_formalism_definitions.py::test_evidence_surfaces_match_the_definition` |
-| [@def:report-envelope] | The ten fields, the digest pointer, the travelling non-claims | `tests/test_formalism_definitions.py::test_report_envelope_matches_the_definition` |
+| [@def:report-envelope] | The ten fields, the digest pointer, the traveling non-claims | `tests/test_formalism_definitions.py::test_report_envelope_matches_the_definition` |
 
 | Proposition | Statement essence | Verifying test | Boundary kept |
 | --- | --- | --- | --- |

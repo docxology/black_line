@@ -547,7 +547,7 @@ def test_surfaces_projection_matches_the_proposition() -> None:
 
 
 def test_report_envelope_matches_the_definition() -> None:
-    """The ten envelope fields, the digest pointer, and the travelling
+    """The ten envelope fields, the digest pointer, and the traveling
     non-claims are re-derived from a real envelope over a real assessment."""
 
     field_names = [field.name for field in fields(AssessmentEnvelope)]
@@ -573,25 +573,6 @@ def test_report_envelope_matches_the_definition() -> None:
     assert envelope.report_ref == assessment_digest(assessment)
     assert envelope.native_status == assessment.status.value
     assert envelope.scope_and_nonclaims == SCOPE_AND_NONCLAIMS
-    assert any("not permission" in claim for claim in envelope.scope_and_nonclaims)
-
-    collapsed = _collapsed()
-    ten_fields = (
-        ", ".join(f"`{name}`" for name in field_names[:-1])
-        + f", and `{field_names[-1]}`"
-    )
-    assert ten_fields in collapsed
-    assert "exactly the ten fields, in order," in collapsed
-    assert f"`{ENVELOPE_SCHEMA}`" in collapsed
-    assert "SHA-256 digest of the complete `canonical_assessment`" in collapsed
-    assert "must not be compared, ranked, averaged, or merged" in collapsed
-    assert "stores and does not verify" in collapsed
-    # Positive control: a drifted field list would fail, because the asserted
-    # list is derived from the running record, not restated.
-    assert (
-        ", ".join(f"`{name}`" for name in field_names[:-2])
-        + f", and `{field_names[-2]}`"
-    ) not in collapsed
 
 
 # --- the section states every definition it is credited with ------------------

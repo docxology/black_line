@@ -33,8 +33,8 @@ from black_line.figures.svg import (
     esc,
 )
 
-#: Redundant to the fill, so the plate reads in greyscale and under colour
-#: vision deficiency: every cell carries a letter as well as a colour.
+#: Redundant to the fill, so the plate reads in grayscale and under color
+#: vision deficiency: every cell carries a letter as well as a color.
 PASS_GLYPH = "P"
 FAIL_GLYPH = "F"
 FAIL_FILL = CRIMSON

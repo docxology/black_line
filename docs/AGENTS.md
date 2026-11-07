@@ -8,7 +8,7 @@ provenance consumed by the external template validator
 (<https://github.com/docxology/template>); update it with the
 binding tests when derived claims change.
 
-Figures must be generated into `../output/figures/`, embedded with a labelled
+Figures must be generated into `../output/figures/`, embedded with a labeled
 relative path, and described with the same epistemic boundary recorded in the
 figure registry. Rendering and rendered-output validation belong to that
 external engine, cloned wherever you like (see `development.md`); do not

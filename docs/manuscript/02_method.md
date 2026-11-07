@@ -8,9 +8,10 @@ underlying artifacts or claims are adequate. This is the load-bearing design
 choice of the whole instrument — it can expose a review surface, never certify
 its truth — and everything downstream inherits that limit.
 
-## Six practice families: decision, procedure, record, world, authority
+## Five epistemic layers: decision, procedure, record, world, authority
 
-The instrument is easiest to use when six practice families are kept separate. The first
+The instrument is easiest to use when five epistemic layers are kept separate.
+These are not the registry's six practice families. The first layer
 is the **decision**: what choice could the work change? The second is the
 **procedure**: what is the smallest method that could inform that choice? The
 third is the **record**: what source, observation, transformation, failure, or
@@ -28,7 +29,7 @@ new study or agreeing on the inference drawn from it
 [@goodman2016reproducibility; @nationalacademies2019rr]. The registry therefore
 names a review surface, not a truth or authority surface.
 
-![The six-practice-family boundary map separates the decision, procedure, and record that Black Line can structure from world adequacy and authority that require domain, independent, or governance review. `ALIGNED` means fresh declaration coverage for applicable practices, not truth or permission.](../output/figures/black_claim_layers.png){#fig:black-claim-layers width=100%}
+![The five-layer epistemic boundary map separates the decision, procedure, and record that Black Line can structure from world adequacy and authority that require domain, independent, or governance review. `ALIGNED` means fresh declaration coverage for applicable practices, not truth or permission.](../output/figures/black_claim_layers.png){#fig:black-claim-layers width=100%}
 
 ## Three claim classes, three evidentiary burdens
 

@@ -2,7 +2,7 @@
 
 ## How to cite
 
-Cite the released software 0.5.0 via its repository/tag until Daniel reserves
+Cite the released software 0.6.0 via its repository/tag until Daniel reserves
 and publishes its version DOI. The last verified archived edition is 0.4.1;
 the citation below intentionally names that older edition, not this release:
 
@@ -27,7 +27,7 @@ BibTeX:
 with `docs/manuscript/config.yaml` and the package; metadata tests fail on drift.
 The last verified DOI is retained only as a historical reference and
 `isNewVersionOf` relation. Current-edition identifiers and `publication.doi`
-omit it, so the 0.5.0 cover and machine-readable citation cannot assign the
+omit it, so the 0.6.0 cover and machine-readable citation cannot assign the
 earlier edition's DOI to this release. Reserve-first publication is pending.
 
 ## Persistent Identifiers and Verification
