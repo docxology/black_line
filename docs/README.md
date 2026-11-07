@@ -22,16 +22,19 @@ limits. The project is intentionally separate from Red Line's refusal evaluator.
   the companion `line_set` work at <https://github.com/docxology/line_set> that
   documents the current family; the historical core is an orientation within it
 
-The maintained manuscript is `docs/manuscript/`. The two root `manuscript/`
-files are retained snapshots, not alternate current sources. Their exact
-revision provenance is not established here; original spelling is preserved.
+The maintained manuscript is `docs/manuscript/`. The obsolete root copies are
+archived under [`releases/legacy-manuscript/`](releases/legacy-manuscript/),
+outside engine manuscript discovery. They are retained snapshots, not alternate
+current sources; their exact revision provenance is not established here, and
+their bytes and original spelling are preserved.
 Published release packets, completed execution narratives in `TODO.md`, and
 earlier changelog entries likewise retain their historical wording.
 
 The figure builder writes deterministic SVG and PNG outputs under
 `../output/figures/` and records the figure contract, package version, and
 registry digest in `../output/figures/figure_registry.json`. Each figure entry
-also records its alt text, interpretive claim, and epistemic boundary, and
+also records its `alt_text`, interpretive claim, and epistemic boundary under
+schema 2.0 (without the retired `alt` key), and
 `validate_generated_figures` compares all three against the builders' declared
 specs, so a caption cannot quietly outclaim the method by blanking the field
 that bounds it. The visual system

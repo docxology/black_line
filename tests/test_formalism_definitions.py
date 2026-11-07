@@ -1,6 +1,6 @@
 """Bind every formalism *definition* to the code it claims to describe.
 
-The propositions in `manuscript/03b_formalism.md` have named tests. The
+The propositions in `docs/manuscript/03b_formalism.md` have named tests. The
 definitions did not: they described the record shapes, the normalization rule,
 the freshness partition, the applicability rule, and both decision tables in
 prose that nothing re-derived. A definition is the part of the formalism a

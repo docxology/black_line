@@ -49,6 +49,12 @@ that read the built mirror skip with a named reason on a machine that has no
 rasterizer, after asserting the mirror really is absent, so a missing system
 package reports as unrun rather than as a failed legibility floor.
 
+The installed wheel also carries the manuscript configuration as distribution
+data under `share/black_line/config.yaml`, so importing and running the figure
+builders does not require a source checkout. Pass an explicit project root to
+`build_figures` and `validate_generated_figures` for output and manuscript
+validation; source-checkout builds still derive geometry from the live config.
+
 ## What it cannot do alone
 
 It cannot produce the typeset PDF or HTML manuscript. Rendering and

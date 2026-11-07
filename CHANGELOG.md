@@ -2,6 +2,11 @@
 
 ## 0.6.0 — 2026-11-06
 
+- Emit figure registry schema 2.0 with authored `alt_text`, including the cover;
+  native validation rejects stale schemas, retired `alt` fields, and nonblank
+  cover-description drift as well as missing accessibility declarations.
+- Include the authentic manuscript configuration in installed distribution data
+  so the native figure producer imports and runs outside a source checkout.
 - Reject duplicate JSON object fields in replay archives, including nested
   objects, instead of silently choosing the final value before integrity checks.
   Loading still checks supported structure; replay separately checks retained
@@ -24,10 +29,11 @@
   documentation-output, and configuration-spelling tests. Documentation recipes
   remain native smoke checks, not assertions over source wording.
 - Preserve published release notes, completed execution narratives, original
-  declarations, fixtures, and retained root `manuscript/` copies with their
-  original spelling. Current manuscript sources are in `docs/manuscript/`;
-  the root copies are retained snapshots of unestablished revision provenance,
-  not maintained sources or evidence of a publication.
+  declarations, fixtures, and retained manuscript snapshots with their original
+  spelling. Archive the obsolete root copies byte-for-byte under
+  `docs/releases/legacy-manuscript/`, outside engine source discovery. Current
+  sources remain in `docs/manuscript/`; archived revision provenance is
+  unestablished and does not establish publication evidence.
 - Run figure and formalism writers against copied source/manuscript inputs in
   CLI tests, and isolate Git ignore probes from host-wide excludes so the
   missing-`.gitignore` negative control measures only the shipped rules.

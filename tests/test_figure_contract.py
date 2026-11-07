@@ -1,7 +1,7 @@
 """Binding tests for the figure contract fields and derived canvases.
 
 Two gaps this file closes. First, the on-disk gate used to compare only
-``label``, ``filename``, and ``caption``, so blanking ``alt``,
+``label``, ``filename``, and ``caption``, so blanking ``alt_text``,
 ``interpretive_claim``, or ``epistemic_boundary`` in the shipped registry left
 ``check_figures.py`` green while the fields the documentation credits with
 stopping an outclaiming caption were gone. Second, two builders carried a fixed
@@ -24,7 +24,7 @@ from black_line.figures.validate import (
 )
 
 ROOT = Path(__file__).resolve().parent.parent
-CONTRACT_FIELDS = ("caption", "alt", "interpretive_claim", "epistemic_boundary")
+CONTRACT_FIELDS = ("caption", "alt_text", "interpretive_claim", "epistemic_boundary")
 
 
 def _bundle(tmp_path: Path) -> Path:
@@ -77,6 +77,43 @@ def test_blanking_a_cover_contract_field_fails_the_gate(tmp_path: Path) -> None:
         assert validate_generated_figures(root) == [
             f"figure registry cover has a blank {field}"
         ], field
+
+
+def test_nonblank_cover_contract_drift_fails_the_gate(tmp_path: Path) -> None:
+    root = _bundle(tmp_path)
+    path, pristine = _registry(root)
+    for field in CONTRACT_FIELDS:
+        registry = json.loads(json.dumps(pristine))
+        registry["cover"][field] = "An unrelated reader-facing declaration."
+        path.write_text(json.dumps(registry), encoding="utf-8")
+        errors = validate_generated_figures(root)
+        assert len(errors) == 1, field
+        assert f"figure registry cover {field} drifted" in errors[0], field
+
+
+def test_retired_metadata_contract_is_rejected(tmp_path: Path) -> None:
+    root = _bundle(tmp_path)
+    path, pristine = _registry(root)
+    registry = json.loads(json.dumps(pristine))
+    registry["schema_version"] = "1.5"
+    path.write_text(json.dumps(registry), encoding="utf-8")
+    assert any(
+        "schema_version drifted" in error for error in validate_generated_figures(root)
+    )
+
+    for remove_canonical in (False, True):
+        registry = json.loads(json.dumps(pristine))
+        for entry in (registry["figures"][0], registry["cover"]):
+            entry["alt"] = entry["alt_text"]
+            if remove_canonical:
+                del entry["alt_text"]
+        path.write_text(json.dumps(registry), encoding="utf-8")
+        errors = validate_generated_figures(root)
+        assert any("registry contains retired alt field" in error for error in errors)
+        assert "figure registry cover contains retired alt field" in errors
+        if remove_canonical:
+            assert any("registry alt_text drifted" in error for error in errors)
+            assert "figure registry cover has a blank alt_text" in errors
 
 
 def test_cover_config_key_is_bound_to_the_registry_cover(tmp_path: Path) -> None:

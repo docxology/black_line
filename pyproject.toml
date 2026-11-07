@@ -18,6 +18,9 @@ dependencies = []
 # tests/test_standalone_contract.py fails if the two ever disagree again.
 dev = ["pytest>=7.4.0", "pytest-cov>=4.1.0", "ruff>=0.6.0"]
 
+[tool.setuptools.data-files]
+"share/black_line" = ["docs/manuscript/config.yaml"]
+
 [tool.ruff]
 # Pinned so "ruff clean" names a reproducible configuration rather than
 # whichever defaults the caller's ambient ruff happened to carry.

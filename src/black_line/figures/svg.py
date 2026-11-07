@@ -15,6 +15,7 @@ import html
 from collections.abc import Callable
 from functools import partial
 from pathlib import Path
+from sysconfig import get_path
 
 from black_line import BLACK_PRACTICES, __version__
 from black_line.figures.legibility import (
@@ -27,12 +28,15 @@ from black_line.figures.legibility import (
 #: leave the cover silently claiming an older method.
 SHORT_VERSION = ".".join(__version__.split(".")[:2])
 
-_PROJECT_ROOT = Path(__file__).resolve().parents[3]
-#: The page these figures are scaled into, read from the same manuscript config
-#: the renderer reads, so a geometry change moves the legibility floor with it.
-PAGE = page_geometry(
-    (_PROJECT_ROOT / "docs" / "manuscript" / "config.yaml").read_text(encoding="utf-8")
+_MODULE_PATH = Path(__file__).resolve()
+#: A checkout uses its live manuscript config; a wheel installs the same file
+#: as distribution data. Neither execution mode invents a page geometry.
+_CONFIG_PATH = (
+    _MODULE_PATH.parents[3] / "docs" / "manuscript" / "config.yaml"
+    if _MODULE_PATH.parents[2].name == "src"
+    else Path(get_path("data")) / "share" / "black_line" / "config.yaml"
 )
+PAGE = page_geometry(_CONFIG_PATH.read_text(encoding="utf-8"))
 
 COLS = 4
 CARD_W = 300

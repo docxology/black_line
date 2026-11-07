@@ -61,7 +61,7 @@ def validate_generated_figures(project_root: Path | None = None) -> list[str]:
         return [f"cannot read generated figure registry {registry_path}: {exc}"]
 
     # The contract is every reader-facing field a spec declares, not only the
-    # three that name the file. `alt`, `interpretive_claim`, and
+    # three that name the file. `alt_text`, `interpretive_claim`, and
     # `epistemic_boundary` are what keep a caption from outclaiming the method,
     # so blanking them on disk has to fail here rather than pass silently.
     expected = {
@@ -69,7 +69,7 @@ def validate_generated_figures(project_root: Path | None = None) -> list[str]:
             "label": spec.label,
             "filename": f"{spec.name}.png",
             "caption": spec.caption,
-            "alt": spec.alt,
+            "alt_text": spec.alt,
             "interpretive_claim": spec.interpretive_claim,
             "epistemic_boundary": spec.epistemic_boundary,
         }
@@ -97,6 +97,8 @@ def validate_generated_figures(project_root: Path | None = None) -> list[str]:
         entry = actual.get(name)
         if entry is None:
             continue
+        if "alt" in entry:
+            errors.append(f"{name} registry contains retired alt field")
         for field, expected_value in contract.items():
             if entry.get(field) != expected_value:
                 errors.append(
@@ -116,9 +118,22 @@ def validate_generated_figures(project_root: Path | None = None) -> list[str]:
     if not isinstance(cover, dict) or cover.get("filename") != "cover_art.png":
         errors.append("figure registry cover does not point to cover_art.png")
     else:
-        for field in ("caption", "alt", "interpretive_claim", "epistemic_boundary"):
+        if "alt" in cover:
+            errors.append("figure registry cover contains retired alt field")
+        for field in (
+            "caption",
+            "alt_text",
+            "interpretive_claim",
+            "epistemic_boundary",
+        ):
             if not str(cover.get(field, "")).strip():
                 errors.append(f"figure registry cover has a blank {field}")
+            elif cover.get(field) != expected[COVER_SPEC.name][field]:
+                errors.append(
+                    f"figure registry cover {field} drifted: "
+                    f"expected {expected[COVER_SPEC.name][field]!r}, "
+                    f"got {cover.get(field)!r}"
+                )
         # The cover's only PDF-side consumer is the title-page key; bind it
         # here so renaming or deleting the file cannot leave the rendered
         # cover silently missing while every other gate stays green.
@@ -140,6 +155,7 @@ def validate_generated_figures(project_root: Path | None = None) -> list[str]:
             )
 
     metadata = {
+        "schema_version": "2.0",
         "package_version": __version__,
         "registry_digest": registry_digest(BLACK_PRACTICES),
         "practice_count": len(BLACK_PRACTICES),

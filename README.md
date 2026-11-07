@@ -125,7 +125,7 @@ matrix that runs the whole invariants battery over eight registries — the
 shipped one and one planted defect per check — and the surfaces panel that
 draws one `evaluate_with_surfaces` call's typed present/missing/stale surfaces
 beside the statuses projected from them. Each figure is
-embedded in the manuscript and carries an `alt`, an `interpretive_claim`, and
+embedded in the manuscript and carries `alt_text`, an `interpretive_claim`, and
 an `epistemic_boundary` in `figure_registry.json`; `validate_generated_figures`
 compares all of those fields against the builders' declared specs, and the
 embed gate requires the image and its caption to reach the manuscript.

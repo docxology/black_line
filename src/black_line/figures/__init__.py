@@ -47,7 +47,7 @@ def build_figures(project_root: Path | None = None) -> list[Path]:
                 "label": spec.label,
                 "filename": png_path.name,
                 "caption": spec.caption,
-                "alt": spec.alt,
+                "alt_text": spec.alt,
                 "interpretive_claim": spec.interpretive_claim,
                 "epistemic_boundary": spec.epistemic_boundary,
                 "source": "black_line registry, evaluator rules, and manuscript protocol",
@@ -56,7 +56,7 @@ def build_figures(project_root: Path | None = None) -> list[Path]:
             }
         )
     registry = {
-        "schema_version": "1.5",
+        "schema_version": "2.0",
         "package_version": __version__,
         "registry_digest": registry_digest(BLACK_PRACTICES),
         "practice_count": len(BLACK_PRACTICES),
@@ -69,7 +69,7 @@ def build_figures(project_root: Path | None = None) -> list[Path]:
         "label": COVER_SPEC.label,
         "filename": f"{COVER_SPEC.name}.png",
         "caption": COVER_SPEC.caption,
-        "alt": COVER_SPEC.alt,
+        "alt_text": COVER_SPEC.alt,
         "interpretive_claim": COVER_SPEC.interpretive_claim,
         "epistemic_boundary": COVER_SPEC.epistemic_boundary,
         "source": "black_line protocol and registry semantics",
