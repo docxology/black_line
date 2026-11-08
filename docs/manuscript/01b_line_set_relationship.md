@@ -1,8 +1,8 @@
 # Relationship to the line set
 
 Black Line is the positive-method work in the historical four-line core.
-The current family includes eight instruments, their reader and witness register;
-this section orients the historical core without importing sibling semantics.
+The [current Line Set declaration](https://github.com/docxology/line_set) owns
+membership; this section orients the historical core without importing sibling semantics.
 Each of the four is
 its own repository:
 [red_line](https://github.com/docxology/red_line) is the personal security
@@ -17,6 +17,13 @@ practice findings never grant permission to cross Red Line.
 Black Line records declared coverage of established work practices. Green Line's
 capacity-under-development scope is distinct: Black's families are neither
 capacity stages nor a progression ladder, and their statuses cannot be combined.
+
+Copper records dimensioned finite resource use, outstanding commitments, and
+attributed burdens, not Black's evidence-label declaration burden. Iron compares
+recorded recovery exercises with scenario-specific targets, not Black's clean
+rerun or handoff practice; a comparison is not a prediction of recovery success.
+Violet, Copper, and Iron have access-controlled sources. Membership establishes
+neither installation nor access, and no sibling source is required here.
 
 One word is deliberately shared with Red Line, and a reader holding only this
 paper should know the other sense exists. Both papers publish a status spelled

@@ -113,8 +113,8 @@ that using the instrument improves anything.
 ## Bounded by the line set
 
 Finally, Black Line is bounded by the rest of the line set on purpose. Its
-historical four-line core is an orientation within the current family of eight
-instruments, their reader and witness register; it is not the entire family.
+historical four-line core is an orientation, not the entire family; current
+membership belongs to the [Line Set declaration](https://github.com/docxology/line_set).
 Golden
 Line addresses direction and aspiration; Red Line holds the refusal boundary;
 White Line marks absence, restraint, and unknowability. Black Line should not
@@ -122,3 +122,9 @@ absorb those questions merely because they are difficult to measure, and a
 passing Black Line assessment never licenses anything a Red Line refusal would
 forbid. The discipline's contribution is to make ordinary rigor inspectable —
 not to guarantee it.
+
+Copper's dimensioned resource accounting is not Black's evidence-label
+declaration burden. Iron's scenario-bound recorded recovery comparisons are not
+Black's clean rerun or handoff practice and do not guarantee future recovery.
+Neither supplies a compensating score or permission. Violet, Copper, and Iron
+sources are access-controlled; membership does not establish source access.

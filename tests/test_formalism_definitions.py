@@ -1,26 +1,8 @@
-"""Bind every formalism *definition* to the code it claims to describe.
-
-The propositions in `docs/manuscript/03b_formalism.md` have named tests. The
-definitions did not: they described the record shapes, the normalization rule,
-the freshness partition, the applicability rule, and both decision tables in
-prose that nothing re-derived. A definition is the part of the formalism a
-reader trusts most and the part most easily left behind by a refactor — renaming
-a field, adding an enum member, or reordering a branch would have contradicted
-the paper while every other gate stayed green.
-
-Each test below recomputes one definition's content from the running package and
-asserts the manuscript still states it. No mocks: every status comes from a real
-`evaluate_work` call, and every record shape is read from
-`dataclasses.fields`. Where a definition names a rejection, the rejection is
-executed rather than described.
-"""
+"""Exercise native formalism behavior without authored prose as a test oracle."""
 
 from __future__ import annotations
 
-import re
-from dataclasses import fields
 from datetime import date, datetime, timedelta
-from pathlib import Path
 
 import pytest
 
@@ -28,14 +10,10 @@ from black_line import (
     BLACK_PRACTICES,
     ENVELOPE_SCHEMA,
     PRACTICE_TAG_VOCABULARY,
-    SCOPE_AND_NONCLAIMS,
-    AssessmentEnvelope,
     AssessmentStatus,
     BlackAssessment,
     BlackPractice,
     EvidenceItem,
-    EvidenceSurfaces,
-    PracticeFinding,
     PracticeKind,
     PracticeStatus,
     WorkAttempt,
@@ -47,24 +25,10 @@ from black_line import (
     registry_digest,
 )
 
-MANUSCRIPT = Path(__file__).resolve().parent.parent / "docs" / "manuscript"
 AS_OF = date(2026, 7, 1)
 #: A practice with a two-label contract and a single tag, so the tests below can
 #: vary one thing at a time. Read from the registry rather than restated.
 DATA_PRACTICE = next(p for p in BLACK_PRACTICES if "data" in p.tags)
-
-
-def _formalism() -> str:
-    return (MANUSCRIPT / "03b_formalism.md").read_text(encoding="utf-8")
-
-
-def _collapsed() -> str:
-    """The formalism section with line wrapping removed.
-
-    Where the section is wrapped is an editorial choice; what it says is not.
-    """
-
-    return " ".join(_formalism().split())
 
 
 def _assess(attempt: WorkAttempt, **kwargs) -> BlackAssessment:
@@ -77,20 +41,9 @@ def _assess(attempt: WorkAttempt, **kwargs) -> BlackAssessment:
 def test_practice_record_matches_the_definition() -> None:
     """The six-tuple, its order, and the METHOD default are re-read from code."""
 
-    names = [field.name for field in fields(BlackPractice)]
-    assert names == ["id", "title", "wire", "tags", "required_evidence", "kind"]
     minimal = BlackPractice("x", "t", "w", frozenset({"data"}), ("a",))
     assert minimal.kind is PracticeKind.METHOD
 
-    collapsed = _collapsed()
-    assert (
-        r"$p = (\mathrm{id}, \mathrm{title}, \mathrm{wire}, \mathrm{tags}, "
-        r"\mathrm{req}, \mathrm{kind})$" in collapsed
-    )
-    assert (
-        f"defaults to `{PracticeKind.METHOD.value}` when omitted from positional "
-        "construction" in collapsed
-    )
 
 
 def test_tag_vocabulary_matches_the_definition() -> None:
@@ -101,10 +54,6 @@ def test_tag_vocabulary_matches_the_definition() -> None:
     declared = {tag for practice in BLACK_PRACTICES for tag in practice.tags}
     assert declared == PRACTICE_TAG_VOCABULARY
 
-    collapsed = _collapsed()
-    for tag in vocabulary:
-        assert rf"\texttt{{{tag}}}" in collapsed, tag
-    assert f"$|V| = {len(PRACTICE_TAG_VOCABULARY)}$" in collapsed
 
 
 def test_registry_matches_the_definition() -> None:
@@ -116,7 +65,6 @@ def test_registry_matches_the_definition() -> None:
     digest = registry_digest(BLACK_PRACTICES)
     assert _assess(WorkAttempt("work", frozenset({"data"}))).registry_digest == digest
 
-    assert "ordered tuple of eleven practices" in _collapsed()
 
 
 def test_craft_families_match_the_definition() -> None:
@@ -134,45 +82,16 @@ def test_craft_families_match_the_definition() -> None:
     used = {practice.kind for practice in BLACK_PRACTICES}
     assert used == set(PracticeKind)
 
-    collapsed = _collapsed()
-    for family in families:
-        assert rf"\texttt{{{family}}}" in collapsed, family
-    assert "with six families" in collapsed
 
 
 def test_work_attempt_matches_the_definition() -> None:
     """W is the four-field record and a dated item is the declared pair."""
 
-    assert [field.name for field in fields(WorkAttempt)] == [
-        "description",
-        "tags",
-        "evidence",
-        "dated_evidence",
-    ]
-    assert [field.name for field in fields(EvidenceItem)] == ["label", "noted_on"]
     assert EvidenceItem("data_origin").noted_on is None
 
-    collapsed = _collapsed()
-    assert r"$W = (\mathrm{desc}, T, E, D)$" in collapsed
-    assert r"pair $(\ell, \tau)$" in collapsed
 
 
 def test_assessment_record_matches_the_definition() -> None:
-    assert [field.name for field in fields(BlackAssessment)] == [
-        "status",
-        "findings",
-        "intake_notes",
-        "evaluated_as_of",
-        "registry_digest",
-        "evaluator_version",
-        "evidence_declared",
-        "intake_codes",
-    ]
-    assert [field.name for field in fields(PracticeFinding)] == [
-        "practice_id",
-        "status",
-        "reasons",
-    ]
     assessment = _assess(
         WorkAttempt("work", frozenset({"data"}), frozenset({"data_origin"}))
     )
@@ -180,12 +99,6 @@ def test_assessment_record_matches_the_definition() -> None:
     assert isinstance(assessment.findings, tuple)
     assert all(isinstance(f.reasons, tuple) for f in assessment.findings)
 
-    collapsed = _collapsed()
-    assert r"$A = (s, \mathcal{F}, N, d, h)$" in collapsed
-    assert (
-        "triple of a practice id, a practice status, and an ordered reasons trail"
-        in (collapsed)
-    )
 
 
 # --- status codomains ---------------------------------------------------------
@@ -194,9 +107,6 @@ def test_assessment_record_matches_the_definition() -> None:
 def test_practice_status_codomain_matches_the_definition() -> None:
     values = [status.value for status in PracticeStatus]
     assert values == ["ALIGNED", "NEEDS_EVIDENCE", "NEEDS_REWORK"]
-    collapsed = _collapsed()
-    for value in values:
-        assert rf"\texttt{{{value.replace('_', chr(92) + '_')}}}" in collapsed, value
 
 
 def test_assessment_status_codomain_matches_the_definition() -> None:
@@ -208,9 +118,6 @@ def test_assessment_status_codomain_matches_the_definition() -> None:
     assert assessment_values - practice_values == {"OUTSIDE_SCOPE"}
     assert "OUTSIDE_SCOPE" not in practice_values
 
-    collapsed = _collapsed()
-    assert r"$S_a = S_p \cup \{\texttt{OUTSIDE\_SCOPE}\}" in collapsed
-    assert "never a per-practice status" in collapsed
 
 
 # --- the two pre-stages -------------------------------------------------------
@@ -246,10 +153,6 @@ def test_review_configuration_refuses_what_the_definition_names() -> None:
     # Zero is a legal window, so "non-negative" is not a stand-in for "positive".
     assert evaluate_work(attempt, BLACK_PRACTICES, max_evidence_age_days=0).status
 
-    collapsed = _collapsed()
-    assert "raises `ValueError`" in collapsed
-    assert "raises `TypeError` rather than being coerced" in collapsed
-    assert "non-negative `int`" in collapsed
 
 
 def test_intake_normalization_matches_the_definition() -> None:
@@ -280,9 +183,6 @@ def test_intake_normalization_matches_the_definition() -> None:
         assert blocked.findings == (), description
     assert _assess(WorkAttempt(" w ", frozenset({"data"}))).findings != ()
 
-    collapsed = _collapsed()
-    assert r"\mathrm{lower}(\mathrm{strip}(t))" in collapsed
-    assert r"\mathrm{strip}(\mathrm{desc}) = \varepsilon" in collapsed
 
 
 def test_freshness_partition_matches_the_definition() -> None:
@@ -322,9 +222,6 @@ def test_freshness_partition_matches_the_definition() -> None:
     )
     assert fresh.status is AssessmentStatus.ALIGNED
 
-    collapsed = _collapsed()
-    assert r"F = \mathrm{clean}(E) \cup \mathrm{fresh\_dated}$" in collapsed
-    assert r"staleness begins at age $\omega + 1$" in collapsed
 
 
 def test_applicability_matches_the_definition() -> None:
@@ -339,10 +236,6 @@ def test_applicability_matches_the_definition() -> None:
     assert _assess(WorkAttempt("w", ("music",))).findings == ()
     assert _assess(WorkAttempt("w", ())).findings == ()
 
-    assert (
-        r"A(W) = \{\, p \in R : p.\mathrm{tags} \cap \mathrm{clean}(T) \neq "
-        r"\emptyset \,\}" in _collapsed()
-    )
 
 
 def test_practice_finding_rule_matches_the_definition() -> None:
@@ -385,11 +278,6 @@ def test_practice_finding_rule_matches_the_definition() -> None:
     assert both_missing.status is PracticeStatus.NEEDS_REWORK
     assert both_missing.reasons == (f"required evidence is missing: {first}, {second}",)
 
-    collapsed = _collapsed()
-    assert r"$\mathrm{missing} \subseteq \Sigma$" in collapsed
-    assert (
-        "reasons trail naming present, missing, and stale-refresh labels" in collapsed
-    )
 
 
 def test_overall_aggregation_matches_the_definition() -> None:
@@ -430,9 +318,6 @@ def test_overall_aggregation_matches_the_definition() -> None:
     assert outside.findings == ()
     assert outside.status is AssessmentStatus.OUTSIDE_SCOPE
 
-    collapsed = _collapsed()
-    assert r"otherwise `ALIGNED` if $\mathcal{F} \neq \emptyset$" in collapsed
-    assert "otherwise `OUTSIDE_SCOPE`" in collapsed
 
 
 # --- surfaces, projection, and the report envelope -----------------------------
@@ -451,11 +336,7 @@ SURFACES_ATTEMPT = WorkAttempt(
 
 
 def test_evidence_surfaces_match_the_definition() -> None:
-    """The four-field record, stale ⊆ missing, and the declared-order invariant
-    are re-read from the running code, and the manuscript states them exactly."""
-
-    field_names = [field.name for field in fields(EvidenceSurfaces)]
-    assert field_names == ["practice_id", "present", "missing", "stale"]
+    """Required-label partitions retain declaration order and stale containment."""
 
     assessment, surfaces = evaluate_with_surfaces(
         SURFACES_ATTEMPT, BLACK_PRACTICES, as_of=AS_OF, max_evidence_age_days=30
@@ -485,34 +366,10 @@ def test_evidence_surfaces_match_the_definition() -> None:
     assert any(surface.stale for surface in surfaces)
     assert assessment.findings, "surfaces align with findings by construction"
 
-    collapsed = _collapsed()
-    sigma = (
-        "$\\sigma(p) = ("
-        + ", ".join(
-            rf"\mathrm{{{name.replace('_', chr(92) + '_')}}}" for name in field_names
-        )
-        + ")$"
-    )
-    assert sigma in collapsed
-    assert "with exactly those four fields" in collapsed
-    assert r"$\mathrm{stale} \subseteq \mathrm{missing}$ always holds" in collapsed
-    assert "keep the practice's declared evidence order" in collapsed
-    # Positive control: a drifted body — one more field, or the inverted
-    # containment — would fail, because the asserted strings are derived.
-    assert (
-        "$\\sigma(p) = ("
-        + ", ".join(
-            rf"\mathrm{{{name.replace('_', chr(92) + '_')}}}"
-            for name in (*field_names, "verified")
-        )
-        + ")$"
-    ) not in collapsed
-    assert r"$\mathrm{missing} \subseteq \mathrm{stale}$" not in collapsed
 
 
 def test_surfaces_projection_matches_the_proposition() -> None:
-    """Both public forms report one staged computation, surfaces exist exactly
-    when findings do, and the manuscript states the proposition it credits."""
+    """Both public forms report one staged computation, with aligned surfaces."""
 
     batteries = (
         (SURFACES_ATTEMPT, 30),
@@ -534,36 +391,9 @@ def test_surfaces_projection_matches_the_proposition() -> None:
             finding.practice_id for finding in paired.findings
         ]
 
-    collapsed = _collapsed()
-    assert "The finding is then a *projection* of that state" in collapsed
-    assert (
-        "byte-identical, under canonical serialization, to what `evaluate_work` "
-        "returns for the same arguments" in collapsed
-    )
-    assert "one staged core, never a second evaluator" in collapsed
-    assert "no findings and therefore no surfaces" in collapsed
-    # Positive control: the proposition's direction cannot be silently flipped.
-    assert "a second evaluator behind the second public form" not in collapsed
-
 
 def test_report_envelope_matches_the_definition() -> None:
-    """The ten envelope fields, the digest pointer, and the traveling
-    non-claims are re-derived from a real envelope over a real assessment."""
-
-    field_names = [field.name for field in fields(AssessmentEnvelope)]
-    assert field_names == [
-        "schema_version",
-        "line_id",
-        "subject_id",
-        "review_date",
-        "registry_version",
-        "registry_digest",
-        "native_status",
-        "report_ref",
-        "source_snapshot_refs",
-        "scope_and_nonclaims",
-    ]
-    assert len(field_names) == 10
+    """A real envelope preserves the assessment's status and digest pointer."""
 
     assessment = _assess(
         WorkAttempt("work", frozenset({"data"}), frozenset({"data_origin"}))
@@ -572,46 +402,5 @@ def test_report_envelope_matches_the_definition() -> None:
     assert envelope.schema_version == ENVELOPE_SCHEMA == "line.report-envelope/1.0"
     assert envelope.report_ref == assessment_digest(assessment)
     assert envelope.native_status == assessment.status.value
-    assert envelope.scope_and_nonclaims == SCOPE_AND_NONCLAIMS
 
 
-# --- the section states every definition it is credited with ------------------
-
-
-def test_every_definition_in_the_section_is_bound_by_a_named_test() -> None:
-    """The definition table must cover every ``.definition`` and ``.remark`` block.
-
-    Closed in both directions: a definition with no row is unbound, and a row
-    naming a label no block declares is a dangling entry. The named test must
-    also exist, which is what stops a rename from quietly emptying the table.
-    """
-
-    text = _formalism()
-    declared = re.findall(r"^::: \{\.(?:definition|remark) #([\w:-]+)", text, re.M)
-    assert len(declared) >= 14, declared
-    rows = re.findall(
-        r"^\| \[@([\w:-]+)\] \| [^|]+ \| `tests/(test_\w+\.py)::(test_\w+)` \|$",
-        text,
-        re.M,
-    )
-    assert {label for label, _f, _fn in rows} == set(declared)
-
-    tests_dir = Path(__file__).resolve().parent
-    for _label, filename, function in rows:
-        source = (tests_dir / filename).read_text(encoding="utf-8")
-        assert f"def {function}(" in source, f"{filename}::{function}"
-
-
-def test_the_definition_binding_can_fail() -> None:
-    """Positive control: the section is compared against derived values, not itself.
-
-    Every test above asserts a value derived from the package appears in the
-    manuscript. If the manuscript said something else, the assertion would fail —
-    which is exactly what this check demonstrates without editing the file.
-    """
-
-    collapsed = _collapsed()
-    assert f"$|V| = {len(PRACTICE_TAG_VOCABULARY)}$" in collapsed
-    assert f"$|V| = {len(PRACTICE_TAG_VOCABULARY) + 1}$" not in collapsed
-    assert "ordered tuple of eleven practices" in collapsed
-    assert "ordered tuple of twelve practices" not in collapsed

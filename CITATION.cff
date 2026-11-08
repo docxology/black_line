@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use or refer to this work, please cite it as below."
 type: software
 title: "Black Line: Strong Work in Public"
-version: "0.6.0"
-date-released: "2026-11-06"
+version: "0.6.1"
+date-released: "2026-11-08"
 authors:
   - family-names: "Friedman"
     given-names: "Daniel Ari"
@@ -41,7 +41,7 @@ references:
       - family-names: "Friedman"
         given-names: "Daniel Ari"
     doi: "10.5281/zenodo.22833503"
-    notes: "Historical edition only; 0.6.0 awaits reserve-first DOI publication."
+    notes: "Historical edition only; 0.6.1 has no assigned version DOI."
   - type: software
     title: "red_line"
     authors:

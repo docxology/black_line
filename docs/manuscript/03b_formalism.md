@@ -513,22 +513,19 @@ would have produced a cleaner diagonal and a less accurate figure.
 
 ## Claim-to-test binding
 
-Each definition and proposition above names the executable test that verifies
-it. The two tables below collect those bindings so a reader can go from claim to
-failing condition without searching. A claim whose test cannot fail is not
-admitted — the invariants battery makes the same demand of itself through
-planted counter-examples. Every row is a statement about code behavior under
-declared inputs; none is a claim about the world, about safety, or about
-persons.
+The tables below are a reading aid linking formalism topics to selected native
+behavior checks, not an assertion that authored sentences or field lists are
+independently verified. The tests exercise declared inputs and planted
+counter-examples; none establishes claims about the world, safety, or persons.
 
 | Definition | What the code must still do | Verifying test |
 | --- | --- | --- |
-| [@def:practice] | Field names, order, and the `METHOD` default | `tests/test_formalism_definitions.py::test_practice_record_matches_the_definition` |
+| [@def:practice] | Omitted kind uses the native `METHOD` default | `tests/test_formalism_definitions.py::test_practice_record_matches_the_definition` |
 | [@def:tag-vocabulary] | $V$ is exactly the five reviewed tags | `tests/test_formalism_definitions.py::test_tag_vocabulary_matches_the_definition` |
 | [@def:registry] | $R$ is an ordered tuple of eleven practices with a digest | `tests/test_formalism_definitions.py::test_registry_matches_the_definition` |
 | [@def:craft-families] | $K$ is exactly the six declared families | `tests/test_formalism_definitions.py::test_craft_families_match_the_definition` |
-| [@def:work-attempt] | $W$ and the dated-item pair keep their shape | `tests/test_formalism_definitions.py::test_work_attempt_matches_the_definition` |
-| [@def:assessment-record] | $A$ and its finding triples keep their shape | `tests/test_formalism_definitions.py::test_assessment_record_matches_the_definition` |
+| [@def:work-attempt] | An undated evidence item remains explicitly undated | `tests/test_formalism_definitions.py::test_work_attempt_matches_the_definition` |
+| [@def:assessment-record] | Assessment retains the review date and tuple-valued findings/reasons | `tests/test_formalism_definitions.py::test_assessment_record_matches_the_definition` |
 | [@def:practice-status] | $S_p$ has exactly three members | `tests/test_formalism_definitions.py::test_practice_status_codomain_matches_the_definition` |
 | [@def:assessment-status] | $S_a = S_p \cup \{\texttt{OUTSIDE\_SCOPE}\}$ | `tests/test_formalism_definitions.py::test_assessment_status_codomain_matches_the_definition` |
 | [@def:review-config] | Each named bad configuration raises rather than coerces | `tests/test_formalism_definitions.py::test_review_configuration_refuses_what_the_definition_names` |
@@ -537,8 +534,8 @@ persons.
 | [@def:applicability] | Selection is exactly non-empty tag intersection | `tests/test_formalism_definitions.py::test_applicability_matches_the_definition` |
 | [@def:finding-rule] | All four branches, in order, with ordered trails | `tests/test_formalism_definitions.py::test_practice_finding_rule_matches_the_definition` |
 | [@def:aggregation] | All four aggregation branches, in order | `tests/test_formalism_definitions.py::test_overall_aggregation_matches_the_definition` |
-| [@def:evidence-surfaces] | Field names, order, stale ⊆ missing, declared evidence order | `tests/test_formalism_definitions.py::test_evidence_surfaces_match_the_definition` |
-| [@def:report-envelope] | The ten fields, the digest pointer, the traveling non-claims | `tests/test_formalism_definitions.py::test_report_envelope_matches_the_definition` |
+| [@def:evidence-surfaces] | Required-label partitions, stale ⊆ missing, declared evidence order | `tests/test_formalism_definitions.py::test_evidence_surfaces_match_the_definition` |
+| [@def:report-envelope] | Native status and complete-assessment digest pointer | `tests/test_formalism_definitions.py::test_report_envelope_matches_the_definition` |
 
 | Proposition | Statement essence | Verifying test | Boundary kept |
 | --- | --- | --- | --- |
@@ -557,11 +554,9 @@ persons.
 | [@prop:ladder] | Ladder ranks $0 \prec 1 \prec 2$; `OUTSIDE_SCOPE` unranked | `tests/test_analytics.py::test_status_rank_rejects_outside_scope` | ordering of statuses, not of people or work |
 | [@prop:invariants] | Registry shape checks, each with planted failures | `tests/test_invariants.py::test_battery_runs_every_check_once_and_passes_on_real_registry` | shape of the registry, not merit of its practices |
 
-The named tests are themselves checked: a suite test re-reads this section and
-fails if any referenced `tests/…::function` does not exist, so a renamed or
-deleted binding surfaces as a red test rather than silent prose drift. A second
-test refuses any formalism block without a label, any reference to a label no
-block declares, and any hand-written block number anywhere in the manuscript.
+Test-name wiring and exact source-field/prose copying are not behavioral
+validation and are not enforced by this table. Separate renderer-structure
+checks retain label, reference-resolution, and hand-written-number controls.
 
 These claims bound what the instrument establishes under its declared inputs and
 implementation. The tests establish that the registry is well-shaped and that

@@ -2,9 +2,9 @@
 
 ## How to cite
 
-Cite the released software 0.6.0 via its repository/tag until Daniel reserves
-and publishes its version DOI. The last verified archived edition is 0.4.1;
-the citation below intentionally names that older edition, not this release:
+Version 0.6.1 is a documentation-only patch prepared for repository release;
+use its repository and, once created, its tag. No release or deposit is asserted
+here. The citation below names the last verified archived edition, 0.4.1:
 
 > Friedman, D. A. (2026). *Black Line: Strong Work in Public* (version
 > 0.4.1) [Software and manuscript]. Zenodo.
@@ -27,8 +27,9 @@ BibTeX:
 with `docs/manuscript/config.yaml` and the package; metadata tests fail on drift.
 The last verified DOI is retained only as a historical reference and
 `isNewVersionOf` relation. Current-edition identifiers and `publication.doi`
-omit it, so the 0.6.0 cover and machine-readable citation cannot assign the
-earlier edition's DOI to this release. Reserve-first publication is pending.
+omit it, so the 0.6.1 cover and machine-readable citation cannot assign the
+earlier edition's DOI to this version. A new archive identifier is not asserted
+before its actual record is verified.
 
 ## Persistent Identifiers and Verification
 
@@ -39,7 +40,17 @@ the citation metadata unless that exact DOI is listed as verified inside the tes
 itself. A placeholder DOI that renders like a real one is worse than no DOI: it
 survives copy-and-paste into someone else's bibliography and points nowhere.
 
-## Reserving and Minting DOIs (reserve-first order)
+## Authorized automatic publication for this release
+
+On November 8, 2026, the owner authorized this GitHub Release campaign with the
+existing public repositories' Zenodo hooks left active. Inspect the authenticated
+hook state immediately before publication and verify the resulting archive's
+repository, tag, version, and contents. Never prefill a DOI or amend an immutable
+tag to add one learned afterward. PyPI, private-source disclosure, and new
+private-sibling deposit automation remain unauthorized. The manual procedure
+below is an alternative, not a prerequisite for this authorized integration.
+
+## Manual reserve-first DOI publication
 
 1. Create the Zenodo deposition **without publishing it**, and reserve its DOI.
 2. Record the reserved DOI in this repository: add it under `identifiers:` in

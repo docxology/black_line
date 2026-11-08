@@ -168,16 +168,23 @@ See [AGENTS.md](AGENTS.md) for the working contract.
 
 ## The Line Set
 
-This work is one of ten in the Line Set family — eight instruments, their
-cross-line reader, and the witness register that co-registers their report
-envelopes without aggregation:
+The [current Line Set declaration](https://github.com/docxology/line_set) owns
+membership. The instruments remain separate from their reader and the Witness
+Register, which co-registers report envelopes without aggregation:
 
 - [Golden Line](https://github.com/docxology/golden_line) — the aspiration and horizon registry
 - [Red Line](https://github.com/docxology/red_line) — the cognitive-security registry of self-assessments
 - [White Line](https://github.com/docxology/white_line) — the absence and omission ledger
 - [Silver Line](https://github.com/docxology/silver_line) — the memory-and-succession instrument
-- [Violet Line](https://github.com/docxology/violet_line) — the consent ledger of affected parties
+- Violet Line — affected-party consent (access-controlled source; see the Line Set declaration)
 - [Blue Line](https://github.com/docxology/blue_line) — the stewardship instrument for maintained commitments
 - [Green Line](https://github.com/docxology/green_line) — the capacity-under-development instrument
+- Copper Line — dimensioned finite resource use, outstanding commitments, and attributed burdens (access-controlled source)
+- Iron Line — recorded recovery exercises compared with scenario-specific targets (access-controlled source)
 - [The Line Set](https://github.com/docxology/line_set) — the cross-line set reader holding instruments apart
 - [The Witness Register](https://github.com/docxology/witness_register) — co-registration without aggregation
+
+Copper's resource quantities are not Black's evidence-label declaration burden.
+Iron's recovery comparisons are not Black's clean-rerun or handoff practice and
+do not predict recovery success. Membership does not establish installation or
+source access; no sibling is a runtime dependency.
