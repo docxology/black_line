@@ -8,6 +8,8 @@
   State access-controlled sources without adding runtime dependencies.
 - Delete incidental formalism prose and source-field copying assertions while
   retaining native evaluation, canonical projection, and envelope-pointer checks.
+- Normalize the edited formalism behavior test's blank lines to the native
+  formatter contract; no evaluation or coverage assertions change.
 - Synchronize current descriptive version metadata without changing evaluator
   semantics, registries, schemas, historical captures, or DOI identities.
   No regenerated artifacts, deposit, or new release verification is asserted here.

@@ -45,7 +45,6 @@ def test_practice_record_matches_the_definition() -> None:
     assert minimal.kind is PracticeKind.METHOD
 
 
-
 def test_tag_vocabulary_matches_the_definition() -> None:
     """V is the exported vocabulary, and the registry stays inside it."""
 
@@ -53,7 +52,6 @@ def test_tag_vocabulary_matches_the_definition() -> None:
     assert vocabulary == ["analysis", "data", "engineering", "research", "writing"]
     declared = {tag for practice in BLACK_PRACTICES for tag in practice.tags}
     assert declared == PRACTICE_TAG_VOCABULARY
-
 
 
 def test_registry_matches_the_definition() -> None:
@@ -64,7 +62,6 @@ def test_registry_matches_the_definition() -> None:
     assert all(isinstance(p, BlackPractice) for p in BLACK_PRACTICES)
     digest = registry_digest(BLACK_PRACTICES)
     assert _assess(WorkAttempt("work", frozenset({"data"}))).registry_digest == digest
-
 
 
 def test_craft_families_match_the_definition() -> None:
@@ -83,12 +80,10 @@ def test_craft_families_match_the_definition() -> None:
     assert used == set(PracticeKind)
 
 
-
 def test_work_attempt_matches_the_definition() -> None:
     """W is the four-field record and a dated item is the declared pair."""
 
     assert EvidenceItem("data_origin").noted_on is None
-
 
 
 def test_assessment_record_matches_the_definition() -> None:
@@ -98,7 +93,6 @@ def test_assessment_record_matches_the_definition() -> None:
     assert assessment.evaluated_as_of == AS_OF.isoformat()
     assert isinstance(assessment.findings, tuple)
     assert all(isinstance(f.reasons, tuple) for f in assessment.findings)
-
 
 
 # --- status codomains ---------------------------------------------------------
@@ -117,7 +111,6 @@ def test_assessment_status_codomain_matches_the_definition() -> None:
     assert practice_values < assessment_values
     assert assessment_values - practice_values == {"OUTSIDE_SCOPE"}
     assert "OUTSIDE_SCOPE" not in practice_values
-
 
 
 # --- the two pre-stages -------------------------------------------------------
@@ -154,7 +147,6 @@ def test_review_configuration_refuses_what_the_definition_names() -> None:
     assert evaluate_work(attempt, BLACK_PRACTICES, max_evidence_age_days=0).status
 
 
-
 def test_intake_normalization_matches_the_definition() -> None:
     """clean() strips and lowercases, every drop is noted, and block() is exact."""
 
@@ -182,7 +174,6 @@ def test_intake_normalization_matches_the_definition() -> None:
         assert blocked.status is AssessmentStatus.NEEDS_REWORK, description
         assert blocked.findings == (), description
     assert _assess(WorkAttempt(" w ", frozenset({"data"}))).findings != ()
-
 
 
 def test_freshness_partition_matches_the_definition() -> None:
@@ -223,7 +214,6 @@ def test_freshness_partition_matches_the_definition() -> None:
     assert fresh.status is AssessmentStatus.ALIGNED
 
 
-
 def test_applicability_matches_the_definition() -> None:
     """Selection is exactly non-empty tag intersection, for every tag in V."""
 
@@ -235,7 +225,6 @@ def test_applicability_matches_the_definition() -> None:
     # An empty intersection selects nothing at all.
     assert _assess(WorkAttempt("w", ("music",))).findings == ()
     assert _assess(WorkAttempt("w", ())).findings == ()
-
 
 
 def test_practice_finding_rule_matches_the_definition() -> None:
@@ -279,7 +268,6 @@ def test_practice_finding_rule_matches_the_definition() -> None:
     assert both_missing.reasons == (f"required evidence is missing: {first}, {second}",)
 
 
-
 def test_overall_aggregation_matches_the_definition() -> None:
     """Each aggregation branch is produced by a real attempt, in priority order."""
 
@@ -317,7 +305,6 @@ def test_overall_aggregation_matches_the_definition() -> None:
     outside = _assess(WorkAttempt("work", frozenset({"music"})))
     assert outside.findings == ()
     assert outside.status is AssessmentStatus.OUTSIDE_SCOPE
-
 
 
 # --- surfaces, projection, and the report envelope -----------------------------
@@ -367,7 +354,6 @@ def test_evidence_surfaces_match_the_definition() -> None:
     assert assessment.findings, "surfaces align with findings by construction"
 
 
-
 def test_surfaces_projection_matches_the_proposition() -> None:
     """Both public forms report one staged computation, with aligned surfaces."""
 
@@ -402,5 +388,3 @@ def test_report_envelope_matches_the_definition() -> None:
     assert envelope.schema_version == ENVELOPE_SCHEMA == "line.report-envelope/1.0"
     assert envelope.report_ref == assessment_digest(assessment)
     assert envelope.native_status == assessment.status.value
-
-
