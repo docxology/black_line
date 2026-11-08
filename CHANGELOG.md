@@ -2,6 +2,8 @@
 
 ## 0.6.0 — 2026-11-06
 
+- Use native numbered section citations without duplicated prefixes or nested
+  hand-written links in the manuscript roadmap.
 - Emit figure registry schema 2.0 with authored `alt_text`, including the cover;
   native validation rejects stale schemas, retired `alt` fields, and nonblank
   cover-description drift as well as missing accessibility declarations.
