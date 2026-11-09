@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.1 — 2026-11-08
+
+- Documentation-only patch: defer current membership to the Line Set declaration
+  and distinguish Copper's resource quantities and Iron's recorded recovery
+  target comparisons from declaration burden, clean rerun, and handoff practice.
+  State access-controlled sources without adding runtime dependencies.
+- Delete incidental formalism prose and source-field copying assertions while
+  retaining native evaluation, canonical projection, and envelope-pointer checks.
+- Normalize the edited formalism behavior test's blank lines to the native
+  formatter contract; no evaluation or coverage assertions change.
+- Synchronize current descriptive version metadata without changing evaluator
+  semantics, registries, schemas, historical captures, or DOI identities.
+  No regenerated artifacts, deposit, or new release verification is asserted here.
+
 ## 0.6.0 — 2026-11-06
 
 - Use native numbered section citations without duplicated prefixes or nested
