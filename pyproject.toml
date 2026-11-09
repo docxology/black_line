@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "black_line"
-version = "0.6.1"
+version = "0.6.2"
 description = "A positive practice instrument for concise, inspectable, revisable work"
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 requires-python = ">=3.11"

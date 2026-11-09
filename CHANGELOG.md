@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.2 — 2026-11-09
+
+- Clarify registry_digest versus the historical assessment projection and the complete EvaluationRecord identity.
+- Document blocked projection context as None, not False, and the replay schema's explicit base-record field boundary without adding subclass or correspondence behavior.
+- Cite the current software through its repository and retain the verified 0.6.1 source ZIP and older editions as historical references. Separate authorized source-archive integration from conditional manuscript deposit procedures.
+- Remove incidental DOI allowlist assertions while retaining metadata/schema/disclosure checks. Native evaluation, result bytes, registries, and historical replay policy are unchanged.
+
 ## 0.6.1 — 2026-11-08
 
 - Documentation-only patch: defer current membership to the Line Set declaration

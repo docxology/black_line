@@ -67,7 +67,7 @@ print(assessment.status, assessment.registry_digest)
 ```
 
 The status is a declaration-coverage prompt, not a truth, safety, or permission
-claim. The assessment digest pins the practice registry used for the decision;
+claim. `assessment.registry_digest` pins the practice registry used for the decision;
 serialize the result with `canonical_assessment(assessment)`. For replay, retain
 an `evaluation_record` with its original declaration, pinned configuration,
 registry snapshot, typed surfaces and version; a result alone omits those inputs.
@@ -87,6 +87,9 @@ cross-instrument report envelope (`line.report-envelope/1.0`): a digest
 pointer to the complete canonical assessment plus the instrument's stated
 non-claims, for archiving one line's complete report beside reports from the
 sibling instruments without ranking, merging, or reinterpreting any of them.
+The envelope's `report_ref` identifies the historical result projection, not the
+complete `EvaluationRecord`; `evaluation_record_digest` identifies retained
+declarations, context, and surfaces.
 Worked recipes for both live in `docs/usage.md`.
 
 `envelope_matches_assessment` checks report correspondence only.

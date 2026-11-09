@@ -12,7 +12,7 @@
   ],
   "license": "cc-by-4.0",
   "access_right": "open",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "keywords": [
     "research practice",
     "declaration coverage",
@@ -23,6 +23,7 @@
     "engineering practice"
   ],
   "related_identifiers": [
+    {"identifier": "10.5281/zenodo.24069415", "relation": "references", "scheme": "doi"},
     {
       "identifier": "10.5281/zenodo.22833503",
       "relation": "isNewVersionOf",
@@ -84,5 +85,5 @@
       "scheme": "doi"
     }
   ],
-  "notes": "Current membership belongs to https://github.com/docxology/line_set. Copper resource quantities are not Black evidence-label declaration burden; Iron recorded recovery target comparisons are not clean rerun or handoff practice and do not predict recovery success. Violet, Copper, and Iron sources are access-controlled; membership is not access. Five earlier companion citation links are retained. Version 0.6.1 has no assigned version DOI; the historical isNewVersionOf DOI identifies archived 0.4.1. No deposit is asserted."
+  "notes": "Current membership belongs to https://github.com/docxology/line_set. Copper resource quantities are not Black evidence-label declaration burden; Iron recorded recovery target comparisons are not clean rerun or handoff practice and do not predict recovery success. Violet, Copper, and Iron sources are access-controlled; membership is not access. Five earlier companion citation links are retained. Previously verified source archive: 0.6.1, DOI 10.5281/zenodo.24069415; identifies that source ZIP only, not a standalone manuscript. The historical isNewVersionOf DOI 10.5281/zenodo.22833503 identifies archived 0.4.1. This metadata cites later source through its repository until that exact edition/object is independently verified."
 }

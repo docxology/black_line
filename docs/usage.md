@@ -295,12 +295,19 @@ record by canonical identity, including exact boolean types, assessment and
 surfaces, and requires the recorded released
 package version. It never silently replays an older method with today's code.
 
+A description-blocked assessment leaves `assessment.evidence_declared` as `None`:
+the result projection was not performed. The replay record still retains a
+boolean for its normalized intake. `None` does not mean `False` or no evidence.
+
 The safe JSON intake supports `WorkAttempt` with text description, frozensets
 of text tags/labels, and a tuple of `EvidenceItem` records with text labels and
 text/None dates. Blank labels and unreadable/future dates are retained with
 the evaluator's normalization notes. Arbitrary Python objects are rejected;
 the bundle does not claim to preserve hostile or unsupported object behavior.
 Set order is not meaningful; dated occurrence and registry order are retained.
+Only the listed base-record fields are serialized. Subclass extension state
+and custom object behavior are outside this schema; retain any additional
+provenance separately.
 
 Old `canonical_assessment/1.0` bytes and their `report_ref` digests do not
 change. They cannot be upgraded into faithful input records without the
