@@ -51,9 +51,12 @@ package reports as unrun rather than as a failed legibility floor.
 
 The installed wheel also carries the manuscript configuration as distribution
 data under `share/black_line/config.yaml`, so importing and running the figure
-builders does not require a source checkout. Pass an explicit project root to
-`build_figures` and `validate_generated_figures` for output and manuscript
-validation; source-checkout builds still derive geometry from the live config.
+builders does not require a source checkout. Its installed distribution record
+locates that resource for the imported package, including non-prefix target
+installations; the running interpreter's unrelated data prefix is not a fallback.
+Pass an explicit project root to `build_figures` and
+`validate_generated_figures` for output and manuscript validation;
+source-checkout builds still derive geometry from the live config.
 
 ## What it cannot do alone
 

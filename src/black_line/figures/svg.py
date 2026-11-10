@@ -14,8 +14,8 @@ from __future__ import annotations
 import html
 from collections.abc import Callable
 from functools import partial
+from importlib.metadata import distribution
 from pathlib import Path
-from sysconfig import get_path
 
 from black_line import BLACK_PRACTICES, __version__
 from black_line.figures.legibility import (
@@ -29,12 +29,29 @@ from black_line.figures.legibility import (
 SHORT_VERSION = ".".join(__version__.split(".")[:2])
 
 _MODULE_PATH = Path(__file__).resolve()
+
+
+def _installed_config_path() -> Path:
+    """Find this installation's authoritative distribution-data resource."""
+    installed = distribution("black_line")
+    if Path(installed.locate_file("black_line")).resolve() != _MODULE_PATH.parents[1]:
+        raise FileNotFoundError("Black Line metadata does not match the imported package")
+    resources = [
+        item
+        for item in installed.files or ()
+        if item.parts[-3:] == ("share", "black_line", "config.yaml")
+    ]
+    if len(resources) != 1:
+        raise FileNotFoundError("Black Line has no unique installed geometry resource")
+    return Path(installed.locate_file(resources[0]))
+
+
 #: A checkout uses its live manuscript config; a wheel installs the same file
 #: as distribution data. Neither execution mode invents a page geometry.
 _CONFIG_PATH = (
     _MODULE_PATH.parents[3] / "docs" / "manuscript" / "config.yaml"
     if _MODULE_PATH.parents[2].name == "src"
-    else Path(get_path("data")) / "share" / "black_line" / "config.yaml"
+    else _installed_config_path()
 )
 PAGE = page_geometry(_CONFIG_PATH.read_text(encoding="utf-8"))
 

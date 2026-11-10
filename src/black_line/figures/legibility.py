@@ -24,6 +24,7 @@ import math
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from xml.etree import ElementTree
 
 __all__ = [
     "COVER_WIDTH_FRACTION",
@@ -57,7 +58,7 @@ MIN_RENDERED_PT = 6.0
 COVER_WIDTH_FRACTION = 0.98
 
 _LENGTH_RE = re.compile(r"([-+]?\d*\.?\d+)\s*(in|cm|mm|pt)")
-_FONT_SIZE_RE = re.compile(r'font-size="([\d.]+)px"')
+_FONT_SIZE_RE = re.compile(r"([\d.]+)px")
 _VIEWBOX_RE = re.compile(r'viewBox="0 0 ([\d.]+) ([\d.]+)"')
 
 
@@ -165,7 +166,11 @@ def svg_canvas(svg_text: str) -> tuple[float, float]:
 def smallest_font_units(svg_text: str) -> float:
     """Return the smallest ``font-size`` in canvas units drawn in an SVG."""
 
-    sizes = [float(value) for value in _FONT_SIZE_RE.findall(svg_text)]
+    sizes = [
+        float(match.group(1))
+        for element in ElementTree.fromstring(svg_text).iter()
+        if (match := _FONT_SIZE_RE.fullmatch(element.get("font-size", "")))
+    ]
     if not sizes:
         raise ValueError("generated SVG draws no sized text")
     return min(sizes)

@@ -18,6 +18,7 @@ from .intake import (
     resolve_max_age as _resolve_max_age,
     clean_labels as _clean_labels,
     dated_labels as _dated_labels,
+    is_scalar_text,
 )
 
 from .model import (
@@ -153,7 +154,7 @@ def _evaluate(
             (),
         )
     description = getattr(attempt, "description", None)
-    blocking = not isinstance(description, str) or not description.strip()
+    blocking = not is_scalar_text(description) or not description.strip()
     if blocking:
         notes.append(
             "work description is empty or not text; restate the work before assessment"

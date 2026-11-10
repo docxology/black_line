@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from .intake import is_scalar_text
 from .model import BlackPractice, PracticeKind
 
 
@@ -23,7 +24,7 @@ def registry_defects(
                 )
             )
             continue
-        if not isinstance(practice.id, str) or not practice.id.strip():
+        if not is_scalar_text(practice.id) or not practice.id.strip():
             defects.append(
                 RegistryDefect(
                     "id_text",
@@ -31,7 +32,7 @@ def registry_defects(
                 )
             )
         if any(
-            not isinstance(value, str) or not value.strip()
+            not is_scalar_text(value) or not value.strip()
             for value in (practice.title, practice.wire)
         ):
             defects.append(
@@ -40,7 +41,7 @@ def registry_defects(
                     f"practice registry entry {index} has blank or non-text fields (blank title or wire, or unusable id)",
                 )
             )
-        if isinstance(practice.id, str):
+        if is_scalar_text(practice.id):
             if practice.id in seen:
                 defects.append(
                     RegistryDefect(
@@ -53,7 +54,7 @@ def registry_defects(
         if (
             not isinstance(tags, frozenset)
             or not tags
-            or any(not isinstance(tag, str) or not tag.strip() for tag in tags)
+            or any(not is_scalar_text(tag) or not tag.strip() for tag in tags)
         ):
             defects.append(
                 RegistryDefect(
@@ -70,7 +71,7 @@ def registry_defects(
         if (
             not isinstance(labels, tuple)
             or not labels
-            or any(not isinstance(label, str) or not label.strip() for label in labels)
+            or any(not is_scalar_text(label) or not label.strip() for label in labels)
         ):
             defects.append(
                 RegistryDefect(

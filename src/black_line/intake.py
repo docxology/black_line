@@ -5,6 +5,13 @@ from dataclasses import dataclass
 from datetime import date, datetime
 
 
+def is_scalar_text(value: object) -> bool:
+    """Whether text can be retained losslessly as Unicode-scalar UTF-8."""
+    return isinstance(value, str) and not any(
+        "\ud800" <= char <= "\udfff" for char in value
+    )
+
+
 def resolve_review_date(as_of: str | date | None) -> date:
     if as_of is None:
         return date.today()
@@ -36,7 +43,7 @@ def clean_labels(raw: object, field: str) -> tuple[frozenset[str], tuple[str, ..
     kept: set[str] = set()
     notes: list[str] = []
     for token in raw:
-        if not isinstance(token, str) or not token.strip():
+        if not is_scalar_text(token) or not token.strip():
             notes.append(f"ignored a malformed {field} label")
             continue
         kept.add(token.strip().lower())
@@ -60,7 +67,7 @@ def dated_intake(
     rows = []
     for index, item in enumerate(records):
         raw_label = getattr(item, "label", None)
-        if not isinstance(raw_label, str) or not raw_label.strip():
+        if not is_scalar_text(raw_label) or not raw_label.strip():
             rows.append(DatedIntake(index, raw_label, "", None, "malformed_label"))
             continue
         label = raw_label.strip().lower()

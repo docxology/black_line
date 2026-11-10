@@ -2,6 +2,14 @@
 
 ## 0.6.2 — 2026-11-09
 
+- Require structural text types throughout loaded replay records, independently
+  of the later replay comparison; reject arrays and objects in native text fields.
+- Admit only Unicode scalar text to lossless replay custody and transport
+  provenance. Preserve valid Unicode bytes and historical assessment projections;
+  live malformed labels remain set aside with safe notes rather than failing
+  the whole evaluation.
+- Measure explicit SVG pixel font-size attributes, ignoring comments and text
+  that merely mention a size; retain the existing six-point print floor.
 - Clarify registry_digest versus the historical assessment projection and the complete EvaluationRecord identity.
 - Document blocked projection context as None, not False, and the replay schema's explicit base-record field boundary without adding subclass or correspondence behavior.
 - Cite the current software through its repository and retain the verified 0.6.1 source ZIP and older editions as historical references. Separate authorized source-archive integration from conditional manuscript deposit procedures.

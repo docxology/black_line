@@ -302,3 +302,27 @@ def test_page_geometry_skips_a_bare_geometry_token() -> None:
         '  geometry: "landscape,margin=0.5in,top=0.58in,bottom=0.58in"'
     )
     assert geometry.text_width_pt == pytest.approx((8.5 - 1.0) * 72.27)
+
+
+@pytest.mark.parametrize(
+    "annotation",
+    [
+        '<!-- <text font-size="1px">not drawn</text> -->',
+        '<text>the string font-size="1px" is not an attribute</text>',
+        '<metadata><![CDATA[font-size="1px"]]></metadata>',
+        """<text data-note='font-size="1px"'>annotation</text>""",
+    ],
+)
+def test_font_inventory_reads_attributes_not_comments_or_text(annotation):
+    svg = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
+        f'{annotation}<text font-size="18px">label</text>'
+        '<g font-size="24px"><text>inherited label</text></g></svg>'
+    )
+    assert smallest_font_units(svg) == 18
+    assert smallest_font_units(svg.replace('font-size="18px"', 'font-size="1px"')) == 1
+
+
+def test_commented_font_is_not_a_sized_label():
+    with pytest.raises(ValueError, match="no sized text"):
+        smallest_font_units('<svg><!-- <text font-size="1px">absent</text> --></svg>')
