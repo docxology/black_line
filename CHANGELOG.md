@@ -10,6 +10,9 @@
   the whole evaluation.
 - Measure explicit SVG pixel font-size attributes, ignoring comments and text
   that merely mention a size; retain the existing six-point print floor.
+- Locate installed figure geometry through the imported distribution's own
+  resource record, including non-prefix target installs; refuse mismatched
+  metadata rather than borrowing an unrelated interpreter's configuration.
 - Clarify registry_digest versus the historical assessment projection and the complete EvaluationRecord identity.
 - Document blocked projection context as None, not False, and the replay schema's explicit base-record field boundary without adding subclass or correspondence behavior.
 - Cite the current software through its repository and retain the verified 0.6.1 source ZIP and older editions as historical references. Separate authorized source-archive integration from conditional manuscript deposit procedures.
