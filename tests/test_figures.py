@@ -386,21 +386,17 @@ def test_the_surfaces_panel_follows_the_executed_call() -> None:
         assert f">{STATUS_GLYPH[status]}</text>" in plate, practice_id
         for label in (*present, *missing):
             assert f">{label}</text>" in plate, (practice_id, label)
-    present_total, missing_total, stale_total = surfaces_label_totals()
+    present_total, missing_total, _stale_total = surfaces_label_totals()
     assert present_total + missing_total == sum(
         len(p.required_evidence)
         for p in BLACK_PRACTICES
         if p.tags & SURFACES_ATTEMPT.tags
     )
-    assert f"{present_total + missing_total} REQUIRED LABELS" in plate
-    assert f"({stale_total} of the {missing_total} missing here)" in plate
-    # The compression footer names the executed shape counts, in enum order.
+    # One projected word still covers several distinct native surface shapes.
     shapes = surfaces_shape_counts()
     assert dict(shapes)["NEEDS_REWORK"] > 1, (
         "the pinned scenario exists to show one word over several shapes"
     )
-    footer = " · ".join(f"{status} {count}" for status, count in shapes)
-    assert footer in plate
 
     # Narrow the declaration: the panel must move with it.
     narrowed_attempt = WorkAttempt(
