@@ -309,9 +309,9 @@ def test_scalar_unicode_archive_round_trip_preserves_raw_text_and_bytes():
     assert restored == original
     assert restored.attempt == attempt
     assert restored.source_snapshot_refs == ("snapshot-é😀", "snapshot-e\u0301")
-    assert bl.canonical_evaluation_record(restored).encode("utf-8") == serialized.encode(
+    assert bl.canonical_evaluation_record(restored).encode(
         "utf-8"
-    )
+    ) == serialized.encode("utf-8")
     assert "Café and Cafe\u0301 😀" in serialized
     assert bl.replay_evaluation_record(restored) == (
         original.assessment,

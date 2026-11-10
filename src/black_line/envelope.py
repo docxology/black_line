@@ -122,7 +122,9 @@ def source_references(refs: Iterable[str]) -> tuple[str, ...]:
         )
     result = tuple(refs)
     if not all(is_scalar_text(ref) and ref.strip() for ref in result):
-        raise ValueError("source_snapshot_refs must be non-blank Unicode scalar strings")
+        raise ValueError(
+            "source_snapshot_refs must be non-blank Unicode scalar strings"
+        )
     return result
 
 

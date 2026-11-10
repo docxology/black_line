@@ -35,7 +35,9 @@ def _installed_config_path() -> Path:
     """Find this installation's authoritative distribution-data resource."""
     installed = distribution("black_line")
     if Path(installed.locate_file("black_line")).resolve() != _MODULE_PATH.parents[1]:
-        raise FileNotFoundError("Black Line metadata does not match the imported package")
+        raise FileNotFoundError(
+            "Black Line metadata does not match the imported package"
+        )
     resources = [
         item
         for item in installed.files or ()

@@ -204,7 +204,9 @@ def _array(values) -> list:
 
 
 def _strings(values) -> tuple[str, ...]:
-    if not isinstance(values, list) or not all(is_scalar_text(value) for value in values):
+    if not isinstance(values, list) or not all(
+        is_scalar_text(value) for value in values
+    ):
         raise ValueError("supported JSON intake requires arrays of Unicode scalar text")
     return tuple(values)
 
@@ -248,9 +250,8 @@ def load_evaluation_record(serialized: str) -> EvaluationRecord:
             )
             for item in _array(payload["registry"])
         )
-        if (
-            registry_defects(registry)
-            or registry_digest(registry) != _text(payload["registry_digest"])
+        if registry_defects(registry) or registry_digest(registry) != _text(
+            payload["registry_digest"]
         ):
             raise ValueError("registry snapshot does not match recorded digest")
         result = payload["assessment"]
