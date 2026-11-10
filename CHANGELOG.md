@@ -2,6 +2,9 @@
 
 ## 0.6.2 — 2026-11-09
 
+- Distinguish fresh, absent, and stale required-label uses in the surfaces
+  panel; repeated uses across practices and stale-as-missing freshness retain
+  their native meanings.
 - Require structural text types throughout loaded replay records, independently
   of the later replay comparison; reject arrays and objects in native text fields.
 - Admit only Unicode scalar text to lossless replay custody and transport

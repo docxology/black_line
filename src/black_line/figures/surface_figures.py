@@ -290,7 +290,8 @@ def surfaces_panel_svg(attempt: WorkAttempt | None = None) -> str:
         text(
             left_x + 136,
             boundary_y,
-            f"Present, missing, and stale ({stale_total} of the {missing_total} missing here) are declaration-coverage surfaces at the pinned review date.",
+            f"Across practice rows: {present_total} fresh, {missing_total - stale_total} absent, "
+            f"{stale_total} stale label uses; stale is part of {missing_total} missing-freshness uses.",
             size=17,
             fill=MUTED,
         )
