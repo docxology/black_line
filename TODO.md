@@ -234,3 +234,7 @@ These items are not represented as hidden evaluator features:
 
 Each open item requires a new evidence contract, tests that can fail, and
 manuscript language that does not overclaim what the adapter establishes.
+
+## Workflowz review — 2026-11-10
+
+No concrete improvement survived this bounded review. Coverage included the root guidance, README, existing TODO, Python and Ruff declarations, version markers, model exports, evaluator/intake/analytics and figure-support excerpts, and the supplied test guards. No silent production substitute or evidence-based runtime change was identified; no tests or other commands were run. Re-review on a concrete failing gate, source change, or new dependency/deployment constraint; no speculative work is queued.
