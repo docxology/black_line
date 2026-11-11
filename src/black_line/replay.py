@@ -14,7 +14,13 @@ from .envelope import (
     validate_envelope_contract,
 )
 from .evaluator import evaluate_with_surfaces
-from .intake import clean_labels, dated_labels, resolve_max_age, resolve_review_date
+from .intake import (
+    clean_labels,
+    dated_labels,
+    is_scalar_text,
+    resolve_max_age,
+    resolve_review_date,
+)
 from .model import (
     AssessmentStatus,
     BlackAssessment,
@@ -54,23 +60,27 @@ class EvaluationRecord:
 
 
 def _supported_attempt(attempt: WorkAttempt) -> None:
-    if not isinstance(attempt, WorkAttempt) or not isinstance(attempt.description, str):
+    if not isinstance(attempt, WorkAttempt) or not is_scalar_text(attempt.description):
         raise TypeError(
-            "supported replay intake requires a WorkAttempt with text description"
+            "supported replay intake requires a WorkAttempt "
+            "with Unicode scalar text description"
         )
     for labels in (attempt.tags, attempt.evidence):
         if not isinstance(labels, frozenset) or not all(
-            isinstance(label, str) for label in labels
+            is_scalar_text(label) for label in labels
         ):
-            raise TypeError("supported replay labels must be frozensets of text")
+            raise TypeError(
+                "supported replay labels must be frozensets of Unicode scalar text"
+            )
     if not isinstance(attempt.dated_evidence, tuple) or any(
         not isinstance(item, EvidenceItem)
-        or not isinstance(item.label, str)
-        or (item.noted_on is not None and not isinstance(item.noted_on, str))
+        or not is_scalar_text(item.label)
+        or (item.noted_on is not None and not is_scalar_text(item.noted_on))
         for item in attempt.dated_evidence
     ):
         raise TypeError(
-            "supported replay dates require a tuple of EvidenceItem text/None records"
+            "supported replay dates require a tuple of "
+            "EvidenceItem Unicode scalar text/None records"
         )
 
 
@@ -84,8 +94,8 @@ def evaluation_record(
     source_snapshot_refs=(),
 ) -> EvaluationRecord:
     _supported_attempt(attempt)
-    if not isinstance(subject_id, str):
-        raise TypeError("subject_id must be text")
+    if not is_scalar_text(subject_id):
+        raise TypeError("subject_id must be Unicode scalar text")
     refs = source_references(source_snapshot_refs)
     review = resolve_review_date(as_of)
     window = resolve_max_age(max_evidence_age_days)
@@ -181,11 +191,23 @@ def evaluation_record_digest(record: EvaluationRecord) -> str:
     ).hexdigest()
 
 
+def _text(value) -> str:
+    if not is_scalar_text(value):
+        raise ValueError("supported JSON intake requires Unicode scalar text")
+    return value
+
+
+def _array(values) -> list:
+    if not isinstance(values, list):
+        raise ValueError("supported JSON intake requires arrays")
+    return values
+
+
 def _strings(values) -> tuple[str, ...]:
     if not isinstance(values, list) or not all(
-        isinstance(value, str) for value in values
+        is_scalar_text(value) for value in values
     ):
-        raise ValueError("supported JSON intake requires arrays of text")
+        raise ValueError("supported JSON intake requires arrays of Unicode scalar text")
     return tuple(values)
 
 
@@ -205,26 +227,31 @@ def load_evaluation_record(serialized: str) -> EvaluationRecord:
             raise ValueError("unsupported replay schema version")
         raw = payload["attempt"]
         attempt = WorkAttempt(
-            raw["description"],
+            _text(raw["description"]),
             frozenset(_strings(raw["tags"])),
             frozenset(_strings(raw["evidence"])),
-            tuple(EvidenceItem(**item) for item in raw["dated_evidence"]),
+            tuple(
+                EvidenceItem(
+                    _text(item["label"]),
+                    None if item["noted_on"] is None else _text(item["noted_on"]),
+                )
+                for item in _array(raw["dated_evidence"])
+            ),
         )
         _supported_attempt(attempt)
         registry = tuple(
             BlackPractice(
-                item["id"],
-                item["title"],
-                item["wire"],
+                _text(item["id"]),
+                _text(item["title"]),
+                _text(item["wire"]),
                 frozenset(_strings(item["tags"])),
                 _strings(item["required_evidence"]),
-                PracticeKind(item["kind"]),
+                PracticeKind(_text(item["kind"])),
             )
-            for item in payload["registry"]
+            for item in _array(payload["registry"])
         )
-        if (
-            registry_defects(registry)
-            or registry_digest(registry) != payload["registry_digest"]
+        if registry_defects(registry) or registry_digest(registry) != _text(
+            payload["registry_digest"]
         ):
             raise ValueError("registry snapshot does not match recorded digest")
         result = payload["assessment"]
@@ -234,46 +261,46 @@ def load_evaluation_record(serialized: str) -> EvaluationRecord:
                 "invalid assessment projection context: expected boolean or null"
             )
         assessment = BlackAssessment(
-            AssessmentStatus(result["status"]),
+            AssessmentStatus(_text(result["status"])),
             tuple(
                 PracticeFinding(
-                    item["practice_id"],
-                    PracticeStatus(item["status"]),
+                    _text(item["practice_id"]),
+                    PracticeStatus(_text(item["status"])),
                     _strings(item["reasons"]),
                 )
-                for item in result["findings"]
+                for item in _array(result["findings"])
             ),
             _strings(result["intake_notes"]),
-            result["evaluated_as_of"],
-            result["registry_digest"],
-            context["evaluator_version"],
+            _text(result["evaluated_as_of"]),
+            _text(result["registry_digest"]),
+            _text(context["evaluator_version"]),
             context["evidence_declared"],
             _strings(context["intake_codes"]),
         )
         surfaces = tuple(
             EvidenceSurfaces(
-                item["practice_id"],
+                _text(item["practice_id"]),
                 _strings(item["present"]),
                 _strings(item["missing"]),
                 _strings(item["stale"]),
             )
-            for item in payload["surfaces"]
+            for item in _array(payload["surfaces"])
         )
         intake = payload["normalized_intake"]
         record = EvaluationRecord(
             attempt,
-            payload["as_of"],
+            _text(payload["as_of"]),
             resolve_max_age(payload["max_evidence_age_days"]),
-            payload["evaluator_version"],
+            _text(payload["evaluator_version"]),
             registry,
-            payload["registry_digest"],
+            _text(payload["registry_digest"]),
             assessment,
             surfaces,
             frozenset(_strings(intake["tags"])),
             frozenset(_strings(intake["fresh"])),
             frozenset(_strings(intake["stale"])),
             intake["evidence_declared"],
-            payload["subject_id"],
+            _text(payload["subject_id"]),
             source_references(_strings(payload["source_snapshot_refs"])),
             _strings(payload["scope_and_nonclaims"]),
         )

@@ -57,6 +57,11 @@ Intake notes are part of the review record. A malformed extra token can coexist
 with a positive status when all required labels are present, but the note is a
 signal to repair the declaration before relying on the record.
 
+Text admitted to evaluation uses Unicode scalar values. Surrogate-bearing
+labels, like other malformed labels, are set aside with safe intake notes;
+usable declarations still determine coverage. A malformed description blocks
+scoring, and a malformed registry requires repair before scoring.
+
 ## What the digest means
 
 `assessment.registry_digest` is the SHA-256 digest of the canonical practice
@@ -276,7 +281,10 @@ It explicitly leaves subject, source references, and producing version
 unverified against the result alone. `envelope_matches_record` also checks
 those fields against a replay record. These are structural checks only.
 Bare string/bytes reference containers are rejected; collections and generators
-of nonblank strings are accepted. `strict=True` rejects incomplete envelope
+of nonblank Unicode scalar strings are accepted in order, without rewriting
+their text. The subject may be blank but must also be Unicode scalar text.
+Both factories and contract validation reject surrogate-bearing provenance.
+`strict=True` rejects incomplete envelope
 exports from old results lacking date, digest, or producing version. None of this changes what
 a status means: coverage of self-declared labels, never quality, truth,
 safety, or permission.
@@ -295,12 +303,28 @@ record by canonical identity, including exact boolean types, assessment and
 surfaces, and requires the recorded released
 package version. It never silently replays an older method with today's code.
 
+A description-blocked assessment leaves `assessment.evidence_declared` as `None`:
+the result projection was not performed. The replay record still retains a
+boolean for its normalized intake. `None` does not mean `False` or no evidence.
+
 The safe JSON intake supports `WorkAttempt` with text description, frozensets
 of text tags/labels, and a tuple of `EvidenceItem` records with text labels and
-text/None dates. Blank labels and unreadable/future dates are retained with
-the evaluator's normalization notes. Arbitrary Python objects are rejected;
-the bundle does not claim to preserve hostile or unsupported object behavior.
+text/None dates. All retained text must consist of Unicode scalar values;
+surrogate code points are rejected before admission to lossless archive custody,
+not escaped, replaced, or discarded. Valid non-ASCII and supplementary text
+keeps its exact UTF-8 representation without normalization. Blank labels and
+unreadable/future dates are retained with the evaluator's normalization notes.
+Arbitrary Python objects are rejected; the bundle does not claim to preserve
+hostile or unsupported object behavior.
 Set order is not meaningful; dated occurrence and registry order are retained.
+Only the listed base-record fields are serialized. Subclass extension state
+and custom object behavior are outside this schema; retain any additional
+provenance separately.
+
+Loading checks structural types in every retained native field: text cannot be
+an array or object, and JSON collections must have their declared array shape.
+It does not recompute findings or repair retained outputs. A structurally valid
+record may load yet fail the separate replay comparison.
 
 Old `canonical_assessment/1.0` bytes and their `report_ref` digests do not
 change. They cannot be upgraded into faithful input records without the

@@ -2,13 +2,12 @@
 
 ## How to cite
 
-Version 0.6.1 is a documentation-only patch prepared for repository release;
-use its repository and, once created, its tag. No release or deposit is asserted
-here. The citation below names the last verified archived edition, 0.4.1:
+For source version 0.6.2, use the repository citation until an archive for that
+exact edition is independently verified:
 
 > Friedman, D. A. (2026). *Black Line: Strong Work in Public* (version
-> 0.4.1) [Software and manuscript]. Zenodo.
-> <https://doi.org/10.5281/zenodo.22833503>
+> 0.6.2) [Software source]. GitHub.
+> <https://github.com/docxology/black_line>
 
 BibTeX:
 
@@ -16,59 +15,59 @@ BibTeX:
 @software{friedman_black_line_2026,
   author  = {Friedman, Daniel Ari},
   title   = {Black Line: Strong Work in Public},
-  version = {0.4.1},
+  version = {0.6.2},
   year    = {2026},
-  doi     = {10.5281/zenodo.22833503}
+  url     = {https://github.com/docxology/black_line}
 }
 ```
 
 `CITATION.cff` carries the same metadata in machine-readable form, and
 `.zenodo.json` carries the deposit metadata. Version declarations are synchronized
 with `docs/manuscript/config.yaml` and the package; metadata tests fail on drift.
-The last verified DOI is retained only as a historical reference and
-`isNewVersionOf` relation. Current-edition identifiers and `publication.doi`
-omit it, so the 0.6.1 cover and machine-readable citation cannot assign the
-earlier edition's DOI to this version. A new archive identifier is not asserted
-before its actual record is verified.
+Previously verified source archive: version 0.6.1,
+<https://doi.org/10.5281/zenodo.24069415>. It identifies that source ZIP only,
+not version 0.6.2 or a standalone rendered manuscript. The earlier edition
+0.4.1 retains DOI `10.5281/zenodo.22833503` as a historical reference.
+Current metadata uses the repository until the exact edition/object is verified.
 
 ## Persistent Identifiers and Verification
 
-This repository retains its last verified Zenodo DOI (`10.5281/zenodo.22833503`),
-confirmed from the public Zenodo record on 2026-10-21 as edition 0.4.1.
-`tests/test_publication_metadata.py` refuses any unverified DOI-shaped string in
-the citation metadata unless that exact DOI is listed as verified inside the test
-itself. A placeholder DOI that renders like a real one is worse than no DOI: it
-survives copy-and-paste into someone else's bibliography and points nowhere.
+Verify the actual archive record's repository, tag, version, and contents before
+assigning its identifier to that edition/object. A local metadata assertion is
+not external publication evidence. Keep historical title/DOI pairs unchanged;
+never invent identifiers or rewrite issued bytes.
 
-## Authorized automatic publication for this release
+## Authorized automatic publication
 
 On November 8, 2026, the owner authorized this GitHub Release campaign with the
-existing public repositories' Zenodo hooks left active. Inspect the authenticated
+existing public repositories' Zenodo hooks left active. Future use requires
+actual owner authority for that release and object. Inspect the authenticated
 hook state immediately before publication and verify the resulting archive's
 repository, tag, version, and contents. Never prefill a DOI or amend an immutable
 tag to add one learned afterward. PyPI, private-source disclosure, and new
 private-sibling deposit automation remain unauthorized. The manual procedure
-below is an alternative, not a prerequisite for this authorized integration.
+below is an alternative, not a universal prerequisite.
 
 ## Manual reserve-first DOI publication
 
-1. Create the Zenodo deposition **without publishing it**, and reserve its DOI.
-2. Record the reserved DOI in this repository: add it under `identifiers:` in
-   `CITATION.cff`, add it to `related_identifiers` in `.zenodo.json` if
-   relevant, add `publication.doi` to `docs/manuscript/config.yaml`, and add the
-   exact string to the verified list in `tests/test_publication_metadata.py`.
-   The gate turns green only when a person has asserted the DOI is real.
-3. Re-render the manuscript so the printed artifact carries its own DOI. A PDF
-   deposited without its DOI on the cover cannot be cited from the paper alone.
-4. Upload the re-rendered artifacts and publish the deposition.
+1. With owner authority for the specific object, create an unpublished Zenodo
+   deposition and reserve its DOI. A reservation is not a published deposit.
+2. Identify the exact software source or standalone manuscript being deposited.
+   If rendering a manuscript with its reserved DOI, label the reservation
+   accurately; a source ZIP DOI does not identify a separate PDF.
+3. Publish only the authorized bytes, then independently verify the actual
+   record's repository, tag, version, and contents.
+4. Record the verified identifier for that exact edition/object. If source has
+   advanced, retain it as a versioned historical reference, not a current DOI.
+   Never amend an immutable tag or archive to insert a DOI learned afterward.
 
 ## The other works
 
-This work belongs to the current ten-work family listed in README. The table
-below retains the earlier six-work citation links, not a complete current roster.
-They reference each other by name, repository URL, and
-verified DOI. No work imports another, and the shared report-envelope schema
-string is aligned by published convention rather than by dependency.
+Current membership belongs to the [Line Set declaration](https://github.com/docxology/line_set).
+The table retains earlier six-work citation links, not a complete current roster.
+Native instruments do not import siblings. Main deliberately imports published
+namespace bindings only; Witness receives report envelopes by value. The shared
+report-envelope schema is aligned by convention, not a shared runtime dependency.
 
 | Work | Role | Repository | DOI |
 | --- | --- | --- | --- |
@@ -78,12 +77,12 @@ string is aligned by published convention rather than by dependency.
 | `line_set` | the reader that declares the set and checks vocabulary separation | <https://github.com/docxology/line_set> | `https://doi.org/10.5281/zenodo.21754244` |
 | `witness_register` | companion beside the set — co-registration without aggregation | <https://github.com/docxology/witness_register> | `https://doi.org/10.5281/zenodo.21754246` |
 
-## Before the repository goes public
+## Before each release
 
 - [ ] Every gate in `AGENTS.md` green on a clean checkout.
 - [ ] `LICENSE` present and accurate.
 - [ ] No absolute local paths, secrets, or private-project names in any tracked
       file (`tests/test_publication_metadata.py` checks the first of these).
-- [ ] Git history contains nothing that should not be public — the published
-      history is a fresh initial-release commit, not a monorepo extract.
+- [ ] Review newly published Git history for disclosure. The fresh initial-release
+      history was a first-publication decision, not an instruction to reset it.
 - [ ] The rendered PDF regenerated at the release tree.

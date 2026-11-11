@@ -29,6 +29,7 @@ from dataclasses import dataclass
 
 from collections.abc import Iterable
 
+from .intake import is_scalar_text
 from .model import AssessmentStatus, BlackAssessment
 from .serialization import assessment_digest
 
@@ -95,8 +96,8 @@ def assessment_envelope(
     """
 
     refs = source_references(source_snapshot_refs)
-    if not isinstance(subject_id, str):
-        raise TypeError("subject_id must be a string")
+    if not is_scalar_text(subject_id):
+        raise TypeError("subject_id must be Unicode scalar text")
     envelope = AssessmentEnvelope(
         ENVELOPE_SCHEMA,
         BLACK_LINE_ID,
@@ -120,8 +121,10 @@ def source_references(refs: Iterable[str]) -> tuple[str, ...]:
             "source_snapshot_refs must be a collection, not a string/bytes container"
         )
     result = tuple(refs)
-    if not all(isinstance(ref, str) and ref.strip() for ref in result):
-        raise ValueError("source_snapshot_refs must be non-blank strings")
+    if not all(is_scalar_text(ref) and ref.strip() for ref in result):
+        raise ValueError(
+            "source_snapshot_refs must be non-blank Unicode scalar strings"
+        )
     return result
 
 
@@ -159,7 +162,7 @@ def validate_envelope_contract(envelope: AssessmentEnvelope) -> EnvelopeValidati
 
     require("schema_version", envelope.schema_version == ENVELOPE_SCHEMA)
     require("line_id", envelope.line_id == BLACK_LINE_ID)
-    require("subject_id", isinstance(envelope.subject_id, str))
+    require("subject_id", is_scalar_text(envelope.subject_id))
     try:
         review = date.fromisoformat(envelope.review_date)
         date_valid = review.isoformat() == envelope.review_date
@@ -187,7 +190,7 @@ def validate_envelope_contract(envelope: AssessmentEnvelope) -> EnvelopeValidati
         "source_snapshot_refs",
         isinstance(envelope.source_snapshot_refs, tuple)
         and all(
-            isinstance(ref, str) and bool(ref.strip())
+            is_scalar_text(ref) and bool(ref.strip())
             for ref in envelope.source_snapshot_refs
         ),
     )
