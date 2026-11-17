@@ -22,6 +22,8 @@ and documented once for the whole set in the companion `line_set` work,
 companion registry or manuscript is copied here, and nothing in this package
 imports, installs, or consults a sibling line project.
 
+![Black Line record-flow architecture: WorkAttempt and dated EvidenceItem intake across 5 tag families, 11-item practice registry and invariants battery, EvidenceSurfaces evaluator and RefreshQueue, and ALIGNED / NEEDS_EVIDENCE / NEEDS_REWORK / OUTSIDE_SCOPE verdicts, replay records, and report envelopes](docs/assets/architecture-overview.svg)
+
 ## Quick start
 
 Python 3.11 or newer is required.
