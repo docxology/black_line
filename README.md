@@ -11,7 +11,7 @@ self-declared tags and evidence. It is a method instrument, not a safety score,
 accreditation, or permission mechanism.
 
 Black Line is standalone, and this repository is the whole instrument — see
-[`STANDALONE.md`](STANDALONE.md). Its relationship to the other works of the
+[standalone guide](docs/standalone.md). Its relationship to the other works of the
 line set is stated in
 [`docs/manuscript/01b_line_set_relationship.md`](docs/manuscript/01b_line_set_relationship.md)
 and documented once for the whole set in the companion `line_set` work,
@@ -24,34 +24,16 @@ imports, installs, or consults a sibling line project.
 
 ![Black Line record-flow architecture: WorkAttempt and dated EvidenceItem intake across 5 tag families, 11-item practice registry and invariants battery, EvidenceSurfaces evaluator and RefreshQueue, and ALIGNED / NEEDS_EVIDENCE / NEEDS_REWORK / OUTSIDE_SCOPE verdicts, replay records, and report envelopes](docs/assets/architecture-overview.svg)
 
-## Quick start
+## Documentation
 
-Python 3.11 or newer is required.
-
-```bash
-uv run python scripts/build_figures.py   # output/ is ignored; five gates read the mirror
-uv run pytest tests/ --cov=src --cov-branch --cov-report=term-missing
-uv run python scripts/check_registry.py
-uv run python scripts/check_figures.py
-uv run ruff check src tests scripts
-uv run ruff format --check src tests scripts
-```
-
-Every tool named there is declared in the `dev` dependency group of `pyproject.toml` and
-pinned in `uv.lock`; the figure build additionally needs `rsvg-convert` from
-librsvg, which is a system package rather than a Python one.
-
-`output/` is disposable and git-ignored, so a fresh checkout has no figure
-bundle. Five gates measure the shipped mirror rather than a temporary one — the
-rendered-legibility floor, the rasterized-pixel check, the cover embed, and the
-two `check_figures.py` CLI checks. Building first is a convenience, not a
-precondition: `tests/conftest.py` rebuilds the mirror with this project's own
-deterministic builder when it is absent, so the suite is green from a clean
-checkout in either order. Without `rsvg-convert` those five gates skip with a
-named reason, after asserting the mirror really is absent, rather than failing
-for want of an artifact the checkout cannot build.
+Start with the [documentation index](docs/README.md) for setup, practice
+and evidence contracts, API recipes, and manuscript navigation. Use the
+[development guide](docs/development.md) to install the locked environment
+and run the gates.
 
 ## Minimal API use
+
+After setup, run this example from the project root with `uv run python`.
 
 ```python
 from black_line import WorkAttempt, evaluate_work
@@ -92,13 +74,13 @@ sibling instruments without ranking, merging, or reinterpreting any of them.
 The envelope's `report_ref` identifies the historical result projection, not the
 complete `EvaluationRecord`; `evaluation_record_digest` identifies retained
 declarations, context, and surfaces.
-Worked recipes for both live in `docs/usage.md`.
+See the [surface and envelope recipes](docs/usage.md).
 
 `envelope_matches_assessment` checks report correspondence only.
 `validate_envelope_contract` separately checks structural identity and required
 non-claims. Subject/source/version correspondence needs `envelope_matches_record`;
-neither check establishes authenticity. The envelope schema and exported enum
-member names are unchanged in 0.6.0.
+neither check establishes authenticity. The envelope retains the shared
+`line.report-envelope/1.0` wire schema.
 
 ## Analytics
 
@@ -113,8 +95,7 @@ shadowed observations), `effective_refresh_queue` (applicable, unshadowed expiry
 with exact predicted surface transitions), and `declaration_status_path` / `no_status_regression` /
 `status_rank` for status-transition sweeps. Every sweep calls the real
 `evaluate_work`, never a reimplementation, and all views describe declaration
-coverage — never quality, safety, or permission. Worked recipes live in
-`docs/usage.md`.
+coverage — never quality, safety, or permission. See the [analytics recipes](docs/usage.md).
 
 ## Figures
 
@@ -159,16 +140,8 @@ semantics, so the visual argument is versioned with the method.
 
 ## Rendering
 
-The typeset PDF and HTML are the one thing this repository cannot produce by
-itself. Rendering belongs to a separate publication engine,
-<https://github.com/docxology/template>, cloned wherever you like — a declared
-external dependency, not a copied engine and not a hidden one. Link this
-repository into that checkout under a qualified project name and render it by
-that name; the path-independent commands are in
-[`docs/development.md`](docs/development.md). Everything above — the package,
-the tests and their coverage floor, the registry battery, and the deterministic
-figures — runs without it.
-
+Build the PDF, HTML, and EPUB from the [canonical manuscript](docs/manuscript/README.md)
+with the [pinned template render and validation commands](docs/development.md#render-and-validate-the-manuscript).
 See [AGENTS.md](AGENTS.md) for the working contract.
 
 ## The Line Set

@@ -13,11 +13,11 @@ limits. The project is intentionally separate from Red Line's refusal evaluator.
 - [Claim ledger](claims.md) — claim classes, evidence, and explicit boundaries
 - [Correspondence](correspondence.md) — external design reviews received and
   the adopted/deferred/declined decision record
-- [Development](development.md)
-- [Standalone guide](../STANDALONE.md) — what a separated copy is, can, and cannot do
-- [Method](manuscript/02_method.md)
-- [Practice registry](manuscript/03_practices.md)
-- [Limits](manuscript/05_limits.md)
+- [Development](development.md) — environment, native gates, and pinned rendering
+- [Publication](publication.md) — citation and release procedure
+- [Release packets](releases/README.md) and [maintenance record](TODO.md)
+- [Standalone guide](standalone.md) — local use, render tooling, and optional companions
+- [Manuscript index](manuscript/README.md) — method, practice registry, examples, limits, and bibliography
 - [Relationship to the line set](manuscript/01b_line_set_relationship.md), and
   the companion `line_set` work at <https://github.com/docxology/line_set> that
   documents the current family; the historical core is an orientation within it

@@ -57,7 +57,7 @@ UNSCANNED = frozenset(
 ANCHOR_DOCS = (
     Path("README.md"),
     Path("AGENTS.md"),
-    Path("STANDALONE.md"),
+    Path("docs/standalone.md"),
     Path("docs/README.md"),
     Path("docs/development.md"),
     Path("docs/manuscript/01_introduction.md"),
@@ -127,7 +127,7 @@ MUST_NOT_BE_IGNORED = (
     "docs/manuscript/01_introduction.md",
     "data/claim_ledger.yaml",
     "README.md",
-    "STANDALONE.md",
+    "docs/standalone.md",
     "pyproject.toml",
 )
 
@@ -421,6 +421,6 @@ def test_rendering_is_documented_as_a_named_external_repository() -> None:
         "the limit must be stated plainly, not left for a reader to infer"
     )
 
-    standalone = (ROOT / "STANDALONE.md").read_text(encoding="utf-8")
+    standalone = (ROOT / "docs/standalone.md").read_text(encoding="utf-8")
     assert TEMPLATE_REPO in standalone
     assert "unrun" in standalone

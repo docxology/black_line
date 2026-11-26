@@ -29,7 +29,7 @@ new study or agreeing on the inference drawn from it
 [@goodman2016reproducibility; @nationalacademies2019rr]. The registry therefore
 names a review surface, not a truth or authority surface.
 
-![The five-layer epistemic boundary map separates the decision, procedure, and record that Black Line can structure from world adequacy and authority that require domain, independent, or governance review. `ALIGNED` means fresh declaration coverage for applicable practices, not truth or permission.](../output/figures/black_claim_layers.png){#fig:black-claim-layers width=100%}
+![The five-layer epistemic boundary map separates the decision, procedure, and record that Black Line can structure from world adequacy and authority that require domain, independent, or governance review. `ALIGNED` means fresh declaration coverage for applicable practices, not truth or permission.](../../output/figures/black_claim_layers.png){#fig:black-claim-layers width=100%}
 
 ## Three claim classes, three evidentiary burdens
 

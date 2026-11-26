@@ -33,7 +33,7 @@ discipline inspectable and repeatable across research, software, and writing.
 The figure below draws the registry in its declaration order, with each card
 color-keyed to its craft family.
 
-![The 11 practices drawn as cards in registry declaration order, color-keyed to the 6 practice families. The order interleaves families and ends at `data-provenance`: it is a declaration order, not a workflow. Each card names a review surface and its required labels; the figure is not a quality or truth score and does not grant permission to cross Red Line.](../output/figures/black_practice_wires.png){#fig:black-practice-wires width=100%}
+![The 11 practices drawn as cards in registry declaration order, color-keyed to the 6 practice families. The order interleaves families and ends at `data-provenance`: it is a declaration order, not a workflow. Each card names a review surface and its required labels; the figure is not a quality or truth score and does not grant permission to cross Red Line.](../../output/figures/black_practice_wires.png){#fig:black-practice-wires width=100%}
 
 The six practice families exist so the registry can be reviewed for balance: a
 registry that only rewarded framing but never verification would have drifted
@@ -45,14 +45,14 @@ each one; the [structural invariants](#sec:formalism) require every family to
 retain at least one practice and every tag to stay inside the reviewed
 vocabulary.
 
-![The 11 practices grouped by 6 practice families, with the reviewed 5-tag vocabulary that makes each practice applicable to a work attempt. Family coverage and tag membership are enforced by structural invariants; the taxonomy maps reachability, not evidence quality.](../output/figures/black_family_taxonomy.png){#fig:black-family-taxonomy width=100%}
+![The 11 practices grouped by 6 practice families, with the reviewed 5-tag vocabulary that makes each practice applicable to a work attempt. Family coverage and tag membership are enforced by structural invariants; the taxonomy maps reachability, not evidence quality.](../../output/figures/black_family_taxonomy.png){#fig:black-family-taxonomy width=100%}
 
 The registry's evidence contract is shown separately so that applicability and
 evidence are not mistaken for proof. The labels below are declarations the
 evaluator can match; they still require a human or external system to inspect
 the underlying source, test, observation, or transformation.
 
-![The registry's evidence-label contract: each practice names labels a reviewer can look for, while the instrument explicitly does not treat a declaration as independent verification of a source, test, or claim.](../output/figures/black_evidence_matrix.png){#fig:black-evidence-matrix width=100%}
+![The registry's evidence-label contract: each practice names labels a reviewer can look for, while the instrument explicitly does not treat a declaration as independent verification of a source, test, or claim.](../../output/figures/black_evidence_matrix.png){#fig:black-evidence-matrix width=100%}
 
 ## Registry coverage and burden {#sec:coverage-burden}
 
@@ -84,4 +84,4 @@ exists so a reviewer can read the status together with the burden it was
 earned against; whether the declared tags honestly describe the work remains
 a human judgment, exactly like the evidence behind each label.
 
-![The tag-practice coverage matrix derived from the registry: filled cells mark applicability, cell numbers give each practice's required-label count, and the margin totals each tag's reach and declaration burden. The burden is asymmetric — `research` reaches 8 practices (16 required labels) while `data` reaches 1 (2 labels) — so a narrow tag set buys a cheaper `ALIGNED`. The matrix maps applicability, not evidence quality, safety, or permission.](../output/figures/black_coverage_heatmap.png){#fig:black-coverage-heatmap width=100%}
+![The tag-practice coverage matrix derived from the registry: filled cells mark applicability, cell numbers give each practice's required-label count, and the margin totals each tag's reach and declaration burden. The burden is asymmetric — `research` reaches 8 practices (16 required labels) while `data` reaches 1 (2 labels) — so a narrow tag set buys a cheaper `ALIGNED`. The matrix maps applicability, not evidence quality, safety, or permission.](../../output/figures/black_coverage_heatmap.png){#fig:black-coverage-heatmap width=100%}

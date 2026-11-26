@@ -50,7 +50,7 @@ KIND_PREFIXES: dict[str, str] = {
 #: before pandoc runs — a `rem:` label did exactly that and cost a render.
 #:
 #: The list is restated here on purpose. This repository cannot run that engine
-#: (see STANDALONE.md), so the constraint is declared locally and checked
+#: (see docs/standalone.md), so the constraint is declared locally and checked
 #: locally; the alternative is discovering it only in a checkout that has the
 #: engine, which is precisely the coupling this project avoids.
 RENDERER_ACCEPTED_PREFIXES: frozenset[str] = frozenset(
