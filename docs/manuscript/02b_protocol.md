@@ -40,7 +40,7 @@ Exact replay requires the recorded package version. Result-only
 `canonical_assessment/1.0` bytes do not retain the declaration or configuration
 and cannot be upgraded into faithful replay inputs without them.
 
-![The smallest honest operating loop: frame the decision, declare pointers to inspectable artifacts, evaluate with a pinned date and registry digest, repair or refresh gaps, and archive the trail. The dark panel makes explicit what remains outside the instrument's authority.](../output/figures/black_operating_loop.png){#fig:black-operating-loop width=100%}
+![The smallest honest operating loop: frame the decision, declare pointers to inspectable artifacts, evaluate with a pinned date and registry digest, repair or refresh gaps, and archive the trail. The dark panel makes explicit what remains outside the instrument's authority.](../../output/figures/black_operating_loop.png){#fig:black-operating-loop width=100%}
 
 This loop is deliberately asymmetric. The evaluator can block an empty work
 description and can refuse to call an unknown or stale declaration fresh, but

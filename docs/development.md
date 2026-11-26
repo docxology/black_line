@@ -1,22 +1,22 @@
 # Development
 
-Use `uv` for the project environment. Run the tests, the gates, and the figure
-builder from this repository's own root; nothing in that loop reaches outside
-this checkout.
+## Set up the project
 
-The package requires Python 3.11 or newer and has no runtime dependencies beyond
-the Python standard library. Its declared development tools — `pytest`,
-`pytest-cov`, and `ruff` — are in the `dev` dependency group of `pyproject.toml`
-and pinned in `uv.lock`, so the contract below
-runs from this repository's declarations rather than from whatever happens to be
-on the ambient PATH.
+Install [uv](https://docs.astral.sh/uv/) and run commands from the project root
+unless the render recipe changes directories. Black Line uses Python 3.11
+or newer and the standard library. The locked development environment adds
+pytest, pytest-cov, and Ruff.
 
-The PNG rasterization step needs one thing that is not a Python package:
-`rsvg-convert` from librsvg (`brew install librsvg`, or
-`apt-get install librsvg2-bin`). It is a hard requirement of the raster step and
-fails loudly when absent. The manuscript declares its denser 0.5-inch page
-geometry in `docs/manuscript/config.yaml`; keep that source setting and the generated
-artifacts in sync when changing layout.
+Install librsvg's `rsvg-convert` and put it on `PATH`. On Debian or Ubuntu,
+install `librsvg2-bin`. On macOS, install `librsvg` through Homebrew.
+
+```bash
+uv sync --locked
+```
+
+See the [usage guide](usage.md) for a reading with a pinned review date,
+dated evidence and a freshness window. The guide also covers archiving and
+replaying an evaluation and matching report envelopes.
 
 ## Local verification loop
 
@@ -48,41 +48,44 @@ manuscript inputs, including a separate formalism-ledger output directory.
 Git ignore probes disable host-wide excludes per command, so a contributor's
 global ignore rules cannot supply the missing-`.gitignore` negative control.
 
-## Rendering the manuscript (external toolchain)
+## Render and validate the manuscript
 
-The typeset PDF and HTML are the one thing this repository cannot produce by
-itself. Rendering is done by a separate publication engine,
-<https://github.com/docxology/template>, which you clone wherever you like. This
-is a declared external dependency: without it the whole local loop above still
-runs and the package, tests, registry, and figures are all still real — you
-simply have no rendered PDF or HTML. An absent rendered artifact is an unrun
-gate, not a failing one.
-
-Nothing below assumes a particular directory layout. Set the two roots to
-wherever the two repositories actually live:
+Black Line cannot produce the typeset publication without the external
+template renderer. Install Pandoc, a matching
+[pandoc-crossref](https://github.com/lierdakil/pandoc-crossref/releases) filter,
+and XeLaTeX with the [pinned template prerequisites](https://github.com/docxology/template/blob/87704feae0a4490ef7dad9c931d268e8c30273c2/README.md#L565-L574).
+Build from a clean Black Line checkout.
 
 ```bash
-BLACK_LINE_ROOT=$(pwd)                  # this repository, from its root
-TEMPLATE_ROOT=${TEMPLATE_ROOT:-$HOME/src/template}
+BLACK_LINE_ROOT="$(pwd)"
+TEMPLATE_ROOT="$(mktemp -d)/template"
+git clone https://github.com/docxology/template.git "$TEMPLATE_ROOT"
+git -C "$TEMPLATE_ROOT" checkout --detach 87704feae0a4490ef7dad9c931d268e8c30273c2
 
-git clone https://github.com/docxology/template.git "${TEMPLATE_ROOT}"   # once
+uv sync --locked
+uv run python scripts/build_figures.py
 
-# Make this repository visible to the engine under a qualified project name.
-# The current engine requires an external project to use a lifecycle leaf.
-mkdir -p "${TEMPLATE_ROOT}/projects/working"
-ln -sfn "${BLACK_LINE_ROOT}" "${TEMPLATE_ROOT}/projects/working/black_line"
+mkdir -p "$TEMPLATE_ROOT/projects/working"
+ln -s "$BLACK_LINE_ROOT" "$TEMPLATE_ROOT/projects/working/black_line"
 
-cd "${TEMPLATE_ROOT}"
-uv run python scripts/pipeline/stage_03_render.py --project working/black_line
-uv run python scripts/pipeline/stage_04_validate.py --project working/black_line
+(
+  cd "$TEMPLATE_ROOT" &&
+  uv sync --locked --no-dev --python 3.14 &&
+  .venv/bin/python scripts/pipeline/stage_03_render.py --project working/black_line &&
+  .venv/bin/python scripts/pipeline/stage_04_validate.py --project working/black_line
+)
 ```
 
-The qualified name is the path under `projects/` that the leaf link produced.
-Use a real engine Git checkout/worktree: current provenance validation needs
-its indexed stage files, which an archive export alone does not provide.
+The template resolves `working/black_line` to the linked checkout and
+discovers [`docs/manuscript/`](manuscript/README.md). Its
+[configuration](manuscript/config.yaml) selects the cover, page geometry,
+figure sizing, and output formats. Inspect these generated files in the Black
+Line checkout.
 
-Inspect the generated PDF and web pages as well as their machine-readable
-reports. Generated files are outputs of the source-to-artifact chain; fix the
-producer or manuscript source rather than hand-editing a rendered file. The
-engine's strict publication gates are public-release checks that run in the
-engine checkout, not here.
+- `output/pdf/black_line_combined.pdf`
+- `output/web/index.html`
+- `output/epub/black_line_combined.epub`
+- `output/reports/validation_report.md`
+
+Check the section order, bibliography, figures, and formalism links.
+If one fails, update the producer or manuscript source and rebuild.

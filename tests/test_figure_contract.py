@@ -175,7 +175,9 @@ def test_the_shipped_cover_reaches_a_reader_with_its_caption(
     )
     assert f"figures/{cover['filename']}" in prose
     matches = re.findall(
-        r"!\[([^\]]*)\]\(\.\./output/figures/" + re.escape(cover["filename"]) + r"\)",
+        r"!\[([^\]]*)\]\(\.\./\.\./output/figures/"
+        + re.escape(cover["filename"])
+        + r"\)",
         prose,
     )
     assert len(matches) == 1

@@ -85,4 +85,5 @@ report-envelope schema is aligned by convention, not a shared runtime dependency
       file (`tests/test_publication_metadata.py` checks the first of these).
 - [ ] Review newly published Git history for disclosure. The fresh initial-release
       history was a first-publication decision, not an instruction to reset it.
-- [ ] The rendered PDF regenerated at the release tree.
+- [ ] The PDF, HTML, and EPUB regenerated and validated from the release tree
+      with the [pinned template](development.md#render-and-validate-the-manuscript).

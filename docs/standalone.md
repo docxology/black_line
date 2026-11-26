@@ -31,10 +31,10 @@ configuration. Exact replay requires the producing package version. A digest
 alone cannot recover input data, and `canonical_assessment/1.0` remains a
 result-only format. Envelope contract and report/context correspondence checks
 establish structural consistency; none authenticate observations or grant
-authority. See the executable recipes in `docs/usage.md`.
+authority. See the executable [usage recipes](usage.md).
 
-The whole local verification loop in
-[`docs/development.md`](docs/development.md) runs from the copy alone, offline:
+After installing the locked Python tools and librsvg, run the local
+verification loop from this checkout. See the [development guide](development.md).
 
 - the test suite with its branch-coverage floor,
 - the `ruff` lint and format gates, from tools this repository declares,
@@ -60,11 +60,11 @@ source-checkout builds still derive geometry from the live config.
 
 ## What it cannot do alone
 
-It cannot produce the typeset PDF or HTML manuscript. Rendering and
+The publication bundle includes PDF, HTML, and EPUB. Rendering and
 rendered-output validation belong to a separate publication engine at
 [`docxology/template`](https://github.com/docxology/template), which you clone
-wherever you like — see [`docs/development.md`](docs/development.md) for the
-path-independent invocation.
+wherever you like — see the [pinned workflow](development.md#render-and-validate-the-manuscript)
+for setup and output locations.
 
 That is a declared external dependency. It is not evidence that the evaluator or
 the manuscript is unsound, and the absence of a rendered PDF is not a failing
@@ -77,9 +77,8 @@ versioned practice registry and `evaluate_work`, returning `ALIGNED`,
 `NEEDS_EVIDENCE`, `NEEDS_REWORK`, or `OUTSIDE_SCOPE` from self-declared tags and
 evidence. A status describes declaration coverage and nothing else. It is not a
 truth claim, a safety score, an accreditation, a moral authority, or a permission
-mechanism, and it never licenses anything Red Line would refuse. Read
-`README.md`, `docs/manuscript/05_limits.md`, and `docs/claims.md` before changing the
-evaluator.
+mechanism, and it never licenses anything Red Line would refuse. Read the [project README](../README.md), [manuscript limits](manuscript/05_limits.md),
+and [claim boundaries](claims.md) before changing the evaluator.
 
 ## Making a copy
 
@@ -93,7 +92,7 @@ resolves outside this repository's root.
 
 ## Validation
 
-Use the canonical local commands in [`docs/development.md`](docs/development.md).
+Use the canonical local commands in [development guide](development.md).
 Generated figures must exist before the figure-contract gate; `output/` is
 ignored and disposable, and the suite rebuilds it when it can.
 

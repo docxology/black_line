@@ -63,7 +63,7 @@ title-page cover, so the visual argument is versioned with the method rather
 than commissioned around it. It is reproduced here because a cover printed
 without its caption states nothing a reader can check:
 
-![Cover art showing unresolved intention narrowing into a followable review line through method, evidence, review, and handoff.](../output/figures/cover_art.png){#fig:black-cover-art width=100%}
+![Cover art showing unresolved intention narrowing into a followable review line through method, evidence, review, and handoff.](../../output/figures/cover_art.png){#fig:black-cover-art width=100%}
 
 The narrowing is a metaphor for the posture, not a result. It is not evidence
 that the work is true, safe, or authorized.

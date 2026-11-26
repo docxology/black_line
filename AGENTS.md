@@ -5,7 +5,7 @@ manuscript beside it. Keep the executable method under `src/black_line/`; keep
 scripts as thin build or validation entry points; and preserve the instrument
 boundary: statuses describe self-declared evidence coverage, never truth,
 safety, accreditation, or permission. What a separated copy is, can do, and
-cannot do is stated in [`STANDALONE.md`](STANDALONE.md).
+cannot do is stated in [standalone guide](docs/standalone.md).
 
 ## Validation contract
 
