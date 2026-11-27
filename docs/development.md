@@ -54,7 +54,7 @@ Black Line cannot produce the typeset publication without the external
 template renderer. Install Pandoc, a matching
 [pandoc-crossref](https://github.com/lierdakil/pandoc-crossref/releases) filter,
 and XeLaTeX with the [pinned template prerequisites](https://github.com/docxology/template/blob/87704feae0a4490ef7dad9c931d268e8c30273c2/README.md#L565-L574).
-Build from a clean Black Line checkout.
+Build from a clean Black Line checkout in a directory named `black_line`.
 
 ```bash
 BLACK_LINE_ROOT="$(pwd)"
